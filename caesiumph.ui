@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CaesiumPH</class>
+ <widget class="QMainWindow" name="CaesiumPH">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>654</width>
+    <height>467</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>CaesiumPH</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="icons.qrc">
+    <normaloff>:/icons/main/logo.png</normaloff>:/icons/main/logo.png</iconset>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="1" column="0" colspan="2">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="compressButton">
+        <property name="text">
+         <string>Compress</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="0" colspan="2">
+     <widget class="QTreeWidget" name="listTreeWidget">
+      <property name="acceptDrops">
+       <bool>true</bool>
+      </property>
+      <property name="dragEnabled">
+       <bool>true</bool>
+      </property>
+      <property name="dragDropMode">
+       <enum>QAbstractItemView::DragDrop</enum>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::ExtendedSelection</enum>
+      </property>
+      <property name="indentation">
+       <number>0</number>
+      </property>
+      <property name="sortingEnabled">
+       <bool>false</bool>
+      </property>
+      <property name="animated">
+       <bool>true</bool>
+      </property>
+      <attribute name="headerDefaultSectionSize">
+       <number>100</number>
+      </attribute>
+      <column>
+       <property name="text">
+        <string>Name</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Size</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>New Size</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Ratio</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Full Path</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>654</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionAdd_pictures"/>
+    <addaction name="actionAdd_folder"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionRemove_items"/>
+    <addaction name="actionClear_list"/>
+    <addaction name="separator"/>
+    <addaction name="actionSelect_all"/>
+   </widget>
+   <widget class="QMenu" name="menuActions">
+    <property name="title">
+     <string>Actions</string>
+    </property>
+    <addaction name="actionCompress"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout_CaesiumPH"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuActions"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <action name="actionAdd_pictures">
+   <property name="text">
+    <string>Add pictures...</string>
+   </property>
+  </action>
+  <action name="actionAdd_folder">
+   <property name="text">
+    <string>Add folder...</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionRemove_items">
+   <property name="text">
+    <string>Remove items</string>
+   </property>
+  </action>
+  <action name="actionClear_list">
+   <property name="text">
+    <string>Clear list</string>
+   </property>
+  </action>
+  <action name="actionSelect_all">
+   <property name="text">
+    <string>Select all</string>
+   </property>
+  </action>
+  <action name="actionCompress">
+   <property name="text">
+    <string>Compress</string>
+   </property>
+  </action>
+  <action name="actionAbout_CaesiumPH">
+   <property name="text">
+    <string>About CaesiumPH...</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>actionQuit</sender>
+   <signal>triggered()</signal>
+   <receiver>CaesiumPH</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>326</x>
+     <y>233</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
