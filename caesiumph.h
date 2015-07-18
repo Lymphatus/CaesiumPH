@@ -13,9 +13,6 @@ class CaesiumPH : public QMainWindow
 {
     Q_OBJECT
 
-    //Comutation time
-    QTime myTimer;
-
 public:
     explicit CaesiumPH(QWidget *parent = 0);
     ~CaesiumPH();
@@ -28,8 +25,6 @@ private slots:
     void on_actionAdd_folder_triggered();
     void on_actionRemove_items_triggered();
     void on_actionCompress_triggered();
-
-    //TODO Remove
     void compressionStarted();
     void compressionFinished();
 

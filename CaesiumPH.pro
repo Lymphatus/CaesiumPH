@@ -14,18 +14,24 @@ TEMPLATE = app
 LIBS += -L/usr/lib/libjpeg-turbo/lib -ljpeg -lturbojpeg
 INCLUDEPATH += /usr/local/include
 
+macx {
+    ICON = icons/icons/icon.icns
+}
+
 CONFIG += warn_off
 
 SOURCES += main.cpp\
         caesiumph.cpp \
     aboutdialog.cpp \
     global.cpp \
-    lossless.cpp
+    lossless.cpp \
+    cimageinfo.cpp
 
 HEADERS  += caesiumph.h \
     aboutdialog.h \
     global.h \
-    lossless.h
+    lossless.h \
+    cimageinfo.h
 
 FORMS    += caesiumph.ui \
     aboutdialog.ui

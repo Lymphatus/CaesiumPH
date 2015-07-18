@@ -4,6 +4,6 @@
 - Change to "in-place" compression
 - Check if a file is bigger, then do not compress
 - Settings dialog
-- Appereance!
+- UI design
 - Translations
-- Git?
+- Windows/Linux icon

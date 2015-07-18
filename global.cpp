@@ -22,7 +22,6 @@ QString formatSize(int size) {
 }
 
 QString getRatio(qint64 original, qint64 compressed) {
-    float percentage = -((float) ((original - compressed) * 100) / (float) original);
-    return QString::number(percentage, 'f', 1) + "%";
+    return QString::number(((float) ((original - compressed) * 100) / (float) original), 'f', 1) + "%";
 }
 

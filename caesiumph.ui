@@ -13,10 +13,6 @@
   <property name="windowTitle">
    <string>CaesiumPH</string>
   </property>
-  <property name="windowIcon">
-   <iconset resource="icons.qrc">
-    <normaloff>:/icons/main/logo.png</normaloff>:/icons/main/logo.png</iconset>
-  </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
   </property>
@@ -35,8 +31,17 @@
     </item>
     <item row="0" column="0" colspan="2">
      <widget class="QTreeWidget" name="listTreeWidget">
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="acceptDrops">
        <bool>true</bool>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
       </property>
       <property name="dragEnabled">
        <bool>true</bool>
@@ -66,7 +71,7 @@
       </column>
       <column>
        <property name="text">
-        <string>Size</string>
+        <string>Original Size</string>
        </property>
       </column>
       <column>
@@ -76,7 +81,7 @@
       </column>
       <column>
        <property name="text">
-        <string>Ratio</string>
+        <string>Saved</string>
        </property>
       </column>
       <column>
@@ -174,9 +179,7 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
-  <include location="icons.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>actionQuit</sender>

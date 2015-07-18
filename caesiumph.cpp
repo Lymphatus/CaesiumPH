@@ -3,15 +3,7 @@
 #include "aboutdialog.h"
 #include "global.h"
 #include "lossless.h"
-
-
-#include <setjmp.h>
-#include <stdio.h>
-#include <jpeglib.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
-
+#include "cimageinfo.h"
 
 #include <QProgressDialog>
 #include <QFileDialog>
@@ -21,6 +13,7 @@
 #include <QtConcurrent>
 #include <QFuture>
 #include <QElapsedTimer>
+#include <QMessageBox>
 #include <QDebug>
 
 CaesiumPH::CaesiumPH(QWidget *parent) :
@@ -81,16 +74,16 @@ void CaesiumPH::showImportProgressDialog(QStringList list) {
     }
 
     for (int i = 0; i < list.size(); i++) {
-        //Get file info
-        QFileInfo* currentItemInfo = new QFileInfo(prefix + list.at(i));
+        //Generate new CImageInfo
+        CImageInfo* currentItemInfo = new CImageInfo(prefix + list.at(i));
 
         //Populate list
         ui->listTreeWidget->addTopLevelItem(new QTreeWidgetItem(ui->listTreeWidget,
-                                                                QStringList() << currentItemInfo->fileName()
-                                                                << formatSize(currentItemInfo->size())
+                                                                QStringList() << currentItemInfo->getBaseName()
+                                                                << currentItemInfo->getFormattedSize()
                                                                 << ""
                                                                 << ""
-                                                                << currentItemInfo->filePath()));
+                                                                << currentItemInfo->getFullPath()));
 
         progress.setValue(i);
 
@@ -121,6 +114,7 @@ void CaesiumPH::on_actionRemove_items_triggered()
 
 extern void compressRoutine(QTreeWidgetItem* item) {
     qDebug() << item->text(4);
+    //BUG Sometimes files are empty. Check it out.
     cclt_optimize(item->text(4).toLocal8Bit().data(),
                   (item->text(4) + ".cmp.jpg").toLocal8Bit().data(),
                   1,
@@ -139,8 +133,8 @@ void CaesiumPH::on_actionCompress_triggered()
 
     //Setting up a progress dialog
     QProgressDialog progressDialog;
-    //progressDialog.setModal(true);
-    //progressDialog.setWindowTitle(tr("Compressing..."));
+    progressDialog.setWindowTitle(tr("CaesiumPH"));
+    progressDialog.setLabelText(tr("Compressing..."));
 
     //Holds the list
     QList<QTreeWidgetItem*> list;
@@ -165,7 +159,6 @@ void CaesiumPH::on_actionCompress_triggered()
         list.append(ui->listTreeWidget->topLevelItem(i));
     }
 
-    CaesiumPH::compressionStarted();
     //And start
     watcher.setFuture(QtConcurrent::map(list, compressRoutine));
 
@@ -177,14 +170,13 @@ void CaesiumPH::on_actionCompress_triggered()
 void CaesiumPH::compressionStarted() {
     //Start monitoring time while compressing
     qDebug() << QTime::currentTime();
-    myTimer.start();
 }
 
 void CaesiumPH::compressionFinished() {
     //Get elapsed time of the compression
-    qDebug() << "Elapsed time: " + myTimer.elapsed();
     qDebug() << QTime::currentTime();
 }
+
 
 
 
