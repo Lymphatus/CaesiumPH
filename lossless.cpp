@@ -166,5 +166,5 @@ extern int cclt_optimize(char* input_file, char* output_file, int exif_flag, cha
 	//Close the output file
 	fclose(fp);
 
-	return 0;
+    return 0;
 }

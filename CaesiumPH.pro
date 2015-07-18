@@ -11,8 +11,11 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = CaesiumPH
 TEMPLATE = app
 
-LIBS += -L/usr/lib/libjpeg-turbo/lib -ljpeg -lturbojpeg
-INCLUDEPATH += /usr/local/include
+macx:LIBS += -L/usr/lib/libjpeg-turbo/lib -ljpeg -lturbojpeg
+win32:LIBS += -LC:\\libjpeg-turbo-gcc\\lib -ljpeg -lturbojpeg
+
+macx:INCLUDEPATH += /usr/local/include
+win32:INCLUDEPATH += C:\\libjpeg-turbo-gcc\\include
 
 macx {
     ICON = icons/icons/icon.icns
