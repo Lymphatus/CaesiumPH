@@ -35,8 +35,12 @@ void CaesiumPH::initializeConnections() {
     connect(ui->actionClear_list, SIGNAL(triggered()), ui->listTreeWidget, SLOT(clear()));
     //List select all
     connect(ui->actionSelect_all, SIGNAL(triggered()), ui->listTreeWidget, SLOT(selectAll()));
-    //Compress Button
+    //UI buttons
     connect(ui->compressButton, SIGNAL(released()), this, SLOT(on_actionCompress_triggered()));
+    connect(ui->addFilesButton, SIGNAL(released()), this, SLOT(on_actionAdd_pictures_triggered()));
+    connect(ui->addFolderButton, SIGNAL(released()), this, SLOT(on_actionAdd_folder_triggered()));
+    connect(ui->removeItemButton, SIGNAL(released()), this, SLOT(on_actionRemove_items_triggered()));
+    connect(ui->clearButton, SIGNAL(released()), ui->listTreeWidget, SLOT(clear()));
 }
 
 void CaesiumPH::on_actionAbout_CaesiumPH_triggered()

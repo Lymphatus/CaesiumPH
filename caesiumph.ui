@@ -21,9 +21,37 @@
     <item row="1" column="0" colspan="2">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
+       <widget class="QPushButton" name="addFilesButton">
+        <property name="text">
+         <string>Add files...</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="addFolderButton">
+        <property name="text">
+         <string>Add folder</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="compressButton">
         <property name="text">
          <string>Compress</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="removeItemButton">
+        <property name="text">
+         <string>Remove items</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="clearButton">
+        <property name="text">
+         <string>Clear list</string>
         </property>
        </widget>
       </item>
