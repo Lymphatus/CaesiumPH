@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>icons/main/logo.png</file>
+        <file>icons/ui/add.png</file>
+        <file>icons/ui/clear.png</file>
+        <file>icons/ui/folder.png</file>
+        <file>icons/ui/remove.png</file>
     </qresource>
 </RCC>

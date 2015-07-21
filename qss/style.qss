@@ -1,0 +1,43 @@
+QPushButton {
+    background-color: transparent;
+    border: none;
+    color: white;
+}
+
+QPushButton:hover {
+    
+}
+
+QMainWindow, QHeaderView::section, QProgressDialog {
+    background-color: #3c3f41;
+    color: white;
+    border: none;
+}
+
+QTreeWidget {
+    background-color: #404040;
+    color: white;
+}
+QTreeWidget::item {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 14pt;
+    border-bottom: 1px solid grey;
+}
+
+QTreeWidget::item:hover:selected {
+    color: #1cb495;
+}
+
+QHeaderView {
+    text-transform: uppercase;
+    padding-bottom: 10px;
+    padding-left: 8px;
+    background-color: #3c3f41;
+    color: #CCCCCC;
+    border-bottom: 1px solid grey;
+}
+
+QProgressBar::chunk {
+    background-color: #1cb495;
+}

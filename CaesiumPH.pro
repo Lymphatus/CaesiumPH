@@ -40,7 +40,9 @@ FORMS    += caesiumph.ui \
     aboutdialog.ui
 
 RESOURCES += \
-    icons.qrc
+    icons.qrc \
+    style.qrc
 
 DISTFILES += \
-    TODO
+    TODO \
+    qss/style.qss
