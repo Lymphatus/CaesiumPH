@@ -45,4 +45,4 @@ RESOURCES += \
 
 DISTFILES += \
     TODO \
-    qss/style.qss
+    qss/style_osx.qss

@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>qss/style.qss</file>
+        <file>qss/style_osx.qss</file>
         <file>font/Roboto-Regular.ttf</file>
     </qresource>
 </RCC>

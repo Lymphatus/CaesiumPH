@@ -25,7 +25,7 @@ CaesiumPH::CaesiumPH(QWidget *parent) :
 
     //Header text to center
     //ui->listTreeWidget->header()->setDefaultAlignment(Qt::AlignCenter);
-    ui->listTreeWidget->header()->setFont(QFont("Serif", 50));
+    //ui->listTreeWidget->header()->setFont(QFont("Serif", 50));
 }
 
 CaesiumPH::~CaesiumPH()
