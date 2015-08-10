@@ -11,8 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = CaesiumPH
 TEMPLATE = app
 
-macx:LIBS += -L/opt/mozjpeg/lib -ljpeg -lturbojpeg
-win32:LIBS += -LC:\\libjpeg-turbo-gcc\\lib -ljpeg -lturbojpeg
+macx:LIBS += -L/opt/mozjpeg/lib -ljpeg.62
+win32:LIBS += -LC:\\libjpeg-turbo-gcc\\lib -ljpeg.62
 
 macx:INCLUDEPATH += /opt/mozjpeg/include
 win32:INCLUDEPATH += C:\\libjpeg-turbo-gcc\\include
@@ -27,14 +27,14 @@ SOURCES += main.cpp\
         caesiumph.cpp \
     aboutdialog.cpp \
     global.cpp \
-    lossless.cpp \
-    cimageinfo.cpp
+    cimageinfo.cpp \
+    lossless.cpp
 
 HEADERS  += caesiumph.h \
     aboutdialog.h \
     global.h \
-    lossless.h \
-    cimageinfo.h
+    cimageinfo.h \
+    lossless.h
 
 FORMS    += caesiumph.ui \
     aboutdialog.ui
