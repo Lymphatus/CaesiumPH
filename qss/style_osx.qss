@@ -1,47 +1,44 @@
 QPushButton {
     background-color: transparent;
     border: none;
-    color: white;
+    color: #757575
 }
 
-QPushButton:hover {
-    
-}
-
-QMainWindow, QHeaderView::section, QProgressDialog {
-    background-color: #404040;
-    color: white;
+QMainWindow, QHeaderView::section, QProgressDialog, QDialog, QGraphicsView {
+    background-color: #FFFFFF;
+    color: #757575;
     border: none;
 }
 
 QTreeWidget {
-    background-color: #202020;
-    color: white;
+    background-color: #FFFFFF;
+    color: #757575;
+    border-bottom: 1px solid #757575;
 }
 QTreeWidget::item {
     padding-top: 5px;
     padding-bottom: 5px;
     font-size: 14pt;
-    border-bottom: 1px solid #404040;
+    border-bottom: 1px solid #CCCCCC;
 }
 
 QTreeWidget::item:hover {
     color: #1cb495;
-    background-color: #404040;
+    background-color: #EEEEEE;
 }
 
 QTreeWidget::item:selected {
     color: #1cb495;
-    background-color: #606060;
+    background-color: #EEEEEE;
 }
 
 QHeaderView {
     text-transform: uppercase;
     padding-bottom: 10px;
     padding-left: 8px;
-    background-color: #3c3f41;
+    background-color: #FFFFFF;
     color: #CCCCCC;
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid #757575;
 }
 
 QHeaderView::section {

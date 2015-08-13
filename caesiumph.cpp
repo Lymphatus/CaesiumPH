@@ -45,6 +45,62 @@ void CaesiumPH::initializeConnections() {
     connect(ui->addFolderButton, SIGNAL(released()), this, SLOT(on_actionAdd_folder_triggered()));
     connect(ui->removeItemButton, SIGNAL(released()), this, SLOT(on_actionRemove_items_triggered()));
     connect(ui->clearButton, SIGNAL(released()), ui->listTreeWidget, SLOT(clear()));
+
+    //Install event filter for buttons
+    ui->addFilesButton->installEventFilter(this);
+    ui->addFolderButton->installEventFilter(this);
+    ui->compressButton->installEventFilter(this);
+    ui->removeItemButton->installEventFilter(this);
+    ui->clearButton->installEventFilter(this);
+}
+
+//Button hover functions
+bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
+    if (obj == (QObject*) ui->addFilesButton) {
+        if (event->type() == QEvent::Enter) {
+            ui->addFilesButton->setIcon(QIcon(":/icons/ui/add_hover.png"));
+            return true;
+        } else if (event->type() == QEvent::Leave){
+            ui->addFilesButton->setIcon(QIcon(":/icons/ui/add.png"));
+            return true;
+        }
+
+    } else if (obj == (QObject*) ui->addFolderButton) {
+        if (event->type() == QEvent::Enter) {
+            ui->addFolderButton->setIcon(QIcon(":/icons/ui/folder_hover.png"));
+            return true;
+        } else if (event->type() == QEvent::Leave){
+            ui->addFolderButton->setIcon(QIcon(":/icons/ui/folder.png"));
+            return true;
+        }
+    } else if (obj == (QObject*) ui->compressButton) {
+        if (event->type() == QEvent::Enter) {
+            ui->compressButton->setIcon(QIcon(":/icons/ui/compress_hover.png"));
+            return true;
+        } else if (event->type() == QEvent::Leave){
+            ui->compressButton->setIcon(QIcon(":/icons/ui/compress.png"));
+            return true;
+        }
+    } else if (obj == (QObject*) ui->removeItemButton) {
+        if (event->type() == QEvent::Enter) {
+            ui->removeItemButton->setIcon(QIcon(":/icons/ui/remove_hover.png"));
+            return true;
+        } else if (event->type() == QEvent::Leave){
+            ui->removeItemButton->setIcon(QIcon(":/icons/ui/remove.png"));
+            return true;
+        }
+    } else if (obj == (QObject*) ui->clearButton) {
+        if (event->type() == QEvent::Enter) {
+            ui->clearButton->setIcon(QIcon(":/icons/ui/clear_hover.png"));
+            return true;
+        } else if (event->type() == QEvent::Leave){
+            ui->clearButton->setIcon(QIcon(":/icons/ui/clear.png"));
+            return true;
+        }
+    } else {
+        //Pass the event on to the parent class
+        return QWidget::eventFilter(obj, event);
+    }
 }
 
 void CaesiumPH::on_actionAbout_CaesiumPH_triggered()
