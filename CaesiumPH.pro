@@ -45,4 +45,6 @@ RESOURCES += \
 
 DISTFILES += \
     TODO \
-    qss/style_osx.qss
+    qss/style_osx.qss \
+    qss/style_win.qss \
+    qss/style_linux.qss
