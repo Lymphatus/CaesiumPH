@@ -63,8 +63,9 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
         } else if (event->type() == QEvent::Leave){
             ui->addFilesButton->setIcon(QIcon(":/icons/ui/add.png"));
             return true;
+        } else {
+            return false;
         }
-
     } else if (obj == (QObject*) ui->addFolderButton) {
         if (event->type() == QEvent::Enter) {
             ui->addFolderButton->setIcon(QIcon(":/icons/ui/folder_hover.png"));
@@ -72,6 +73,8 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
         } else if (event->type() == QEvent::Leave){
             ui->addFolderButton->setIcon(QIcon(":/icons/ui/folder.png"));
             return true;
+        } else {
+            return false;
         }
     } else if (obj == (QObject*) ui->compressButton) {
         if (event->type() == QEvent::Enter) {
@@ -80,6 +83,8 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
         } else if (event->type() == QEvent::Leave){
             ui->compressButton->setIcon(QIcon(":/icons/ui/compress.png"));
             return true;
+        } else {
+            return false;
         }
     } else if (obj == (QObject*) ui->removeItemButton) {
         if (event->type() == QEvent::Enter) {
@@ -88,6 +93,8 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
         } else if (event->type() == QEvent::Leave){
             ui->removeItemButton->setIcon(QIcon(":/icons/ui/remove.png"));
             return true;
+        } else {
+            return false;
         }
     } else if (obj == (QObject*) ui->clearButton) {
         if (event->type() == QEvent::Enter) {
@@ -96,6 +103,8 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
         } else if (event->type() == QEvent::Leave){
             ui->clearButton->setIcon(QIcon(":/icons/ui/clear.png"));
             return true;
+        } else {
+            return false;
         }
     } else {
         //Pass the event on to the parent class
@@ -222,12 +231,15 @@ void CaesiumPH::on_actionCompress_triggered()
         list.append(ui->listTreeWidget->topLevelItem(i));
     }
 
+#ifdef _WIN32
     QThreadPool::globalInstance()->setMaxThreadCount(1);
+#endif
     //And start
     watcher.setFuture(QtConcurrent::map(list, compressRoutine));
 
     //Show the dialog
     progressDialog.exec();
+
 
 }
 

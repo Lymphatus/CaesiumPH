@@ -13,8 +13,15 @@
   <property name="windowTitle">
    <string>CaesiumPH</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="icons.qrc">
+    <normaloff>:/icons/main/logo.png</normaloff>:/icons/main/logo.png</iconset>
+  </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
+  </property>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_2">
@@ -269,7 +276,7 @@
      <x>0</x>
      <y>0</y>
      <width>654</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

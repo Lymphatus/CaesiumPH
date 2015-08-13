@@ -1,3 +1,22 @@
+QMenu, QMenuBar {
+    background-color: #FFFFFF;
+}
+
+QMenuBar::item, QMenu::item {
+    color: #757575;
+}
+
+QMenu::item:selected, QMenuBar::item:selected {
+    background-color: #221cb495;
+    color: #757575;
+}
+
+QMenu:separator {
+    height: 1px;
+    background: #DD757575;
+    margin: 0px 5px 0px 5px;
+}
+
 QPushButton {
     background-color: transparent;
     border: none;

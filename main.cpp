@@ -9,16 +9,16 @@ int main(int argc, char *argv[])
     CaesiumPH w;
     w.show();
 
+    //Load styles
+#ifdef __APPLE__
+    //Retina support
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
-
-    //Load style
-    #ifdef __APPLE__
-        QFile qss(":/qss/style_osx.qss");
-    #elif _WIN32
-        QFile qss(":/qss/style_win.qss");
-    #else
-        QFile qss(":/qss/style_unix.qss");
-    #endif
+    QFile qss(":/qss/style_osx.qss");
+#elif _WIN32
+    QFile qss(":/qss/style_win.qss");
+#else
+    QFile qss(":/qss/style_linux.qss");
+#endif
 
     qss.open(QFile::ReadOnly);
     //Apply
