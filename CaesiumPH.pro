@@ -12,10 +12,10 @@ TARGET = CaesiumPH
 TEMPLATE = app
 
 macx:LIBS += -L/opt/mozjpeg/lib -ljpeg.62
-win32:LIBS += -LC:\\libjpeg-turbo-gcc\\lib -ljpeg.62
+win32:LIBS += -LC:\\mozjpeg\\lib -ljpeg
 
 macx:INCLUDEPATH += /opt/mozjpeg/include
-win32:INCLUDEPATH += C:\\libjpeg-turbo-gcc\\include
+win32:INCLUDEPATH += C:\\mozjpeg\\include
 
 macx {
     ICON = icons/icons/icon.icns

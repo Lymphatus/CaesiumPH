@@ -25,3 +25,10 @@ QString getRatio(qint64 original, qint64 compressed) {
     return QString::number(((float) ((original - compressed) * 100) / (float) original), 'f', 1) + "%";
 }
 
+char* QStringToChar(QString s) {
+    char* c_str = (char*) malloc((s.length() + 1) * sizeof(char));
+    QByteArray bArray = s.toLocal8Bit();
+    strcpy(c_str, bArray.data());
+    return c_str;
+}
+

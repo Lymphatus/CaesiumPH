@@ -121,12 +121,11 @@ void CaesiumPH::on_actionRemove_items_triggered()
 }
 
 extern void compressRoutine(QTreeWidgetItem* item) {
-    qDebug() << item->text(4);
     //BUG Sometimes files are empty. Check it out.
-    cclt_optimize(item->text(4).toLocal8Bit().data(),
-                  (item->text(4) + ".cmp.jpg").toLocal8Bit().data(),
-                  1,
-                  item->text(4).toLocal8Bit().data());
+    cclt_optimize(QStringToChar(item->text(4)),
+                  QStringToChar(item->text(4) + ".cmp.jpg"),
+                  0,
+                  QStringToChar(item->text(4)));
     //Gets new file info
     //TODO Change it, it must point the right output
     QFileInfo* fileInfo = new QFileInfo(item->text(4) + ".cmp.jpg");
@@ -167,6 +166,7 @@ void CaesiumPH::on_actionCompress_triggered()
         list.append(ui->listTreeWidget->topLevelItem(i));
     }
 
+    QThreadPool::globalInstance()->setMaxThreadCount(1);
     //And start
     watcher.setFuture(QtConcurrent::map(list, compressRoutine));
 

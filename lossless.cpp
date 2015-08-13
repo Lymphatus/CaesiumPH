@@ -5,6 +5,8 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include <QDebug>
+
 #include "lossless.h"
 #include "caesiumph.h"
 
@@ -90,7 +92,7 @@ extern int cclt_optimize(char* input_file, char* output_file, int exif_flag, cha
     jpeg_create_compress(&dstinfo);
 
     //Open the input file
-    fp = fopen(input_file, "r");
+    fp = fopen(input_file, "rb");
 
     //Check for errors
     //TODO Use UNIX error messages
@@ -126,7 +128,7 @@ extern int cclt_optimize(char* input_file, char* output_file, int exif_flag, cha
     fclose(fp);
 
     //Open the output one instead
-    fp = fopen(output_file, "w+");
+    fp = fopen(output_file, "wb");
     //Check for errors
     //TODO Use UNIX error messages
     if (fp == NULL) {
