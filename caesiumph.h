@@ -15,6 +15,7 @@ class CaesiumPH : public QMainWindow
 
 public:
     explicit CaesiumPH(QWidget *parent = 0);
+    bool eventFilter(QObject *obj, QEvent *event);
     ~CaesiumPH();
 
 private slots:

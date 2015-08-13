@@ -5,5 +5,11 @@
         <file>icons/ui/clear.png</file>
         <file>icons/ui/folder.png</file>
         <file>icons/ui/remove.png</file>
+        <file>icons/ui/compress.png</file>
+        <file>icons/ui/add_hover.png</file>
+        <file>icons/ui/clear_hover.png</file>
+        <file>icons/ui/compress_hover.png</file>
+        <file>icons/ui/folder_hover.png</file>
+        <file>icons/ui/remove_hover.png</file>
     </qresource>
 </RCC>
