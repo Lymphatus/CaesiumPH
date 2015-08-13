@@ -12,5 +12,6 @@ extern int buildNumber;
 
 QString formatSize(int);
 QString getRatio(qint64, qint64);
+char* QStringToChar(QString s);
 
 #endif // GLOBAL_H
