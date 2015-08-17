@@ -1,9 +1,10 @@
 #include "caesiumph.h"
 #include "ui_caesiumph.h"
 #include "aboutdialog.h"
-#include "global.h"
+#include "utils.h"
 #include "lossless.h"
 #include "cimageinfo.h"
+#include "exif.h"
 
 #include <QProgressDialog>
 #include <QFileDialog>
@@ -14,6 +15,8 @@
 #include <QFuture>
 #include <QElapsedTimer>
 #include <QMessageBox>
+#include <QImageReader>
+
 #include <QDebug>
 
 CaesiumPH::CaesiumPH(QWidget *parent) :
@@ -22,15 +25,31 @@ CaesiumPH::CaesiumPH(QWidget *parent) :
 {
     ui->setupUi(this);
     initializeConnections();
+    initializeUI();
 
     //Header text to center
     //ui->listTreeWidget->header()->setDefaultAlignment(Qt::AlignCenter);
     //ui->listTreeWidget->header()->setFont(QFont("Serif", 50));
 }
 
-CaesiumPH::~CaesiumPH()
-{
+CaesiumPH::~CaesiumPH() {
     delete ui;
+}
+
+void CaesiumPH::initializeUI() {
+    //Set the side panel invisible
+    //TODO Make this a preference
+
+    ui->sidePanelDockWidget->setVisible(false);
+    ui->sidePanelLine->setVisible(false);
+
+    //Install event filter for buttons
+    ui->addFilesButton->installEventFilter(this);
+    ui->addFolderButton->installEventFilter(this);
+    ui->compressButton->installEventFilter(this);
+    ui->removeItemButton->installEventFilter(this);
+    ui->clearButton->installEventFilter(this);
+    ui->showSidePanelButton->installEventFilter(this);
 }
 
 void CaesiumPH::initializeConnections() {
@@ -45,13 +64,6 @@ void CaesiumPH::initializeConnections() {
     connect(ui->addFolderButton, SIGNAL(released()), this, SLOT(on_actionAdd_folder_triggered()));
     connect(ui->removeItemButton, SIGNAL(released()), this, SLOT(on_actionRemove_items_triggered()));
     connect(ui->clearButton, SIGNAL(released()), ui->listTreeWidget, SLOT(clear()));
-
-    //Install event filter for buttons
-    ui->addFilesButton->installEventFilter(this);
-    ui->addFolderButton->installEventFilter(this);
-    ui->compressButton->installEventFilter(this);
-    ui->removeItemButton->installEventFilter(this);
-    ui->clearButton->installEventFilter(this);
 }
 
 //Button hover functions
@@ -106,6 +118,21 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
         } else {
             return false;
         }
+    } else if (obj == (QObject*) ui->showSidePanelButton) {
+        if (!ui->sidePanelDockWidget->isVisible()) {
+            if (event->type() == QEvent::Enter) {
+                ui->showSidePanelButton->setIcon(QIcon(":/icons/ui/side_panel_active.png"));
+                return true;
+            } else if (event->type() == QEvent::Leave){
+                ui->showSidePanelButton->setIcon(QIcon(":/icons/ui/side_panel.png"));
+                return true;
+            } else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
     } else {
         //Pass the event on to the parent class
         return QWidget::eventFilter(obj, event);
@@ -122,20 +149,20 @@ void CaesiumPH::on_actionAbout_CaesiumPH_triggered()
 
 void CaesiumPH::on_actionAdd_pictures_triggered()
 {
-    //Generate file dialog for import and slot connection when the job is done
-    QFileDialog* fd = new QFileDialog(this,
-                                      tr("Import files..."),
-                                      QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).at(0),
-                                      inputFilter);
-    fd->setFileMode(QFileDialog::ExistingFiles);
-    connect(fd, SIGNAL(filesSelected(QStringList)), this, SLOT(showImportProgressDialog(QStringList)));
-    //Show it
-    fd->show();
+    //Generate file dialog for import and call the progress dialog indicator
+    QStringList fileList = QFileDialog::getOpenFileNames(this,
+                                  tr("Import files..."),
+                                  QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).at(0),
+                                  inputFilter);
+    if (!fileList.isEmpty()) {
+        showImportProgressDialog(fileList);
+    }
 }
 
 void CaesiumPH::showImportProgressDialog(QStringList list) {
 
     QProgressDialog progress(tr("Importing..."), tr("Cancel"), 0, list.count(), this);
+    progress.setWindowIcon(QIcon(":/icons/main/logo.png"));
     progress.show();
     progress.setWindowModality(Qt::WindowModal);
 
@@ -166,16 +193,14 @@ void CaesiumPH::showImportProgressDialog(QStringList list) {
     progress.setValue(list.count());
 }
 
-void CaesiumPH::on_actionAdd_folder_triggered()
-{
-    QFileDialog* fd = new QFileDialog(this,
+void CaesiumPH::on_actionAdd_folder_triggered() {
+    QString path = QFileDialog::getExistingDirectory(this,
                                       tr("Select a folder to import..."),
                                       QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).at(0),
-                                      inputFilter);
-    fd->setFileMode(QFileDialog::DirectoryOnly);
-    connect(fd, SIGNAL(filesSelected(QStringList)), this, SLOT(showImportProgressDialog(QStringList)));
-    //Show it
-    fd->show();
+                                      QFileDialog::ShowDirsOnly);
+    if (!path.isEmpty()) {
+        showImportProgressDialog(QStringList() << path);
+    }
 }
 
 void CaesiumPH::on_actionRemove_items_triggered()
@@ -189,7 +214,7 @@ extern void compressRoutine(QTreeWidgetItem* item) {
     //BUG Sometimes files are empty. Check it out.
     cclt_optimize(QStringToChar(item->text(4)),
                   QStringToChar(item->text(4) + ".cmp.jpg"),
-                  0,
+                  1,
                   QStringToChar(item->text(4)));
     //Gets new file info
     //TODO Change it, it must point the right output
@@ -253,6 +278,44 @@ void CaesiumPH::compressionFinished() {
     qDebug() << QTime::currentTime();
 }
 
+void CaesiumPH::on_sidePanelDockWidget_topLevelChanged(bool topLevel) {
+    //Check if it's floating and hide/show the line
+    ui->sidePanelLine->setVisible(!topLevel);
+}
 
+void CaesiumPH::on_sidePanelDockWidget_visibilityChanged(bool visible) {
+    //Handle the close event
+    on_showSidePanelButton_clicked(visible);
+    ui->showSidePanelButton->setChecked(visible);
+}
 
+void CaesiumPH::on_showSidePanelButton_clicked(bool checked) {
+    ui->sidePanelDockWidget->setVisible(checked);
+    //If it's not floating, we have a dedicated handler for that
+    if (!ui->sidePanelDockWidget->isFloating()) {
+        ui->sidePanelLine->setVisible(checked);
+    }
+    //Set icons
+    if (checked) {
+        ui->showSidePanelButton->setIcon(QIcon(":/icons/ui/side_panel_active.png"));
+    } else {
+        ui->showSidePanelButton->setIcon(QIcon(":/icons/ui/side_panel.png"));
+    }
+}
 
+void CaesiumPH::on_listTreeWidget_itemSelectionChanged() {
+    //Check if there's a selection
+    if (ui->listTreeWidget->selectedItems().length() > 0) {
+        //Get the first item selected
+        QTreeWidgetItem* currentItem = ui->listTreeWidget->selectedItems().at(0);
+
+        //Load the scaled image
+        //TODO Load into another thread
+
+        QImageReader* imageReader = new QImageReader(currentItem->text(4));
+        imageReader->setScaledSize(getScaledSizeWithRatio(imageReader->size(), ui->imagePreviewLabel->size().width()));
+        ui->imagePreviewLabel->setPixmap(QPixmap::fromImage(imageReader->read()));
+
+        ui->exifTextEdit->setText(getExifFromPath(QStringToChar(currentItem->text(4))));
+    }
+}

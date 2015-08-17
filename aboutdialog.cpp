@@ -1,6 +1,6 @@
 #include "aboutdialog.h"
 #include "ui_aboutdialog.h"
-#include "global.h"
+#include "utils.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>

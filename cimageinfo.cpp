@@ -1,5 +1,5 @@
 #include "cimageinfo.h"
-#include "global.h"
+#include "utils.h"
 
 #include <QFileInfo>
 

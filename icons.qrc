@@ -11,5 +11,7 @@
         <file>icons/ui/compress_hover.png</file>
         <file>icons/ui/folder_hover.png</file>
         <file>icons/ui/remove_hover.png</file>
+        <file>icons/ui/side_panel.png</file>
+        <file>icons/ui/side_panel_active.png</file>
     </qresource>
 </RCC>

@@ -20,6 +20,7 @@ public:
 
 private slots:
     void initializeConnections();
+    void initializeUI();
     void on_actionAbout_CaesiumPH_triggered();
     void showImportProgressDialog(QStringList);
     void on_actionAdd_pictures_triggered();
@@ -28,6 +29,11 @@ private slots:
     void on_actionCompress_triggered();
     void compressionStarted();
     void compressionFinished();
+    void on_sidePanelDockWidget_topLevelChanged(bool topLevel);
+    void on_sidePanelDockWidget_visibilityChanged(bool visible);
+    void on_showSidePanelButton_clicked(bool checked);
+
+    void on_listTreeWidget_itemSelectionChanged();
 
 private:
     Ui::CaesiumPH *ui;

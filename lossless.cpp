@@ -153,7 +153,7 @@ extern int cclt_optimize(char* input_file, char* output_file, int exif_flag, cha
     //Write EXIF
     if (exif_flag == 1) {
         if (strcmp(input_file, exif_src) == 0) {
-            //jcopy_markers_execute(&srcinfo, &dstinfo);
+            jcopy_markers_execute(&srcinfo, &dstinfo);
         } else {
             //For standard compression EXIF data
             struct jpeg_decompress_struct einfo = cclt_get_markers(exif_src);

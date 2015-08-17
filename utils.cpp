@@ -1,5 +1,7 @@
-#include "global.h"
+#include "utils.h"
+#include "math.h"
 #include <QIODevice>
+#include <QDebug>
 
 QString inputFilter =  QIODevice::tr("Image Files (*.jpg *.jpeg)");
 QStringList inputFilterList = QStringList() << "*.jpg" << "*.jpeg";
@@ -32,3 +34,18 @@ char* QStringToChar(QString s) {
     return c_str;
 }
 
+QSize getScaledSizeWithRatio(QSize size, int square) {
+    int w = size.width();
+    int h = size.height();
+
+    double ratio = 0.0;
+
+    //Check the biggest between the two and scale on that dimension
+    if (w >= h) {
+        ratio = w / (double) square;
+    } else {
+        ratio = h / (double) square;
+    }
+
+    return QSize((int) round(w / ratio), (int) h / ratio);
+}

@@ -1,22 +1,3 @@
-QMenu, QMenuBar {
-    background-color: #FFFFFF;
-}
-
-QMenuBar::item, QMenu::item {
-    color: #757575;
-}
-
-QMenu::item:selected, QMenuBar::item:selected {
-    background-color: #221cb495;
-    color: #757575;
-}
-
-QMenu:separator {
-    height: 1px;
-    background: #DD757575;
-    margin: 0px 5px 0px 5px;
-}
-
 QPushButton {
     background-color: transparent;
     border: none;
@@ -39,6 +20,7 @@ QTreeWidget::item {
     padding-bottom: 5px;
     font-size: 14pt;
     border-bottom: 1px solid #CCCCCC;
+    font-weight: bold;
 }
 
 QTreeWidget::item:hover {
@@ -78,3 +60,49 @@ QProgressBar {
 QDialog {
     color: #FFFFFF;
 }
+
+QDockWidget {
+    background: #FFFFFF;
+}
+
+QDockWidget::title {
+    background: #FFFFFF;
+}
+
+QDockWidget::close-button {
+    icon-size: 16px;
+    right: 10px;
+}
+
+QDockWidget::float-button {
+    icon-size: 16px;
+    right: 26px;
+}
+
+/* Windows specific look */
+
+QMenu, QMenuBar {
+    background-color: #FFFFFF;
+}
+
+QMenuBar::item, QMenu::item {
+    color: #757575;
+}
+
+QMenu::item:selected, QMenuBar::item:selected {
+    background-color: #221cb495;
+    color: #757575;
+}
+
+QMenu:separator {
+    height: 1px;
+    background: #DD757575;
+    margin: 0px 5px 0px 5px;
+}
+
+QTextEdit {
+    background: #FFFFFF;
+    color: #757575;
+    font-family: "Lucida Console", Monaco, monospace;
+}
+
