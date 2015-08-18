@@ -1,15 +1,17 @@
 ## CaesiumPH
-##### CaesiumPH - v 1.9.9 BETA (build 20150720) - Copyright &copy; Matteo Paonessa, 2015. All Rights Reserved.
+##### CaesiumPH - v 0.9.9 BETA (build 20150818) - Copyright &copy; Matteo Paonessa, 2015. All Rights Reserved.
 
 ----------
 
 ###### REQUIREMENTS
 * [mozjpeg](https://github.com/mozilla/mozjpeg)
+* [Exiv2](http://www.exiv2.org/)
 
 ----------
 
 ###### TESTED PLATFORMS
 * MacOSX Yosemite (v. 10.10.4)
+* Windows 10
 
 ----------
 
@@ -24,8 +26,8 @@ See TODO
 ----------
 
 ###### CHANGELOG
-Note that CaesiumPH started along with Caesium 2.0.0 so it uses its versioning system. 2.0.0 has to be considered the initial release.
-* 1.9.9 - Initial development stage
+* 0.9.9 - Initial development stage
+For a more detailed list of beta commits, see the [GitHub Repository](https://github.com/Lymphatus/CaesiumPH)
 
 ----------
 

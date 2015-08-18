@@ -11,13 +11,24 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = CaesiumPH
 TEMPLATE = app
 
-macx:LIBS += -L/opt/mozjpeg/lib -ljpeg.62
+macx {
+    QMAKE_CXXFLAGS_CXX11 = -std=gnu++1y
+    CONFIG *= c++11
+    QMAKE_CXXFLAGS += -stdlib=libc++
+    LIBS += -stdlib=libc++
+}
+
+macx {
+    LIBS += -L/usr/local/lib -lexiv2.14 -L/opt/mozjpeg/lib -ljpeg.62
+}
 win32 {
     LIBS += -LC:\\mozjpeg\\lib -ljpeg
     LIBS += -LC:\\exiv2\\src\\.libs -lexiv2
 }
 
-macx:INCLUDEPATH += /opt/mozjpeg/include
+macx {
+    INCLUDEPATH += /opt/mozjpeg/include /usr/local/include
+}
 win32 {
     INCLUDEPATH += C:\\mozjpeg\\include
     INCLUDEPATH += C:\\exiv2\\include
@@ -56,3 +67,4 @@ DISTFILES += \
     qss/style_osx.qss \
     qss/style_win.qss \
     qss/style_linux.qss
+

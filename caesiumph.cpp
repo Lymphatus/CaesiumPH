@@ -27,6 +27,10 @@ CaesiumPH::CaesiumPH(QWidget *parent) :
     initializeConnections();
     initializeUI();
 
+#ifdef _WIN32
+    QThreadPool::globalInstance()->setMaxThreadCount(1);
+#endif
+
     //Header text to center
     //ui->listTreeWidget->header()->setDefaultAlignment(Qt::AlignCenter);
     //ui->listTreeWidget->header()->setFont(QFont("Serif", 50));
@@ -50,6 +54,13 @@ void CaesiumPH::initializeUI() {
     ui->removeItemButton->installEventFilter(this);
     ui->clearButton->installEventFilter(this);
     ui->showSidePanelButton->installEventFilter(this);
+
+    //Set the headers size
+    ui->listTreeWidget->header()->resizeSection(0, 180);
+    ui->listTreeWidget->header()->resizeSection(1, 100);
+    ui->listTreeWidget->header()->resizeSection(2, 100);
+    ui->listTreeWidget->header()->resizeSection(3, 80);
+    ui->listTreeWidget->header()->resizeSection(4, 100);
 }
 
 void CaesiumPH::initializeConnections() {
@@ -256,9 +267,6 @@ void CaesiumPH::on_actionCompress_triggered()
         list.append(ui->listTreeWidget->topLevelItem(i));
     }
 
-#ifdef _WIN32
-    QThreadPool::globalInstance()->setMaxThreadCount(1);
-#endif
     //And start
     watcher.setFuture(QtConcurrent::map(list, compressRoutine));
 
@@ -303,19 +311,32 @@ void CaesiumPH::on_showSidePanelButton_clicked(bool checked) {
     }
 }
 
+
 void CaesiumPH::on_listTreeWidget_itemSelectionChanged() {
     //Check if there's a selection
     if (ui->listTreeWidget->selectedItems().length() > 0) {
         //Get the first item selected
         QTreeWidgetItem* currentItem = ui->listTreeWidget->selectedItems().at(0);
 
-        //Load the scaled image
-        //TODO Load into another thread
+        //Connect the global watcher to the slot
+        connect(&imageWatcher, SIGNAL(finished()), this, SLOT(finishPreviewLoading()));
+        //Run the image loader function
+        imageWatcher.setFuture(QtConcurrent::run<QImage>(this, &CaesiumPH::loadImagePreview, currentItem->text(4)));
 
-        QImageReader* imageReader = new QImageReader(currentItem->text(4));
-        imageReader->setScaledSize(getScaledSizeWithRatio(imageReader->size(), ui->imagePreviewLabel->size().width()));
-        ui->imagePreviewLabel->setPixmap(QPixmap::fromImage(imageReader->read()));
-
+        //Load EXIF info
+        //TODO Should run in another thread too?
         ui->exifTextEdit->setText(getExifFromPath(QStringToChar(currentItem->text(4))));
     }
+}
+
+QImage CaesiumPH::loadImagePreview(QString path) {
+    //Load a scaled version of the image into memory
+    QImageReader* imageReader = new QImageReader(path);
+    imageReader->setScaledSize(getScaledSizeWithRatio(imageReader->size(), ui->imagePreviewLabel->size().width()));
+    return imageReader->read();
+}
+
+void CaesiumPH::finishPreviewLoading() {
+    //Set the image
+    ui->imagePreviewLabel->setPixmap(QPixmap::fromImage(imageWatcher.result()));
 }

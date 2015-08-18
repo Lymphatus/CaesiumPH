@@ -3,9 +3,8 @@
 #include <QString>
 #include <QStringList>
 
-#include <iostream>
-#include <iomanip>
-#include <cassert>
+#include <stdlib.h>
+#include <assert.h>
 
 QString getExifFromPath(char* filename) {
     try {

@@ -4,6 +4,5 @@
 - Change to "in-place" compression
 - Check if a file is bigger, then do not compress
 - Settings dialog
-- UI design
 - Translations
 - Windows/Linux icon

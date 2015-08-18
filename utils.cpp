@@ -1,12 +1,14 @@
 #include "utils.h"
 #include "math.h"
 #include <QIODevice>
+#include <QDate>
 #include <QDebug>
 
 QString inputFilter =  QIODevice::tr("Image Files (*.jpg *.jpeg)");
 QStringList inputFilterList = QStringList() << "*.jpg" << "*.jpeg";
-QString versionString = "1.9.9.0 (BETA)";
-int buildNumber = 1990;
+QString versionString = "0.9.9 (BETA)";
+int versionNumber = 199;
+int buildNumber = QDate::currentDate().toString("yyyyMMdd").toInt();
 
 QString formatSize(int size) {
     double doubleSize = (double) size;

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTreeWidgetItem>
+#include <QFutureWatcher>
 #include <QTime>
 
 namespace Ui {
@@ -32,11 +33,14 @@ private slots:
     void on_sidePanelDockWidget_topLevelChanged(bool topLevel);
     void on_sidePanelDockWidget_visibilityChanged(bool visible);
     void on_showSidePanelButton_clicked(bool checked);
-
     void on_listTreeWidget_itemSelectionChanged();
+    QImage loadImagePreview(QString path);
+    void finishPreviewLoading();
+
 
 private:
     Ui::CaesiumPH *ui;
+    QFutureWatcher<QImage> imageWatcher;
 };
 
 #endif // CAESIUMPH_H
