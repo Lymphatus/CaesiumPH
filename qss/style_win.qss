@@ -48,13 +48,14 @@ QHeaderView::section {
 
 QProgressBar::chunk {
     background-color: #1cb495;
+    border-radius: 2px;
 }
 
 QProgressBar {
-    border-radius: 5px;
+    border: 1px solid #88757575;
+    border-radius: 2px;
     height: 5px;
     color: transparent;
-    font-size: 0px;
 }
 
 QDialog {

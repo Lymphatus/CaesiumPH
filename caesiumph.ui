@@ -96,7 +96,7 @@
       </column>
      </widget>
     </item>
-    <item row="1" column="0" colspan="2">
+    <item row="2" column="0" colspan="2">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <spacer name="horizontalSpacer">
@@ -294,13 +294,20 @@
       </item>
      </layout>
     </item>
-    <item row="0" column="2" rowspan="2">
+    <item row="0" column="2" rowspan="3">
      <widget class="Line" name="sidePanelLine">
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
       <property name="orientation">
        <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QProgressBar" name="progressBar">
+      <property name="value">
+       <number>24</number>
       </property>
      </widget>
     </item>
@@ -312,7 +319,7 @@
      <x>0</x>
      <y>0</y>
      <width>883</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

@@ -224,12 +224,12 @@ void CaesiumPH::on_actionRemove_items_triggered()
 extern void compressRoutine(QTreeWidgetItem* item) {
     //BUG Sometimes files are empty. Check it out.
     cclt_optimize(QStringToChar(item->text(4)),
-                  QStringToChar(item->text(4) + ".cmp.jpg"),
+                  QStringToChar(item->text(4) + ".cmp"),
                   1,
                   QStringToChar(item->text(4)));
     //Gets new file info
     //TODO Change it, it must point the right output
-    QFileInfo* fileInfo = new QFileInfo(item->text(4) + ".cmp.jpg");
+    QFileInfo* fileInfo = new QFileInfo(item->text(4) + ".cmp");
     item->setText(2, formatSize(fileInfo->size()));
     item->setText(3, getRatio((new QFileInfo(item->text(4)))->size(), fileInfo->size()));
 }
@@ -252,10 +252,12 @@ void CaesiumPH::on_actionCompress_triggered()
 
     //Setting up connections
     //Progress dialog
-    connect(&watcher, SIGNAL(progressValueChanged(int)), &progressDialog, SLOT(setValue(int)));
-    connect(&watcher, SIGNAL(progressRangeChanged(int, int)), &progressDialog, SLOT(setRange(int,int)));
-    connect(&watcher, SIGNAL(finished()), &progressDialog, SLOT(reset()));
-    connect(&progressDialog, SIGNAL(canceled()), &watcher, SLOT(cancel()));
+    //connect(&watcher, SIGNAL(progressValueChanged(int)), &progressDialog, SLOT(setValue(int)));
+    //connect(&watcher, SIGNAL(progressRangeChanged(int, int)), &progressDialog, SLOT(setRange(int,int)));
+    connect(&watcher, SIGNAL(progressValueChanged(int)), ui->progressBar, SLOT(setValue(int)));
+    connect(&watcher, SIGNAL(progressRangeChanged(int, int)), ui->progressBar, SLOT(setRange(int,int)));
+    //connect(&watcher, SIGNAL(finished()), &progressDialog, SLOT(reset()));
+    //connect(&progressDialog, SIGNAL(canceled()), &watcher, SLOT(cancel()));
     //TODO Work on that
     //connect(&watcher, SIGNAL(progressTextChanged(QString)), &progressDialog, SLOT(setLabelText(QString)));
     //Connect two slots for handling compression start/finish
@@ -271,7 +273,7 @@ void CaesiumPH::on_actionCompress_triggered()
     watcher.setFuture(QtConcurrent::map(list, compressRoutine));
 
     //Show the dialog
-    progressDialog.exec();
+    //progressDialog.exec();
 
 
 }
