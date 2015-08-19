@@ -78,4 +78,37 @@ QTextEdit#exifTextEdit {
     background: #FFFFFF;
     color: #757575;
     font-family: "Lucida Console", Monaco, monospace;
+    border-bottom: 1px solid #CCCCCC;
+}
+
+QDockWidget::title {
+    padding-top: 10px;
+    height: 32px;
+}
+
+QDockWidget {
+    titlebar-close-icon: url(:/icons/ui/dock_close.png);
+    titlebar-normal-icon: url(:/icons/ui/dock_float.png);;
+
+}
+QDockWidget::close-button, QDockWidget::float-button {
+    width: 32px;
+    height: 32px;
+    icon-size: 32px;
+}
+
+QDockWidget::close-button {
+
+}
+
+QDockWidget::float-button {
+
+}
+
+QDockWidget::close-button:hover {
+    background-color: red;
+}
+
+QDockWidget::float-button:hover {
+
 }
