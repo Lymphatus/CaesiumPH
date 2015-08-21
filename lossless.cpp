@@ -139,6 +139,8 @@ extern int cclt_optimize(char* input_file, char* output_file, int exif_flag, cha
     //CRITICAL - This is the optimization step
     dstinfo.optimize_coding = TRUE;
 
+    //TODO mozjpeg functions?
+
     //Progressive
     jpeg_simple_progression(&dstinfo);
 

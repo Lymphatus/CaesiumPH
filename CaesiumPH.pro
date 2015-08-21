@@ -38,10 +38,6 @@ macx {
     ICON = icons/icons/icon.icns
 }
 
-win32 {
-    RC_ICONS = icons/icons/icon.ico
-}
-
 CONFIG += warn_off
 
 SOURCES += main.cpp\
