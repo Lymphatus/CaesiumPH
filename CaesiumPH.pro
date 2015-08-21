@@ -46,17 +46,20 @@ SOURCES += main.cpp\
     cimageinfo.cpp \
     lossless.cpp \
     utils.cpp \
-    exif.cpp
+    exif.cpp \
+    preferencedialog.cpp
 
 HEADERS  += caesiumph.h \
     aboutdialog.h \
     cimageinfo.h \
     lossless.h \
     utils.h \
-    exif.h
+    exif.h \
+    preferencedialog.h
 
 FORMS    += caesiumph.ui \
-    aboutdialog.ui
+    aboutdialog.ui \
+    preferencedialog.ui
 
 RESOURCES += \
     icons.qrc \

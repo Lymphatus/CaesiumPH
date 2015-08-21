@@ -25,7 +25,16 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_2">
-    <property name="spacing">
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <property name="horizontalSpacing">
+     <number>2</number>
+    </property>
+    <property name="verticalSpacing">
      <number>3</number>
     </property>
     <item row="0" column="0" colspan="2">
@@ -60,8 +69,14 @@
       <property name="animated">
        <bool>true</bool>
       </property>
-      <attribute name="headerDefaultSectionSize">
-       <number>100</number>
+      <attribute name="headerCascadingSectionResizes">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="headerHighlightSections">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="headerShowSortIndicator" stdset="0">
+       <bool>false</bool>
       </attribute>
       <column>
        <property name="text">
@@ -112,7 +127,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="addFilesButton">
+       <widget class="QToolButton" name="addFilesButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -131,8 +146,11 @@
           <height>0</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
         <property name="text">
-         <string/>
+         <string>Add files</string>
         </property>
         <property name="icon">
          <iconset resource="icons.qrc">
@@ -144,10 +162,13 @@
           <height>32</height>
          </size>
         </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextUnderIcon</enum>
+        </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="addFolderButton">
+       <widget class="QToolButton" name="addFolderButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -161,7 +182,7 @@
          </size>
         </property>
         <property name="text">
-         <string/>
+         <string>Import folder</string>
         </property>
         <property name="icon">
          <iconset resource="icons.qrc">
@@ -173,18 +194,33 @@
           <height>32</height>
          </size>
         </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextUnderIcon</enum>
+        </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="compressButton">
+       <widget class="QToolButton" name="compressButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
           <width>90</width>
-          <height>50</height>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>64</height>
          </size>
         </property>
         <property name="text">
-         <string/>
+         <string>Compress</string>
         </property>
         <property name="icon">
          <iconset resource="icons.qrc">
@@ -192,14 +228,17 @@
         </property>
         <property name="iconSize">
          <size>
-          <width>42</width>
-          <height>42</height>
+          <width>32</width>
+          <height>32</height>
          </size>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextUnderIcon</enum>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="removeItemButton">
+       <widget class="QToolButton" name="removeItemButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -213,7 +252,7 @@
          </size>
         </property>
         <property name="text">
-         <string/>
+         <string>Remove item</string>
         </property>
         <property name="icon">
          <iconset resource="icons.qrc">
@@ -225,10 +264,13 @@
           <height>32</height>
          </size>
         </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextUnderIcon</enum>
+        </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="clearButton">
+       <widget class="QToolButton" name="clearButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -242,7 +284,7 @@
          </size>
         </property>
         <property name="text">
-         <string/>
+         <string>Clear list</string>
         </property>
         <property name="icon">
          <iconset resource="icons.qrc">
@@ -253,6 +295,9 @@
           <width>32</width>
           <height>32</height>
          </size>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextUnderIcon</enum>
         </property>
        </widget>
       </item>
@@ -270,13 +315,13 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="showSidePanelButton">
+       <widget class="QToolButton" name="showSidePanelButton">
         <property name="text">
          <string/>
         </property>
         <property name="icon">
          <iconset resource="icons.qrc">
-          <normaloff>:/icons/ui/side_panel.png</normaloff>:/icons/ui/side_panel.png</iconset>
+          <normaloff>:/icons/ui/side_panel_active.png</normaloff>:/icons/ui/side_panel_active.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -287,17 +332,23 @@
         <property name="checkable">
          <bool>true</bool>
         </property>
-        <property name="flat">
+        <property name="checked">
          <bool>true</bool>
         </property>
        </widget>
       </item>
      </layout>
     </item>
-    <item row="0" column="2" rowspan="2">
+    <item row="0" column="3" rowspan="2">
      <widget class="Line" name="sidePanelLine">
+      <property name="styleSheet">
+       <string notr="true">margin-bottom:10px;</string>
+      </property>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
+      </property>
+      <property name="lineWidth">
+       <number>1</number>
       </property>
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -360,7 +411,7 @@
    <property name="minimumSize">
     <size>
      <width>265</width>
-     <height>369</height>
+     <height>379</height>
     </size>
    </property>
    <property name="maximumSize">
@@ -378,6 +429,9 @@
    <property name="allowedAreas">
     <set>Qt::RightDockWidgetArea</set>
    </property>
+   <property name="windowTitle">
+    <string/>
+   </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
@@ -387,23 +441,26 @@
       <number>0</number>
      </property>
      <property name="leftMargin">
-      <number>0</number>
+      <number>2</number>
      </property>
      <property name="topMargin">
-      <number>3</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
-      <number>5</number>
+      <number>2</number>
      </property>
      <property name="bottomMargin">
       <number>9</number>
      </property>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout">
+      <layout class="QVBoxLayout" name="dockVerticalLayout">
        <property name="spacing">
         <number>0</number>
        </property>
        <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
         <number>0</number>
        </property>
        <item>
@@ -417,6 +474,12 @@
          <property name="tabStopWidth">
           <number>150</number>
          </property>
+         <property name="textInteractionFlags">
+          <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+         </property>
+         <property name="placeholderText">
+          <string/>
+         </property>
         </widget>
        </item>
        <item>
@@ -429,14 +492,14 @@
          </property>
          <property name="minimumSize">
           <size>
-           <width>256</width>
-           <height>256</height>
+           <width>0</width>
+           <height>196</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>256</width>
-           <height>256</height>
+           <width>280</width>
+           <height>196</height>
           </size>
          </property>
          <property name="baseSize">
@@ -446,7 +509,10 @@
           </size>
          </property>
          <property name="text">
-          <string>Image Preview</string>
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="icons.qrc">:/icons/ui/picture.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>false</bool>

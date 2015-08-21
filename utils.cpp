@@ -9,6 +9,8 @@ QStringList inputFilterList = QStringList() << "*.jpg" << "*.jpeg";
 QString versionString = "0.9.9 (BETA)";
 int versionNumber = 199;
 int buildNumber = QDate::currentDate().toString("yyyyMMdd").toInt();
+long originalsSize = 0;
+long compressedSize = 0;
 
 QString formatSize(int size) {
     double doubleSize = (double) size;

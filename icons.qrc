@@ -17,5 +17,7 @@
         <file>icons/ui/dock_close.png</file>
         <file>icons/ui/dock_float_hover.png</file>
         <file>icons/ui/dock_float.png</file>
+        <file>icons/ui/picture.png</file>
+        <file>icons/settings/general.png</file>
     </qresource>
 </RCC>

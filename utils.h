@@ -11,6 +11,7 @@ extern QStringList inputFilterList;
 extern QString versionString;
 extern int versionNumber;
 extern int buildNumber;
+extern long originalsSize, compressedSize; //Before and after bytes count
 
 QString formatSize(int);
 QString getRatio(qint64, qint64);

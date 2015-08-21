@@ -40,7 +40,8 @@ private slots:
 
 private:
     Ui::CaesiumPH *ui;
-    QFutureWatcher<QImage> imageWatcher;
+    QFutureWatcher<QImage> imageWatcher; //Image preview loader
+
 };
 
 #endif // CAESIUMPH_H

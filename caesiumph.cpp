@@ -41,11 +41,8 @@ CaesiumPH::~CaesiumPH() {
 }
 
 void CaesiumPH::initializeUI() {
-    //Set the side panel invisible
+    //Set the side panel visible
     //TODO Make this a preference
-
-    ui->sidePanelDockWidget->setVisible(false);
-    ui->sidePanelLine->setVisible(false);
 
     //Install event filter for buttons
     ui->addFilesButton->installEventFilter(this);
@@ -61,6 +58,8 @@ void CaesiumPH::initializeUI() {
     ui->listTreeWidget->header()->resizeSection(2, 100);
     ui->listTreeWidget->header()->resizeSection(3, 80);
     ui->listTreeWidget->header()->resizeSection(4, 100);
+
+    ui->menuBar->setVisible(false);
 }
 
 void CaesiumPH::initializeConnections() {
@@ -225,17 +224,22 @@ extern void compressRoutine(QTreeWidgetItem* item) {
     //BUG Sometimes files are empty. Check it out.
     cclt_optimize(QStringToChar(item->text(4)),
                   QStringToChar(item->text(4) + ".cmp.jpg"),
-                  1,
+                  0,
                   QStringToChar(item->text(4)));
     //Gets new file info
     //TODO Change it, it must point the right output
     QFileInfo* fileInfo = new QFileInfo(item->text(4) + ".cmp.jpg");
+    QFileInfo* originalInfo = new QFileInfo(item->text(4));
     item->setText(2, formatSize(fileInfo->size()));
-    item->setText(3, getRatio((new QFileInfo(item->text(4)))->size(), fileInfo->size()));
+    item->setText(3, getRatio(originalInfo->size(), fileInfo->size()));
+    originalsSize += originalInfo->size();
+    compressedSize += fileInfo->size();
 }
 
 void CaesiumPH::on_actionCompress_triggered()
 {
+    //Reset counters
+    originalsSize = compressedSize = 0;
     //Register metatype for emitting changes
     qRegisterMetaType<QVector<int> >("QVector<int>");
 
@@ -272,8 +276,6 @@ void CaesiumPH::on_actionCompress_triggered()
 
     //Show the dialog
     progressDialog.exec();
-
-
 }
 
 void CaesiumPH::compressionStarted() {
@@ -284,6 +286,7 @@ void CaesiumPH::compressionStarted() {
 void CaesiumPH::compressionFinished() {
     //Get elapsed time of the compression
     qDebug() << QTime::currentTime();
+    qDebug() << formatSize(originalsSize) + " - " + formatSize(compressedSize) + " | " + getRatio(originalsSize, compressedSize);
 }
 
 void CaesiumPH::on_sidePanelDockWidget_topLevelChanged(bool topLevel) {
