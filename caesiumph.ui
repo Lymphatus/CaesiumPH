@@ -111,7 +111,7 @@
       </column>
      </widget>
     </item>
-    <item row="1" column="0" colspan="2">
+    <item row="2" column="0" colspan="2">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <spacer name="horizontalSpacer">
@@ -339,7 +339,11 @@
       </item>
      </layout>
     </item>
+<<<<<<< HEAD
     <item row="0" column="3" rowspan="2">
+=======
+    <item row="0" column="2" rowspan="3">
+>>>>>>> CaesiumPH/master
      <widget class="Line" name="sidePanelLine">
       <property name="styleSheet">
        <string notr="true">margin-bottom:10px;</string>
@@ -355,6 +359,13 @@
       </property>
      </widget>
     </item>
+    <item row="1" column="0">
+     <widget class="QProgressBar" name="progressBar">
+      <property name="value">
+       <number>24</number>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -363,7 +374,7 @@
      <x>0</x>
      <y>0</y>
      <width>883</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
