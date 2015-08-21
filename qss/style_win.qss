@@ -2,10 +2,18 @@ QToolButton {
     background-color: transparent;
     border: none;
     color: #757575;
+    border-bottom: 3px solid #FFFFFF;
+    padding-bottom: 5px;
 }
 
 QToolButton:hover {
     color: #1cb495;
+    border-bottom: 3px solid #1cb495;
+}
+
+QToolButton#showSidePanelButton, QToolButton:hover#showSidePanelButton {
+    color: #1cb495;
+    border-bottom: none;
 }
 
 QMainWindow, QHeaderView::section, QProgressDialog, QDialog, QGraphicsView {
