@@ -2,16 +2,19 @@
 <ui version="4.0">
  <class>PreferenceDialog</class>
  <widget class="QMainWindow" name="PreferenceDialog">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>488</width>
-    <height>338</height>
+    <width>413</width>
+    <height>303</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Preferences</string>
   </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
@@ -22,28 +25,31 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <property name="leftMargin">
-     <number>10</number>
+     <number>14</number>
     </property>
     <property name="topMargin">
-     <number>10</number>
+     <number>14</number>
     </property>
     <property name="rightMargin">
-     <number>10</number>
+     <number>14</number>
     </property>
     <property name="bottomMargin">
-     <number>10</number>
+     <number>14</number>
     </property>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QStackedWidget" name="stackedWidget">
         <property name="lineWidth">
+         <number>1</number>
+        </property>
+        <property name="midLineWidth">
          <number>0</number>
         </property>
         <property name="currentIndex">
          <number>0</number>
         </property>
-        <widget class="QWidget" name="">
+        <widget class="QWidget" name="generalPage">
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <property name="leftMargin">
            <number>0</number>
@@ -58,18 +64,11 @@
            <number>0</number>
           </property>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_3">
-            <item>
-             <widget class="QCheckBox" name="checkBox">
-              <property name="text">
-               <string>Overwrite original files</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
+           <layout class="QGridLayout" name="gridLayout">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetMaximumSize</enum>
+            </property>
+            <item row="5" column="1">
              <spacer name="verticalSpacer">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -82,11 +81,196 @@
               </property>
              </spacer>
             </item>
+            <item row="4" column="1">
+             <widget class="QComboBox" name="languageComboBox">
+              <item>
+               <property name="text">
+                <string>-- System language --</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="2" column="0" colspan="2">
+             <widget class="QCheckBox" name="promptExitCheckBox">
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="text">
+               <string>Prompt before exit</string>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" colspan="2">
+             <widget class="QCheckBox" name="subfoldersCheckBox">
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="text">
+               <string>Walk through subfolders</string>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0" colspan="2">
+             <widget class="QCheckBox" name="overwriteOriginalCheckBox">
+              <property name="text">
+               <string>Overwrite original files</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="languageLabel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>140</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Language</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0" colspan="2">
+             <widget class="Line" name="line">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="page_2"/>
+        <widget class="QWidget" name="compressionPage">
+         <layout class="QGridLayout" name="gridLayout_3">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item row="0" column="0">
+           <layout class="QGridLayout" name="gridLayout_2">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetMaximumSize</enum>
+            </property>
+            <item row="2" column="0" colspan="2">
+             <spacer name="verticalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="1" column="0" colspan="2">
+             <widget class="QCheckBox" name="progressiveCheckBox">
+              <property name="text">
+               <string>Progressive</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0" colspan="2">
+             <widget class="QCheckBox" name="exifCheckBox">
+              <property name="text">
+               <string>Keep EXIF information</string>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="privacyPage">
+         <layout class="QGridLayout" name="gridLayout_5">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item row="0" column="0">
+           <layout class="QGridLayout" name="gridLayout_4">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetMaximumSize</enum>
+            </property>
+            <item row="2" column="0" colspan="2">
+             <spacer name="verticalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="0" column="0" colspan="2">
+             <widget class="QCheckBox" name="sendInfoCheckBox">
+              <property name="text">
+               <string>Send anonymous usage information</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QPushButton" name="seeInfoButton">
+              <property name="maximumSize">
+               <size>
+                <width>140</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>See info...</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
        </widget>
       </item>
      </layout>
@@ -102,8 +286,8 @@
    </property>
    <property name="iconSize">
     <size>
-     <width>48</width>
-     <height>48</height>
+     <width>42</width>
+     <height>42</height>
     </size>
    </property>
    <property name="toolButtonStyle">
@@ -119,6 +303,8 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionGeneral"/>
+   <addaction name="actionCompression"/>
+   <addaction name="actionPrivacy"/>
   </widget>
   <action name="actionGeneral">
    <property name="icon">
@@ -127,6 +313,24 @@
    </property>
    <property name="text">
     <string>General</string>
+   </property>
+  </action>
+  <action name="actionCompression">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/settings/compression.png</normaloff>:/icons/settings/compression.png</iconset>
+   </property>
+   <property name="text">
+    <string>Compression</string>
+   </property>
+  </action>
+  <action name="actionPrivacy">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/settings/privacy.png</normaloff>:/icons/settings/privacy.png</iconset>
+   </property>
+   <property name="text">
+    <string>Privacy</string>
    </property>
   </action>
  </widget>

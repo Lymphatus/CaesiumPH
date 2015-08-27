@@ -1,21 +1,3 @@
-QToolButton {
-    background-color: transparent;
-    border: none;
-    color: #757575;
-    border-bottom: 3px solid #FFFFFF;
-    padding-bottom: 5px;
-}
-
-QToolButton:hover {
-    color: #1cb495;
-    border-bottom: 3px solid #1cb495;
-}
-
-QToolButton#showSidePanelButton, QToolButton:hover#showSidePanelButton {
-    color: #1cb495;
-    border-bottom: none;
-}
-
 QMainWindow, QHeaderView::section, QProgressDialog, QDialog, QGraphicsView {
     background-color: #FFFFFF;
     color: #757575;
@@ -34,7 +16,7 @@ QTreeWidget::item {
     padding-bottom: 5px;
     padding-left: 8px;
     font-size: 14pt;
-    border-bottom: 1px solid #CCCCCC;
+    border-bottom: 1px solid #CFCFCF;
 }
 
 QTreeWidget::item:hover {
@@ -91,6 +73,11 @@ QTextEdit#exifTextEdit {
     color: #757575;
     font-family: "Lucida Console", Monaco, monospace;
     border-bottom: 1px solid #CCCCCC;
+    padding-bottom: 5px;
+}
+
+QLabel#imagePreviewLabel {
+    padding-top:3px;
 }
 
 /* OSX specific look */

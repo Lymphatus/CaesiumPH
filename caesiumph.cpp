@@ -5,6 +5,8 @@
 #include "lossless.h"
 #include "cimageinfo.h"
 #include "exif.h"
+#include "preferencedialog.h"
+#include "usageinfo.h"
 
 #include <QProgressDialog>
 #include <QFileDialog>
@@ -16,6 +18,9 @@
 #include <QElapsedTimer>
 #include <QMessageBox>
 #include <QImageReader>
+#include <QSettings>
+#include <QCloseEvent>
+#include <QMessageBox>
 
 #include <QDebug>
 
@@ -24,8 +29,10 @@ CaesiumPH::CaesiumPH(QWidget *parent) :
     ui(new Ui::CaesiumPH)
 {
     ui->setupUi(this);
+    initializeSettings();
     initializeConnections();
     initializeUI();
+    readPreferences();
 
 #ifdef _WIN32
     QThreadPool::globalInstance()->setMaxThreadCount(1);
@@ -41,8 +48,7 @@ CaesiumPH::~CaesiumPH() {
 }
 
 void CaesiumPH::initializeUI() {
-    //Set the side panel visible
-    //TODO Make this a preference
+    QSettings settings;
 
     //Install event filter for buttons
     ui->addFilesButton->installEventFilter(this);
@@ -51,6 +57,7 @@ void CaesiumPH::initializeUI() {
     ui->removeItemButton->installEventFilter(this);
     ui->clearButton->installEventFilter(this);
     ui->showSidePanelButton->installEventFilter(this);
+    ui->settingsButton->installEventFilter(this);
 
     //Set the headers size
     ui->listTreeWidget->header()->resizeSection(0, 180);
@@ -59,7 +66,18 @@ void CaesiumPH::initializeUI() {
     ui->listTreeWidget->header()->resizeSection(3, 80);
     ui->listTreeWidget->header()->resizeSection(4, 100);
 
+    //Set menu invisible for Windows/Linux
     ui->menuBar->setVisible(false);
+
+    //Restore window state
+    settings.beginGroup(KEY_PREF_GROUP_GEOMETRY);
+    resize(settings.value(KEY_PREF_GEOMETRY_SIZE, QSize(880, 500)).toSize());
+    move(settings.value(KEY_PREF_GEOMETRY_POS, QPoint(200, 200)).toPoint());
+    ui->sidePanelDockWidget->setVisible(settings.value(KEY_PREF_GEOMETRY_PANEL_VISIBLE).value<bool>());
+    on_sidePanelDockWidget_visibilityChanged(settings.value(KEY_PREF_GEOMETRY_PANEL_VISIBLE).value<bool>());
+    settings.endGroup();
+
+    ui->exifTextEdit->setText(tr("No EXIF info available"));
 }
 
 void CaesiumPH::initializeConnections() {
@@ -74,6 +92,24 @@ void CaesiumPH::initializeConnections() {
     connect(ui->addFolderButton, SIGNAL(released()), this, SLOT(on_actionAdd_folder_triggered()));
     connect(ui->removeItemButton, SIGNAL(released()), this, SLOT(on_actionRemove_items_triggered()));
     connect(ui->clearButton, SIGNAL(released()), ui->listTreeWidget, SLOT(clear()));
+}
+
+void CaesiumPH::initializeSettings() {
+    QCoreApplication::setApplicationName("CaesiumPH");
+    QCoreApplication::setOrganizationName("SaeraSoft");
+    QCoreApplication::setOrganizationDomain("saerasoft.com");
+}
+
+void CaesiumPH::readPreferences() {
+    //Read important parameters from settings
+    QSettings settings;
+
+    settings.beginGroup(KEY_PREF_GROUP_COMPRESSION);
+    params.exif = settings.value(KEY_PREF_COMPRESSION_EXIF).value<bool>();
+    params.progressive = settings.value(KEY_PREF_COMPRESSION_PROGRESSIVE).value<bool>();
+    settings.endGroup();
+
+    params.overwrite = settings.value(KEY_PREF_GROUP_GENERAL + KEY_PREF_GENERAL_OVERWRITE).value<bool>();
 }
 
 //Button hover functions
@@ -141,6 +177,16 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
             }
         }
         else {
+            return false;
+        }
+    } else if (obj == (QObject*) ui->settingsButton) {
+        if (event->type() == QEvent::Enter) {
+            ui->settingsButton->setIcon(QIcon(":/icons/ui/settings_hover.png"));
+            return true;
+        } else if (event->type() == QEvent::Leave){
+            ui->settingsButton->setIcon(QIcon(":/icons/ui/settings.png"));
+            return true;
+        } else {
             return false;
         }
     } else {
@@ -221,23 +267,42 @@ void CaesiumPH::on_actionRemove_items_triggered()
 }
 
 extern void compressRoutine(QTreeWidgetItem* item) {
-    //BUG Sometimes files are empty. Check it out.
-    cclt_optimize(QStringToChar(item->text(4)),
-                  QStringToChar(item->text(4) + ".cmp.jpg"),
-                  0,
-                  QStringToChar(item->text(4)));
-    //Gets new file info
-    //TODO Change it, it must point the right output
-    QFileInfo* fileInfo = new QFileInfo(item->text(4) + ".cmp.jpg");
+    QString inputPath = item->text(4);
     QFileInfo* originalInfo = new QFileInfo(item->text(4));
+    QString outputPath;
+    if (params.overwrite) {
+        outputPath = inputPath;
+    } else {
+        outputPath = originalInfo->filePath().replace(originalInfo->completeBaseName(),
+                                                      originalInfo->baseName() + "_compressed");
+    }
+    //BUG Sometimes files are empty. Check it out.
+    cclt_optimize(QStringToChar(inputPath),
+                  QStringToChar(outputPath),
+                  params.exif,
+                  params.progressive,
+                  QStringToChar(inputPath));
+    //Gets new file info
+    //TODO Ratio is wrong if overwrites
+    QFileInfo* fileInfo = new QFileInfo(outputPath);
     item->setText(2, formatSize(fileInfo->size()));
     item->setText(3, getRatio(originalInfo->size(), fileInfo->size()));
     originalsSize += originalInfo->size();
     compressedSize += fileInfo->size();
+
+    //Usage reports
+    if (originalInfo->size() > uinfo->max_bytes) {
+        uinfo->setMax_bytes(originalInfo->size());
+    }
+
+    if ((originalInfo->size() - fileInfo->size()) * 100 / (double) originalInfo->size() > uinfo->best_ratio) {
+        uinfo->setBest_ratio((originalInfo->size() - fileInfo->size()) * 100 / (double) originalInfo->size());
+    }
 }
 
-void CaesiumPH::on_actionCompress_triggered()
-{
+void CaesiumPH::on_actionCompress_triggered() {
+    //Read preferences again
+    readPreferences();
     //Reset counters
     originalsSize = compressedSize = 0;
     //Register metatype for emitting changes
@@ -287,6 +352,11 @@ void CaesiumPH::compressionFinished() {
     //Get elapsed time of the compression
     qDebug() << QTime::currentTime();
     qDebug() << formatSize(originalsSize) + " - " + formatSize(compressedSize) + " | " + getRatio(originalsSize, compressedSize);
+    //Set parameters for usage info
+    uinfo->setCompressed_bytes(uinfo->compressed_bytes + originalsSize);
+    uinfo->setCompressed_pictures(uinfo->compressed_pictures + ui->listTreeWidget->topLevelItemCount());
+
+    uinfo->writeJSON();
 }
 
 void CaesiumPH::on_sidePanelDockWidget_topLevelChanged(bool topLevel) {
@@ -342,4 +412,40 @@ QImage CaesiumPH::loadImagePreview(QString path) {
 void CaesiumPH::finishPreviewLoading() {
     //Set the image
     ui->imagePreviewLabel->setPixmap(QPixmap::fromImage(imageWatcher.result()));
+}
+
+void CaesiumPH::on_settingsButton_clicked() {
+    PreferenceDialog* pd = new PreferenceDialog(this);
+    pd->show();
+}
+
+void CaesiumPH::closeEvent(QCloseEvent *event) {
+    QSettings settings;
+
+    //Save window geometry
+    settings.beginGroup(KEY_PREF_GROUP_GEOMETRY);
+    settings.setValue(KEY_PREF_GEOMETRY_SIZE, size());
+    settings.setValue(KEY_PREF_GEOMETRY_POS, pos());
+    settings.setValue(KEY_PREF_GEOMETRY_PANEL_VISIBLE, ui->sidePanelDockWidget->isVisible());
+    settings.endGroup();
+
+    if (settings.value(KEY_PREF_GROUP_GENERAL + KEY_PREF_GENERAL_PROMPT).value<bool>()) {
+        //Display a prompt
+        int res = QMessageBox::warning(this, tr("CaesiumPH"),
+                                       tr("Do you really want to exit?"),
+                                       QMessageBox::Ok | QMessageBox::Cancel);
+        //Exit if OK, go back if Cancel
+        //TODO Translate?
+        switch (res) {
+            case QMessageBox::Ok:
+                event->accept();
+                break;
+            case QMessageBox::Cancel:
+                event->ignore();
+            default:
+                break;
+        }
+    } else {
+        event->accept();
+    }
 }

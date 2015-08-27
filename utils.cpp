@@ -11,6 +11,8 @@ int versionNumber = 199;
 int buildNumber = QDate::currentDate().toString("yyyyMMdd").toInt();
 long originalsSize = 0;
 long compressedSize = 0;
+cparams params;
+UsageInfo* uinfo = new UsageInfo();
 
 QString formatSize(int size) {
     double doubleSize = (double) size;
@@ -52,4 +54,9 @@ QSize getScaledSizeWithRatio(QSize size, int square) {
     }
 
     return QSize((int) round(w / ratio), (int) h / ratio);
+}
+
+double ratioToDouble(QString ratio) {
+    ratio = ratio.split(" ").at(0);
+    return ratio.toDouble();
 }

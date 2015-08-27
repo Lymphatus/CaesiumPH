@@ -70,7 +70,7 @@ void jcopy_markers_execute (j_decompress_ptr srcinfo, j_compress_ptr dstinfo) {
   }
 }
 
-extern int cclt_optimize(char* input_file, char* output_file, int exif_flag, char* exif_src) {
+extern int cclt_optimize(char* input_file, char* output_file, int exif_flag, int progressive_flag, char* exif_src) {
     //File pointer for both input and output
     FILE* fp;
 
@@ -139,10 +139,10 @@ extern int cclt_optimize(char* input_file, char* output_file, int exif_flag, cha
     //CRITICAL - This is the optimization step
     dstinfo.optimize_coding = TRUE;
 
-    //TODO mozjpeg functions?
-
     //Progressive
-    jpeg_simple_progression(&dstinfo);
+    if (progressive_flag) {
+        jpeg_simple_progression(&dstinfo);
+    }
 
     //Set the output file parameters
     jpeg_stdio_dest(&dstinfo, fp);

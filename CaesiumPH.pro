@@ -47,7 +47,8 @@ SOURCES += main.cpp\
     lossless.cpp \
     utils.cpp \
     exif.cpp \
-    preferencedialog.cpp
+    preferencedialog.cpp \
+    usageinfo.cpp
 
 HEADERS  += caesiumph.h \
     aboutdialog.h \
@@ -55,7 +56,8 @@ HEADERS  += caesiumph.h \
     lossless.h \
     utils.h \
     exif.h \
-    preferencedialog.h
+    preferencedialog.h \
+    usageinfo.h
 
 FORMS    += caesiumph.ui \
     aboutdialog.ui \

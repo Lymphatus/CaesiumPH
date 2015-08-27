@@ -3,6 +3,31 @@
 
 #include <QMainWindow>
 
+//Preference group keys
+#define KEY_PREF_GROUP_GENERAL QString("PreferenceGeneral/")
+#define KEY_PREF_GROUP_COMPRESSION QString("PreferenceCompression/")
+#define KEY_PREF_GROUP_PRIVACY QString("PreferencePrivacy/")
+#define KEY_PREF_GROUP_GEOMETRY QString("WindowGeometry/")
+
+//General group keys
+#define KEY_PREF_GENERAL_OVERWRITE QString("overwrite")
+#define KEY_PREF_GENERAL_SUBFOLDER QString("subfolder")
+#define KEY_PREF_GENERAL_LOCALE QString("locale")
+#define KEY_PREF_GENERAL_PROMPT QString("promptExit")
+
+//Compression group keys
+#define KEY_PREF_COMPRESSION_EXIF QString("exif")
+#define KEY_PREF_COMPRESSION_PROGRESSIVE QString("progressive")
+
+//Privacy group keys
+#define KEY_PREF_PRIVACY_USAGE QString("sendInfo")
+
+//Geometry group keys
+#define KEY_PREF_GEOMETRY_SIZE QString("size")
+#define KEY_PREF_GEOMETRY_POS QString("pos")
+#define KEY_PREF_GEOMETRY_PANEL_VISIBLE QString("sidePanelVisible")
+#define KEY_PREF_GEOMETRY_PANEL_FLOAT QString("sidePanelFloating")
+
 namespace Ui {
 class PreferenceDialog;
 }
@@ -14,6 +39,16 @@ class PreferenceDialog : public QMainWindow
 public:
     explicit PreferenceDialog(QWidget *parent = 0);
     ~PreferenceDialog();
+
+private slots:
+    void on_actionCompression_triggered();
+    void on_actionGeneral_triggered();
+    void on_actionPrivacy_triggered();
+    void closeEvent(QCloseEvent *event);
+    void writePreferences();
+    void readPreferences();
+
+    void on_seeInfoButton_clicked();
 
 private:
     Ui::PreferenceDialog *ui;

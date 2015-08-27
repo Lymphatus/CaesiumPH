@@ -17,7 +17,7 @@ QString getExifFromPath(char* filename) {
             std::string error(filename);
             error += ": No Exif data found in the file";
             //TODO Translate
-            return QString("No EXIF found in the file.");
+            return QString("No EXIF info available");
             //throw Exiv2::Error(1, error);
         }
         Exiv2::ExifData::const_iterator end = exifData.end();

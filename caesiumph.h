@@ -1,6 +1,8 @@
 #ifndef CAESIUMPH_H
 #define CAESIUMPH_H
 
+#include "usageinfo.h"
+
 #include <QMainWindow>
 #include <QTreeWidgetItem>
 #include <QFutureWatcher>
@@ -22,6 +24,8 @@ public:
 private slots:
     void initializeConnections();
     void initializeUI();
+    void initializeSettings();
+    void readPreferences();
     void on_actionAbout_CaesiumPH_triggered();
     void showImportProgressDialog(QStringList);
     void on_actionAdd_pictures_triggered();
@@ -36,11 +40,15 @@ private slots:
     void on_listTreeWidget_itemSelectionChanged();
     QImage loadImagePreview(QString path);
     void finishPreviewLoading();
+    void closeEvent(QCloseEvent *event);
 
+
+    void on_settingsButton_clicked();
 
 private:
     Ui::CaesiumPH *ui;
     QFutureWatcher<QImage> imageWatcher; //Image preview loader
+
 
 };
 
