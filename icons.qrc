@@ -24,5 +24,6 @@
         <file>icons/settings/compression.png</file>
         <file>icons/settings/privacy.png</file>
         <file>icons/ui/exif.png</file>
+        <file>icons/main/icon.ico</file>
     </qresource>
 </RCC>
