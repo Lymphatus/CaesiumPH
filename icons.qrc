@@ -25,5 +25,6 @@
         <file>icons/settings/privacy.png</file>
         <file>icons/ui/exif.png</file>
         <file>icons/main/icon.ico</file>
+        <file>icons/ui/update.png</file>
     </qresource>
 </RCC>

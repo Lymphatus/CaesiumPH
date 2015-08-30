@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui concurrent
+QT       += core gui concurrent network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -42,7 +42,7 @@ win32 {
     RC_ICONS = icons/main/icon.ico
 }
 
-CONFIG += warn_off
+CONFIG += warn_off c++11
 
 SOURCES += main.cpp\
         caesiumph.cpp \
@@ -52,7 +52,10 @@ SOURCES += main.cpp\
     utils.cpp \
     exif.cpp \
     preferencedialog.cpp \
-    usageinfo.cpp
+    usageinfo.cpp \
+    networkoperations.cpp \
+    qdroptreewidget.cpp \
+    ctreewidgetitem.cpp
 
 HEADERS  += caesiumph.h \
     aboutdialog.h \
@@ -61,7 +64,10 @@ HEADERS  += caesiumph.h \
     utils.h \
     exif.h \
     preferencedialog.h \
-    usageinfo.h
+    usageinfo.h \
+    networkoperations.h \
+    qdroptreewidget.h \
+    ctreewidgetitem.h
 
 FORMS    += caesiumph.ui \
     aboutdialog.ui \

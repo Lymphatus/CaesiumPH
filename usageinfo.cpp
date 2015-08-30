@@ -1,4 +1,5 @@
 #include "usageinfo.h"
+#include "utils.h"
 
 #include <QUuid>
 #include <QDateTime>
@@ -10,8 +11,17 @@
 
 #include <QDebug>
 
+
 UsageInfo::UsageInfo() {
+
+}
+
+void UsageInfo::initialize() {
+    jsonPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) +
+            QDir::separator() +
+            "caesium.ph";
     QFile jsonFile(jsonPath);
+    qDebug() << jsonPath;
     if (jsonFile.exists()) {
         readJSON();
     } else {
@@ -19,6 +29,9 @@ UsageInfo::UsageInfo() {
         timestamp = QDateTime::currentMSecsSinceEpoch();
         productName = QSysInfo::prettyProductName();
         locale = QLocale().bcp47Name();
+        arch = QSysInfo::currentCpuArchitecture();
+        appVersion = versionNumber;
+        build = buildNumber;
 
         compressed_bytes = compressed_pictures = max_bytes = best_ratio = 0;
         writeJSON();
@@ -37,6 +50,9 @@ void UsageInfo::readJSON() {
         timestamp = json["timestamp"].toVariant().toULongLong();
         productName = json["productName"].toString();
         locale = json["locale"].toString();
+        arch = json["arch"].toString();
+        appVersion = json["appVersion"].toInt();
+        build = json["build"].toInt();
 
         compressed_bytes = json["compressedBytes"].toVariant().toULongLong();
         compressed_pictures = json["compressedPictures"].toVariant().toUInt();
@@ -54,6 +70,9 @@ void UsageInfo::writeJSON() {
     json["timestamp"] = timestamp;
     json["productName"] = productName;
     json["locale"] = locale;
+    json["arch"] = arch;
+    json["appVersion"] = appVersion;
+    json["build"] = build;
 
     json["compressedBytes"] = QJsonValue::fromVariant(QVariant(compressed_bytes));
     json["compressedPictures"] = QJsonValue::fromVariant(QVariant(compressed_pictures));
@@ -68,6 +87,7 @@ void UsageInfo::writeJSON() {
 }
 
 QString UsageInfo::printJSON() {
+    qDebug () << jsonPath;
     QFile jsonFile(jsonPath);
     if (jsonFile.exists()) {
         jsonFile.open(QFile::ReadOnly);

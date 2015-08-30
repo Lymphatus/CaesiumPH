@@ -1,5 +1,5 @@
 ## CaesiumPH
-##### CaesiumPH - v 0.9.9 BETA (build 20150818) - Copyright &copy; Matteo Paonessa, 2015. All Rights Reserved.
+##### CaesiumPH - v 0.9.9 BETA (build 20150830) - Copyright &copy; Matteo Paonessa, 2015. All Rights Reserved.
 
 ----------
 
@@ -10,8 +10,8 @@
 ----------
 
 ###### TESTED PLATFORMS
-* MacOSX Yosemite (v. 10.10.4)
-* Windows 10
+* MacOSX Yosemite (v. 10.10.5)
+* Windows 10 64 bit
 
 ----------
 

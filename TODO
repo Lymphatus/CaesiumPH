@@ -1,8 +1,4 @@
-- After compression, some images are empty. Track this bug.
-- Folder structure support
 - Check for duplicates in list
-- Change to "in-place" compression
-- Check if a file is bigger, then do not compress
-- Settings dialog
 - Translations
-- Windows/Linux icon
+- Linux icon
+- Update method

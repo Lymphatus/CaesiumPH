@@ -7,6 +7,9 @@
 #include "exif.h"
 #include "preferencedialog.h"
 #include "usageinfo.h"
+#include "networkoperations.h"
+#include "qdroptreewidget.h"
+#include "ctreewidgetitem.h"
 
 #include <QProgressDialog>
 #include <QFileDialog>
@@ -33,6 +36,7 @@ CaesiumPH::CaesiumPH(QWidget *parent) :
     initializeConnections();
     initializeUI();
     readPreferences();
+    checkUpdates();
 
 #ifdef _WIN32
     QThreadPool::globalInstance()->setMaxThreadCount(1);
@@ -69,6 +73,10 @@ void CaesiumPH::initializeUI() {
     //Set menu invisible for Windows/Linux
     ui->menuBar->setVisible(false);
 
+    //Update button visibility
+    ui->updateButton->setVisible(false);
+    ui->updateLabel->setVisible(false);
+
     //Restore window state
     settings.beginGroup(KEY_PREF_GROUP_GEOMETRY);
     resize(settings.value(KEY_PREF_GEOMETRY_SIZE, QSize(880, 500)).toSize());
@@ -77,7 +85,12 @@ void CaesiumPH::initializeUI() {
     on_sidePanelDockWidget_visibilityChanged(settings.value(KEY_PREF_GEOMETRY_PANEL_VISIBLE).value<bool>());
     settings.endGroup();
 
+    //Default EXIF value
     ui->exifTextEdit->setText(tr("No EXIF info available"));
+
+    //Sorting
+    //TODO Make a preference
+    ui->listTreeWidget->sortByColumn(0, Qt::AscendingOrder);
 }
 
 void CaesiumPH::initializeConnections() {
@@ -92,12 +105,17 @@ void CaesiumPH::initializeConnections() {
     connect(ui->addFolderButton, SIGNAL(released()), this, SLOT(on_actionAdd_folder_triggered()));
     connect(ui->removeItemButton, SIGNAL(released()), this, SLOT(on_actionRemove_items_triggered()));
     connect(ui->clearButton, SIGNAL(released()), ui->listTreeWidget, SLOT(clear()));
+
+    //TreeWidget drop event
+    connect(ui->listTreeWidget, SIGNAL(dropFinished(QStringList)), this, SLOT(showImportProgressDialog(QStringList)));
 }
 
 void CaesiumPH::initializeSettings() {
     QCoreApplication::setApplicationName("CaesiumPH");
     QCoreApplication::setOrganizationName("SaeraSoft");
     QCoreApplication::setOrganizationDomain("saerasoft.com");
+
+    uinfo->initialize();
 }
 
 void CaesiumPH::readPreferences() {
@@ -216,7 +234,6 @@ void CaesiumPH::on_actionAdd_pictures_triggered()
 }
 
 void CaesiumPH::showImportProgressDialog(QStringList list) {
-
     QProgressDialog progress(tr("Importing..."), tr("Cancel"), 0, list.count(), this);
     progress.setWindowIcon(QIcon(":/icons/main/logo.png"));
     progress.show();
@@ -230,16 +247,26 @@ void CaesiumPH::showImportProgressDialog(QStringList list) {
     }
 
     for (int i = 0; i < list.size(); i++) {
+
+        //Validate extension
+        if (!isJPEG(QStringToChar(prefix + list.at(i)))) {
+            qDebug() << "NOT JPEG";
+            continue;
+        }
+
         //Generate new CImageInfo
         CImageInfo* currentItemInfo = new CImageInfo(prefix + list.at(i));
 
         //Populate list
-        ui->listTreeWidget->addTopLevelItem(new QTreeWidgetItem(ui->listTreeWidget,
-                                                                QStringList() << currentItemInfo->getBaseName()
-                                                                << currentItemInfo->getFormattedSize()
-                                                                << ""
-                                                                << ""
-                                                                << currentItemInfo->getFullPath()));
+        QStringList itemContent = QStringList() << currentItemInfo->getBaseName()
+                                                << currentItemInfo->getFormattedSize()
+                                                << ""
+                                                << ""
+                                                << currentItemInfo->getFullPath();
+        qDebug() << itemContent;
+
+        ui->listTreeWidget->addTopLevelItem(new CTreeWidgetItem(ui->listTreeWidget,
+                                                                itemContent));
 
         progress.setValue(i);
 
@@ -259,14 +286,13 @@ void CaesiumPH::on_actionAdd_folder_triggered() {
     }
 }
 
-void CaesiumPH::on_actionRemove_items_triggered()
-{
-    foreach (QTreeWidgetItem *i, ui->listTreeWidget->selectedItems()) {
-        ui->listTreeWidget->takeTopLevelItem(ui->listTreeWidget->indexOfTopLevelItem(i));
+void CaesiumPH::on_actionRemove_items_triggered() {
+    for (int i = 0; i < ui->listTreeWidget->selectedItems().count(); i++) {
+        ui->listTreeWidget->takeTopLevelItem(ui->listTreeWidget->indexOfTopLevelItem(ui->listTreeWidget->selectedItems().at(i)));
     }
 }
 
-extern void compressRoutine(QTreeWidgetItem* item) {
+extern void compressRoutine(CTreeWidgetItem* item) {
     QString inputPath = item->text(4);
     QFileInfo* originalInfo = new QFileInfo(item->text(4));
     QString outputPath;
@@ -314,7 +340,7 @@ void CaesiumPH::on_actionCompress_triggered() {
     progressDialog.setLabelText(tr("Compressing..."));
 
     //Holds the list
-    QList<QTreeWidgetItem*> list;
+    QList<CTreeWidgetItem*> list;
 
     //Setup watcher
     QFutureWatcher<void> watcher;
@@ -333,7 +359,7 @@ void CaesiumPH::on_actionCompress_triggered() {
 
     //Gets the list filled
     for (int i = 0; i < ui->listTreeWidget->topLevelItemCount(); i++) {
-        list.append(ui->listTreeWidget->topLevelItem(i));
+        list.append((CTreeWidgetItem*) ui->listTreeWidget->topLevelItem(i));
     }
 
     //And start
@@ -389,7 +415,7 @@ void CaesiumPH::on_listTreeWidget_itemSelectionChanged() {
     //Check if there's a selection
     if (ui->listTreeWidget->selectedItems().length() > 0) {
         //Get the first item selected
-        QTreeWidgetItem* currentItem = ui->listTreeWidget->selectedItems().at(0);
+        CTreeWidgetItem* currentItem = (CTreeWidgetItem*) ui->listTreeWidget->selectedItems().at(0);
 
         //Connect the global watcher to the slot
         connect(&imageWatcher, SIGNAL(finished()), this, SLOT(finishPreviewLoading()));
@@ -415,6 +441,8 @@ void CaesiumPH::finishPreviewLoading() {
 }
 
 void CaesiumPH::on_settingsButton_clicked() {
+    NetworkOperations* no = new NetworkOperations(this);
+    no->uploadUsageStatistics();
     PreferenceDialog* pd = new PreferenceDialog(this);
     pd->show();
 }
@@ -448,4 +476,17 @@ void CaesiumPH::closeEvent(QCloseEvent *event) {
     } else {
         event->accept();
     }
+}
+
+void CaesiumPH::checkUpdates() {
+    qDebug() << "Check updates called";
+    NetworkOperations* op = new NetworkOperations();
+    op->checkForUpdates();
+    connect(op, SIGNAL(checkForUpdatesFinished(int)), this, SLOT(updateAvailable(int)));
+}
+
+void CaesiumPH::updateAvailable(int version) {
+    qDebug() << version;
+    ui->updateButton->setVisible(version > versionNumber);
+    ui->updateLabel->setVisible(ui->updateButton->isVisible());
 }

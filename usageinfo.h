@@ -5,27 +5,35 @@
 #include <QTime>
 #include <QStandardPaths>
 #include <QDir>
+#include <QCoreApplication>
 
 class UsageInfo
 {
+
 public:
     UsageInfo();
-    UsageInfo(QString jsonPath);
+
+    QString jsonPath;
 
     void writeJSON();
     void readJSON();
     QString printJSON();
+    void initialize();
 
     QString UUID;
     qint64 timestamp;
 
     QString productName;
     QString locale;
+    QString arch;
+    int appVersion;
+    int build;
 
     unsigned long long compressed_bytes;
     unsigned int compressed_pictures;
     qint64 max_bytes;
     double best_ratio;
+
 
     void setCompressed_bytes(unsigned long long value);
     void setCompressed_pictures(unsigned int value);
@@ -33,9 +41,7 @@ public:
     void setBest_ratio(double value);
 
 private:
-    QString jsonPath = QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation).at(0) +
-            QDir::separator() +
-            "usage.dat";
+
 };
 
 #endif // USAGEINFO_H

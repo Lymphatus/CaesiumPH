@@ -9,10 +9,10 @@ int main(int argc, char *argv[])
     CaesiumPH w;
     w.show();
 
+    a.setAttribute(Qt::AA_UseHighDpiPixmaps);
+
     //Load styles
 #ifdef __APPLE__
-    //Retina support
-    a.setAttribute(Qt::AA_UseHighDpiPixmaps);
     QFile qss(":/qss/style_osx.qss");
 #elif _WIN32
     QFile qss(":/qss/style_win.qss");

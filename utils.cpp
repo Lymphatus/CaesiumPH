@@ -1,5 +1,7 @@
 #include "utils.h"
 #include "math.h"
+#include <stdlib.h>
+
 #include <QIODevice>
 #include <QDate>
 #include <QDebug>
@@ -7,12 +9,20 @@
 QString inputFilter =  QIODevice::tr("Image Files (*.jpg *.jpeg)");
 QStringList inputFilterList = QStringList() << "*.jpg" << "*.jpeg";
 QString versionString = "0.9.9 (BETA)";
-int versionNumber = 199;
+int versionNumber = 99;
 int buildNumber = QDate::currentDate().toString("yyyyMMdd").toInt();
 long originalsSize = 0;
 long compressedSize = 0;
 cparams params;
 UsageInfo* uinfo = new UsageInfo();
+QString os =
+        #ifdef _WIN32
+            "win";
+        #elif __APPLE__
+            "osx";
+        #else
+            "linux";
+        #endif
 
 QString formatSize(int size) {
     double doubleSize = (double) size;
@@ -59,4 +69,31 @@ QSize getScaledSizeWithRatio(QSize size, int square) {
 double ratioToDouble(QString ratio) {
     ratio = ratio.split(" ").at(0);
     return ratio.toDouble();
+}
+
+bool isJPEG(char* path) {
+    FILE* fp;
+    unsigned char* type_buffer = (unsigned char*) valloc(2);
+
+    fp = fopen(path, "r");
+
+    if (fp == NULL) {
+        fprintf(stderr, "Cannot open input file for type detection. Aborting.\n");
+        exit(-14);
+    }
+
+    if (fread(type_buffer, 1, 2, fp) < 2) {
+        fprintf(stderr, "Cannot read file type. Aborting.\n");
+        exit(-15);
+    }
+
+    fclose(fp);
+
+    if (((int) type_buffer[0] == 0xFF) && ((int) type_buffer[1] == 0xD8)) {
+        free(type_buffer);
+        return true;
+    } else {
+        fprintf(stderr, "Unsupported file type. Skipping.\n");
+        return false;
+    }
 }

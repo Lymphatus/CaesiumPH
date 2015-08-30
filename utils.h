@@ -21,11 +21,13 @@ extern int buildNumber;
 extern long originalsSize, compressedSize; //Before and after bytes count
 extern cparams params; //Important parameters
 extern UsageInfo* uinfo;
+extern QString os;
 
 QString formatSize(int);
 QString getRatio(qint64, qint64);
 char* QStringToChar(QString s);
 QSize getScaledSizeWithRatio(QSize size, int square); //Image preview resize
 double ratioToDouble(QString ratio);
+bool isJPEG(char* path);
 
 #endif // UTILS_H

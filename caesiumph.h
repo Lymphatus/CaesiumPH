@@ -20,6 +20,13 @@ public:
     explicit CaesiumPH(QWidget *parent = 0);
     bool eventFilter(QObject *obj, QEvent *event);
     ~CaesiumPH();
+    static CaesiumPH* instance() {
+        static CaesiumPH window;
+        return &window;
+    }
+
+signals:
+    void dropAccepted(QStringList);
 
 private slots:
     void initializeConnections();
@@ -27,7 +34,6 @@ private slots:
     void initializeSettings();
     void readPreferences();
     void on_actionAbout_CaesiumPH_triggered();
-    void showImportProgressDialog(QStringList);
     void on_actionAdd_pictures_triggered();
     void on_actionAdd_folder_triggered();
     void on_actionRemove_items_triggered();
@@ -41,14 +47,15 @@ private slots:
     QImage loadImagePreview(QString path);
     void finishPreviewLoading();
     void closeEvent(QCloseEvent *event);
-
-
     void on_settingsButton_clicked();
+    void showImportProgressDialog(QStringList);
+    void updateAvailable(int);
 
 private:
     Ui::CaesiumPH *ui;
     QFutureWatcher<QImage> imageWatcher; //Image preview loader
 
+    void checkUpdates();
 
 };
 

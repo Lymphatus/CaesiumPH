@@ -38,7 +38,7 @@
      <number>3</number>
     </property>
     <item row="0" column="0" colspan="2">
-     <widget class="QTreeWidget" name="listTreeWidget">
+     <widget class="QDropTreeWidget" name="listTreeWidget">
       <property name="focusPolicy">
        <enum>Qt::NoFocus</enum>
       </property>
@@ -52,10 +52,13 @@
        <enum>QFrame::Plain</enum>
       </property>
       <property name="dragEnabled">
-       <bool>true</bool>
+       <bool>false</bool>
+      </property>
+      <property name="dragDropOverwriteMode">
+       <bool>false</bool>
       </property>
       <property name="dragDropMode">
-       <enum>QAbstractItemView::DragDrop</enum>
+       <enum>QAbstractItemView::DropOnly</enum>
       </property>
       <property name="selectionMode">
        <enum>QAbstractItemView::ExtendedSelection</enum>
@@ -64,7 +67,7 @@
        <number>0</number>
       </property>
       <property name="sortingEnabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="animated">
        <bool>true</bool>
@@ -76,7 +79,7 @@
        <bool>false</bool>
       </attribute>
       <attribute name="headerShowSortIndicator" stdset="0">
-       <bool>false</bool>
+       <bool>true</bool>
       </attribute>
       <column>
        <property name="text">
@@ -111,7 +114,7 @@
       </column>
      </widget>
     </item>
-    <item row="1" column="0" colspan="2">
+    <item row="3" column="0" colspan="2">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QToolButton" name="settingsButton">
@@ -437,7 +440,7 @@ border: none;</string>
       </item>
      </layout>
     </item>
-    <item row="0" column="3" rowspan="2">
+    <item row="0" column="3" rowspan="4">
      <widget class="Line" name="sidePanelLine">
       <property name="styleSheet">
        <string notr="true">margin-bottom:10px;</string>
@@ -452,6 +455,63 @@ border: none;</string>
        <enum>Qt::Vertical</enum>
       </property>
      </widget>
+    </item>
+    <item row="1" column="0" colspan="2">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QToolButton" name="updateButton">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: transparent;
+border: none;</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/icons/ui/update.png</normaloff>:/icons/ui/update.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="autoRaise">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="updateLabel">
+        <property name="font">
+         <font>
+          <pointsize>11</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>A new update is available! Click here to install it.</string>
+        </property>
+        <property name="textFormat">
+         <enum>Qt::RichText</enum>
+        </property>
+        <property name="openExternalLinks">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -677,6 +737,13 @@ p, li { white-space: pre-wrap; }
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QDropTreeWidget</class>
+   <extends>QTreeWidget</extends>
+   <header>qdroptreewidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="icons.qrc"/>
  </resources>
