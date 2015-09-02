@@ -22,6 +22,8 @@ public:
     QString getFormattedSize() const;
     void setFormattedSize(const QString &value);
 
+    bool isEqual(QString path);
+
 private:
     QString fullPath;
     QString baseName;

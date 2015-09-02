@@ -59,8 +59,7 @@ void UsageInfo::readJSON() {
         max_bytes = json["maxBytes"].toVariant().toULongLong();
         best_ratio = json["bestRatio"].toDouble();
     } else {
-        //TODO Change
-        //qDebug() << "Cannot open JSON file";
+        qDebug() << "Cannot open JSON file";
     }
 }
 
@@ -98,23 +97,19 @@ QString UsageInfo::printJSON() {
         return QString(jsonD.toJson(QJsonDocument::Indented));
     }
 }
-void UsageInfo::setBest_ratio(double value)
-{
+void UsageInfo::setBest_ratio(double value) {
     best_ratio = value;
 }
 
-void UsageInfo::setMax_bytes(unsigned int value)
-{
+void UsageInfo::setMax_bytes(unsigned int value) {
     max_bytes = value;
 }
 
-void UsageInfo::setCompressed_pictures(unsigned int value)
-{
+void UsageInfo::setCompressed_pictures(unsigned int value) {
     compressed_pictures = value;
 }
 
-void UsageInfo::setCompressed_bytes(unsigned long long value)
-{
+void UsageInfo::setCompressed_bytes(unsigned long long value) {
     compressed_bytes = value;
 }
 

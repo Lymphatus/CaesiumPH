@@ -11,6 +11,8 @@ typedef struct var {
     int exif;
     int progressive;
     bool overwrite;
+    int outMethodIndex;
+    QString outMethodString;
 } cparams;
 
 extern QString inputFilter;
@@ -21,7 +23,7 @@ extern int buildNumber;
 extern long originalsSize, compressedSize; //Before and after bytes count
 extern cparams params; //Important parameters
 extern UsageInfo* uinfo;
-extern QString os;
+extern QStringList osAndExtension;
 
 QString formatSize(int);
 QString getRatio(qint64, qint64);

@@ -2,6 +2,7 @@
 #define CAESIUMPH_H
 
 #include "usageinfo.h"
+#include "cimageinfo.h"
 
 #include <QMainWindow>
 #include <QTreeWidgetItem>
@@ -45,17 +46,20 @@ private slots:
     void on_showSidePanelButton_clicked(bool checked);
     void on_listTreeWidget_itemSelectionChanged();
     QImage loadImagePreview(QString path);
-    void finishPreviewLoading();
+    void finishPreviewLoading(int i);
     void closeEvent(QCloseEvent *event);
     void on_settingsButton_clicked();
     void showImportProgressDialog(QStringList);
     void updateAvailable(int);
+    void on_updateButton_clicked();
+    void startUpdateProcess(QString);
 
 private:
     Ui::CaesiumPH *ui;
     QFutureWatcher<QImage> imageWatcher; //Image preview loader
 
     void checkUpdates();
+    bool hasADuplicateInList(CImageInfo* c);
 
 };
 

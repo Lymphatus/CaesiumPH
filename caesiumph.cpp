@@ -24,6 +24,8 @@
 #include <QSettings>
 #include <QCloseEvent>
 #include <QMessageBox>
+#include <QDesktopServices>
+#include <QDirIterator>
 
 #include <QDebug>
 
@@ -41,10 +43,6 @@ CaesiumPH::CaesiumPH(QWidget *parent) :
 #ifdef _WIN32
     QThreadPool::globalInstance()->setMaxThreadCount(1);
 #endif
-
-    //Header text to center
-    //ui->listTreeWidget->header()->setDefaultAlignment(Qt::AlignCenter);
-    //ui->listTreeWidget->header()->setFont(QFont("Serif", 50));
 }
 
 CaesiumPH::~CaesiumPH() {
@@ -75,7 +73,6 @@ void CaesiumPH::initializeUI() {
 
     //Update button visibility
     ui->updateButton->setVisible(false);
-    ui->updateLabel->setVisible(false);
 
     //Restore window state
     settings.beginGroup(KEY_PREF_GROUP_GEOMETRY);
@@ -83,14 +80,13 @@ void CaesiumPH::initializeUI() {
     move(settings.value(KEY_PREF_GEOMETRY_POS, QPoint(200, 200)).toPoint());
     ui->sidePanelDockWidget->setVisible(settings.value(KEY_PREF_GEOMETRY_PANEL_VISIBLE).value<bool>());
     on_sidePanelDockWidget_visibilityChanged(settings.value(KEY_PREF_GEOMETRY_PANEL_VISIBLE).value<bool>());
+    ui->listTreeWidget->sortByColumn(settings.value(KEY_PREF_GEOMETRY_SORT_COLUMN).value<int>(),
+                                     settings.value(KEY_PREF_GEOMETRY_SORT_ORDER).value<Qt::SortOrder>());
     settings.endGroup();
 
     //Default EXIF value
     ui->exifTextEdit->setText(tr("No EXIF info available"));
 
-    //Sorting
-    //TODO Make a preference
-    ui->listTreeWidget->sortByColumn(0, Qt::AscendingOrder);
 }
 
 void CaesiumPH::initializeConnections() {
@@ -127,7 +123,11 @@ void CaesiumPH::readPreferences() {
     params.progressive = settings.value(KEY_PREF_COMPRESSION_PROGRESSIVE).value<bool>();
     settings.endGroup();
 
-    params.overwrite = settings.value(KEY_PREF_GROUP_GENERAL + KEY_PREF_GENERAL_OVERWRITE).value<bool>();
+    settings.beginGroup(KEY_PREF_GROUP_GENERAL);
+    params.overwrite = settings.value(KEY_PREF_GENERAL_OVERWRITE).value<bool>();
+    params.outMethodIndex = settings.value(KEY_PREF_GENERAL_OUTPUT_METHOD).value<int>();
+    params.outMethodString = settings.value(KEY_PREF_GENERAL_OUTPUT_STRING).value<QString>();
+    settings.endGroup();
 }
 
 //Button hover functions
@@ -234,6 +234,9 @@ void CaesiumPH::on_actionAdd_pictures_triggered()
 }
 
 void CaesiumPH::showImportProgressDialog(QStringList list) {
+    QSettings settings;
+    bool scanSubdir = settings.value(KEY_PREF_GROUP_GENERAL + KEY_PREF_GENERAL_SUBFOLDER).value<bool>();
+
     QProgressDialog progress(tr("Importing..."), tr("Cancel"), 0, list.count(), this);
     progress.setWindowIcon(QIcon(":/icons/main/logo.png"));
     progress.show();
@@ -242,20 +245,29 @@ void CaesiumPH::showImportProgressDialog(QStringList list) {
     QString prefix = ""; //Prefix for full path folder import
 
     if (QDir(list[0]).exists()) {
-        prefix = list[0] + QDir::separator();
-        list = QDir(list[0]).entryList(inputFilterList, QDir::Files);
+        QDirIterator it(list[0], inputFilterList, QDir::AllEntries, scanSubdir ? QDirIterator::Subdirectories : QDirIterator::NoIteratorFlags);
+        //prefix = list[0] + QDir::separator();
+        while(it.hasNext()) {
+            qDebug() << it.next();
+            list.append(it.filePath());
+        }
+        //list = QDir(list[0]).entryList(inputFilterList, QDir::Files);
     }
 
     for (int i = 0; i < list.size(); i++) {
 
         //Validate extension
-        if (!isJPEG(QStringToChar(prefix + list.at(i)))) {
-            qDebug() << "NOT JPEG";
+        if (!isJPEG(QStringToChar(list.at(i)))) {
             continue;
         }
 
         //Generate new CImageInfo
-        CImageInfo* currentItemInfo = new CImageInfo(prefix + list.at(i));
+        CImageInfo* currentItemInfo = new CImageInfo(list.at(i));
+
+        //Check if it has a duplicate
+        if (hasADuplicateInList(currentItemInfo)) {
+            continue;
+        }
 
         //Populate list
         QStringList itemContent = QStringList() << currentItemInfo->getBaseName()
@@ -263,15 +275,15 @@ void CaesiumPH::showImportProgressDialog(QStringList list) {
                                                 << ""
                                                 << ""
                                                 << currentItemInfo->getFullPath();
-        qDebug() << itemContent;
 
         ui->listTreeWidget->addTopLevelItem(new CTreeWidgetItem(ui->listTreeWidget,
                                                                 itemContent));
 
         progress.setValue(i);
 
-        if (progress.wasCanceled())
+        if (progress.wasCanceled()) {
             break;
+        }
     }
     progress.setValue(list.count());
 }
@@ -293,14 +305,36 @@ void CaesiumPH::on_actionRemove_items_triggered() {
 }
 
 extern void compressRoutine(CTreeWidgetItem* item) {
+    //Input file path
     QString inputPath = item->text(4);
     QFileInfo* originalInfo = new QFileInfo(item->text(4));
+    qint64 originalSize = originalInfo->size();
     QString outputPath;
+
     if (params.overwrite) {
         outputPath = inputPath;
     } else {
-        outputPath = originalInfo->filePath().replace(originalInfo->completeBaseName(),
-                                                      originalInfo->baseName() + "_compressed");
+        switch (params.outMethodIndex) {
+        case 0:
+            //Add a suffix
+            outputPath = originalInfo->filePath().replace(originalInfo->completeBaseName(),
+                                                          originalInfo->baseName() + params.outMethodString);
+            break;
+        case 1:
+            //Compress in a subfolder
+            outputPath = originalInfo->path() + QDir::separator() + params.outMethodString + QDir::separator() + originalInfo->fileName();
+            //Create it
+            QDir().mkdir(originalInfo->path() + QDir::separator() + params.outMethodString + QDir::separator());
+            break;
+        case 2:
+            //Compress in a custom directory
+            outputPath = params.outMethodString + QDir::separator() + originalInfo->fileName();
+            QDir().mkdir(params.outMethodString);
+        default:
+            break;
+        }
+
+
     }
     //BUG Sometimes files are empty. Check it out.
     cclt_optimize(QStringToChar(inputPath),
@@ -309,11 +343,10 @@ extern void compressRoutine(CTreeWidgetItem* item) {
                   params.progressive,
                   QStringToChar(inputPath));
     //Gets new file info
-    //TODO Ratio is wrong if overwrites
     QFileInfo* fileInfo = new QFileInfo(outputPath);
     item->setText(2, formatSize(fileInfo->size()));
-    item->setText(3, getRatio(originalInfo->size(), fileInfo->size()));
-    originalsSize += originalInfo->size();
+    item->setText(3, getRatio(originalSize, fileInfo->size()));
+    originalsSize += originalSize;
     compressedSize += fileInfo->size();
 
     //Usage reports
@@ -321,7 +354,8 @@ extern void compressRoutine(CTreeWidgetItem* item) {
         uinfo->setMax_bytes(originalInfo->size());
     }
 
-    if ((originalInfo->size() - fileInfo->size()) * 100 / (double) originalInfo->size() > uinfo->best_ratio) {
+    if ((originalInfo->size() - fileInfo->size()) * 100 / (double) originalInfo->size() > uinfo->best_ratio
+            && fileInfo->size() != 0) {
         uinfo->setBest_ratio((originalInfo->size() - fileInfo->size()) * 100 / (double) originalInfo->size());
     }
 }
@@ -351,8 +385,6 @@ void CaesiumPH::on_actionCompress_triggered() {
     connect(&watcher, SIGNAL(progressRangeChanged(int, int)), &progressDialog, SLOT(setRange(int,int)));
     connect(&watcher, SIGNAL(finished()), &progressDialog, SLOT(reset()));
     connect(&progressDialog, SIGNAL(canceled()), &watcher, SLOT(cancel()));
-    //TODO Work on that
-    //connect(&watcher, SIGNAL(progressTextChanged(QString)), &progressDialog, SLOT(setLabelText(QString)));
     //Connect two slots for handling compression start/finish
     connect(&watcher, SIGNAL(started()), this, SLOT(compressionStarted()));
     connect(&watcher, SIGNAL(finished()), this, SLOT(compressionFinished()));
@@ -418,7 +450,7 @@ void CaesiumPH::on_listTreeWidget_itemSelectionChanged() {
         CTreeWidgetItem* currentItem = (CTreeWidgetItem*) ui->listTreeWidget->selectedItems().at(0);
 
         //Connect the global watcher to the slot
-        connect(&imageWatcher, SIGNAL(finished()), this, SLOT(finishPreviewLoading()));
+        connect(&imageWatcher, SIGNAL(resultReadyAt(int)), this, SLOT(finishPreviewLoading(int)));
         //Run the image loader function
         imageWatcher.setFuture(QtConcurrent::run<QImage>(this, &CaesiumPH::loadImagePreview, currentItem->text(4)));
 
@@ -435,9 +467,9 @@ QImage CaesiumPH::loadImagePreview(QString path) {
     return imageReader->read();
 }
 
-void CaesiumPH::finishPreviewLoading() {
+void CaesiumPH::finishPreviewLoading(int i) {
     //Set the image
-    ui->imagePreviewLabel->setPixmap(QPixmap::fromImage(imageWatcher.result()));
+    ui->imagePreviewLabel->setPixmap(QPixmap::fromImage(imageWatcher.resultAt(i)));
 }
 
 void CaesiumPH::on_settingsButton_clicked() {
@@ -455,6 +487,8 @@ void CaesiumPH::closeEvent(QCloseEvent *event) {
     settings.setValue(KEY_PREF_GEOMETRY_SIZE, size());
     settings.setValue(KEY_PREF_GEOMETRY_POS, pos());
     settings.setValue(KEY_PREF_GEOMETRY_PANEL_VISIBLE, ui->sidePanelDockWidget->isVisible());
+    settings.setValue(KEY_PREF_GEOMETRY_SORT_COLUMN, ui->listTreeWidget->sortColumn());
+    settings.setValue(KEY_PREF_GEOMETRY_SORT_ORDER, ui->listTreeWidget->header()->sortIndicatorOrder());
     settings.endGroup();
 
     if (settings.value(KEY_PREF_GROUP_GENERAL + KEY_PREF_GENERAL_PROMPT).value<bool>()) {
@@ -488,5 +522,25 @@ void CaesiumPH::checkUpdates() {
 void CaesiumPH::updateAvailable(int version) {
     qDebug() << version;
     ui->updateButton->setVisible(version > versionNumber);
-    ui->updateLabel->setVisible(ui->updateButton->isVisible());
+}
+
+bool CaesiumPH::hasADuplicateInList(CImageInfo *c) {
+    for (int i = 0; i < ui->listTreeWidget->topLevelItemCount(); i++) {
+        if (c->isEqual(ui->listTreeWidget->topLevelItem(i)->text(4))) {
+            qDebug() << "Duplicate detected. Skipping.";
+            return true;
+        }
+    }
+}
+
+void CaesiumPH::on_updateButton_clicked() {
+    NetworkOperations* op = new NetworkOperations();
+    connect(op, SIGNAL(updateDownloadFinished(QString)), this, SLOT(startUpdateProcess(QString)));
+    op->downloadUpdateRequest();
+}
+
+void CaesiumPH::startUpdateProcess(QString path) {
+    QDesktopServices::openUrl(QUrl("file://" + path, QUrl::TolerantMode));
+    this->close();
+    qDebug() << path;
 }

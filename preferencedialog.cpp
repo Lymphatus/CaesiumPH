@@ -7,6 +7,7 @@
 #include <QCloseEvent>
 #include <QSettings>
 #include <QMessageBox>
+#include <QFileDialog>
 
 PreferenceDialog::PreferenceDialog(QWidget *parent) :
     QMainWindow(parent),
@@ -43,6 +44,8 @@ void PreferenceDialog::writePreferences() {
     settings.beginGroup(KEY_PREF_GROUP_GENERAL);
     settings.setValue(KEY_PREF_GENERAL_OVERWRITE, ui->overwriteOriginalCheckBox->isChecked());
     settings.setValue(KEY_PREF_GENERAL_SUBFOLDER, ui->subfoldersCheckBox->isChecked());
+    settings.setValue(KEY_PREF_GENERAL_OUTPUT_METHOD, ui->outputFileMethodComboBox->currentIndex());
+    settings.setValue(KEY_PREF_GENERAL_OUTPUT_STRING, ui->outputFileMethodLineEdit->text());
     settings.setValue(KEY_PREF_GENERAL_PROMPT, ui->promptExitCheckBox->isChecked());
     settings.setValue(KEY_PREF_GENERAL_LOCALE, ui->languageComboBox->currentIndex());
     settings.endGroup();
@@ -66,6 +69,8 @@ void PreferenceDialog::readPreferences() {
     settings.beginGroup(KEY_PREF_GROUP_GENERAL);
     ui->overwriteOriginalCheckBox->setChecked(settings.value(KEY_PREF_GENERAL_OVERWRITE).value<bool>());
     ui->subfoldersCheckBox->setChecked(settings.value(KEY_PREF_GENERAL_SUBFOLDER).value<bool>());
+    ui->outputFileMethodComboBox->setCurrentIndex(settings.value(KEY_PREF_GENERAL_OUTPUT_METHOD).value<int>());
+    ui->outputFileMethodLineEdit->setText(settings.value(KEY_PREF_GENERAL_OUTPUT_STRING).value<QString>());
     ui->promptExitCheckBox->setChecked(settings.value(KEY_PREF_GENERAL_PROMPT).value<bool>());
     ui->languageComboBox->setCurrentIndex(settings.value(KEY_PREF_GENERAL_LOCALE).value<int>());
     settings.endGroup();
@@ -93,4 +98,31 @@ void PreferenceDialog::on_seeInfoButton_clicked() {
     QGridLayout* layout = (QGridLayout*)msgBox.layout();
     layout->addItem(horizontalSpacer, layout->rowCount(), 0, 1, layout->columnCount());
     msgBox.exec();
+}
+
+void PreferenceDialog::on_outputFileMethodComboBox_currentIndexChanged(int index) {
+    ui->outputFileMethodLineEdit->setReadOnly(index == 2);
+    ui->browseButton->setVisible(index == 2);
+    switch(index) {
+    case 0:
+        ui->outputFileMethodLineEdit->setText(tr("_compressed"));
+        break;
+    case 1:
+        ui->outputFileMethodLineEdit->setText(tr("compressed"));
+        break;
+    case 2:
+        ui->outputFileMethodLineEdit->setText(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) +
+                                              QDir::separator() + "CaesiumPH");
+        break;
+    default:
+        break;
+    }
+}
+
+void PreferenceDialog::on_browseButton_clicked() {
+    ui->outputFileMethodLineEdit->setText(
+                QFileDialog::getExistingDirectory(this,
+                                                  tr("Select an output folder..."),
+                                                  QStandardPaths::writableLocation(QStandardPaths::PicturesLocation),
+                                                  QFileDialog::ShowDirsOnly));
 }

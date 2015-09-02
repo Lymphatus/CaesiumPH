@@ -4,9 +4,10 @@
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QProgressDialog>
 
 NetworkOperations::NetworkOperations(QObject *parent) : QObject(parent) {
-    releaseURL = "http://download.saerasoft.com/caesiumph/" + os + "/current/";
+    releaseURL = "http://download.saerasoft.com/caesiumph/" + osAndExtension.at(0) + "/current/";
 }
 
 void NetworkOperations::uploadUsageStatistics() {
@@ -28,18 +29,73 @@ void NetworkOperations::uploadFinished(QNetworkReply * reply) {
 }
 
 void NetworkOperations::checkForUpdates() {
-    //Get the current build
+    //Request current build from network
     updateReply = networkManager->get(QNetworkRequest(QUrl("http://download.saerasoft.com/caesiumph/current")));
-    //TODO check for errors
     connect(updateReply, SIGNAL(readyRead()), this, SLOT(getCurrentBuild()));
 }
 
 void NetworkOperations::getCurrentBuild() {
-    qDebug() << "Qui";
+    //Actually gets the build number
     if (updateReply->error() == QNetworkReply::NoError) {
         emit checkForUpdatesFinished(updateReply->readAll().toInt());
     } else {
         qDebug() << updateReply->errorString();
     }
+    updateReply->close();
 }
 
+void NetworkOperations::downloadUpdateRequest() {
+    //ProgressDialog for progress display
+    pDialog = new QProgressDialog();
+    pDialog->setWindowTitle(tr("CaesiumPH"));
+    pDialog->setLabelText(tr("Downloading updates..."));
+    //Set the right URL according to OS
+    QUrl url;
+    url.setUrl("http://download.saerasoft.com/caesiumph/" +
+               osAndExtension.at(0) +
+               "/current/caesiumph_update" +
+               osAndExtension.at(1));
+
+    //Get request
+    downloadUpdateReply = networkManager->get(QNetworkRequest(url));
+
+    //Connections
+    connect(downloadUpdateReply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(showUpdateDownloadProgress(qint64,qint64)));
+    connect(pDialog, SIGNAL(canceled()), downloadUpdateReply, SLOT(abort()));
+    connect(downloadUpdateReply, SIGNAL(finished()), this, SLOT(flushUpdate()));
+}
+
+void NetworkOperations::showUpdateDownloadProgress(qint64 c, qint64 t) {
+    //Show the progress in the ProgressDialog
+    if (downloadUpdateReply->error() == QNetworkReply::NoError) {
+        pDialog->setRange(0, t);
+        pDialog->setValue(c);
+    } else {
+        qDebug() << "Network error";
+        pDialog->close();
+        downloadUpdateReply->abort();
+    }
+}
+
+void NetworkOperations::flushUpdate() {
+    //Gets a temporary path where we can write
+    QString tmpPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) +
+            QDir::separator() +
+            "cph_u" +
+            osAndExtension.at(1);
+
+    QFile *file = new QFile(tmpPath);
+
+    //Flush the file
+    if (file->open(QFile::WriteOnly)) {
+        file->write(downloadUpdateReply->readAll());
+        file->flush();
+        file->close();
+        emit updateDownloadFinished(tmpPath);
+        downloadUpdateReply->deleteLater();
+
+    } else {
+        downloadUpdateReply->deleteLater();
+        qDebug() << "Failed to write file";
+    }
+}

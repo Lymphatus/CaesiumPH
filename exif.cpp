@@ -2,6 +2,7 @@
 
 #include <QString>
 #include <QStringList>
+#include <QCoreApplication>
 
 #include <stdlib.h>
 #include <assert.h>

@@ -2,6 +2,7 @@
 #define CTREEWIDGETITEM_H
 
 #include <QTreeWidgetItem>
+#include <QFileInfo>
 
 class CTreeWidgetItem : public QTreeWidgetItem
 {
@@ -11,7 +12,16 @@ public:
 private:
     bool operator< (const QTreeWidgetItem &other) const {
         int column = treeWidget()->sortColumn();
-        return text(column).toLower() < other.text(column).toLower();
+        switch (column) {
+        case 1:
+            return QFileInfo(text(4)).size() < QFileInfo(other.text(4)).size();
+        case 2:
+            //Sort by compressed size
+            return QFileInfo(text(4)).size() < QFileInfo(other.text(4)).size();
+        default:
+            //Sort by path
+            return text(column).toLower() < other.text(column).toLower();
+        }
     }
 };
 

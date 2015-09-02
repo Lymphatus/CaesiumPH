@@ -8,18 +8,18 @@
 
 QString inputFilter =  QIODevice::tr("Image Files (*.jpg *.jpeg)");
 QStringList inputFilterList = QStringList() << "*.jpg" << "*.jpeg";
-QString versionString = "0.9.9 (BETA)";
-int versionNumber = 99;
+QString versionString = "0.9.1 (BETA)";
+int versionNumber = 91;
 int buildNumber = QDate::currentDate().toString("yyyyMMdd").toInt();
 long originalsSize = 0;
 long compressedSize = 0;
 cparams params;
 UsageInfo* uinfo = new UsageInfo();
-QString os =
+QStringList osAndExtension = QStringList() <<
         #ifdef _WIN32
-            "win";
+            "win" << ".exe";
         #elif __APPLE__
-            "osx";
+            "osx" << ".dmg";
         #else
             "linux";
         #endif
@@ -78,13 +78,13 @@ bool isJPEG(char* path) {
     fp = fopen(path, "r");
 
     if (fp == NULL) {
-        fprintf(stderr, "Cannot open input file for type detection. Aborting.\n");
-        exit(-14);
+        fprintf(stderr, "Cannot open input file for type detection. Skipping.\n");
+        return false;
     }
 
     if (fread(type_buffer, 1, 2, fp) < 2) {
-        fprintf(stderr, "Cannot read file type. Aborting.\n");
-        exit(-15);
+        fprintf(stderr, "Cannot read file type. Skipping.\n");
+        return false;
     }
 
     fclose(fp);

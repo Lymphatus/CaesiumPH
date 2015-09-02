@@ -12,6 +12,8 @@
 //General group keys
 #define KEY_PREF_GENERAL_OVERWRITE QString("overwrite")
 #define KEY_PREF_GENERAL_SUBFOLDER QString("subfolder")
+#define KEY_PREF_GENERAL_OUTPUT_METHOD QString("outMethod")
+#define KEY_PREF_GENERAL_OUTPUT_STRING QString("outString")
 #define KEY_PREF_GENERAL_LOCALE QString("locale")
 #define KEY_PREF_GENERAL_PROMPT QString("promptExit")
 
@@ -27,6 +29,8 @@
 #define KEY_PREF_GEOMETRY_POS QString("pos")
 #define KEY_PREF_GEOMETRY_PANEL_VISIBLE QString("sidePanelVisible")
 #define KEY_PREF_GEOMETRY_PANEL_FLOAT QString("sidePanelFloating")
+#define KEY_PREF_GEOMETRY_SORT_ORDER QString("sortOrder")
+#define KEY_PREF_GEOMETRY_SORT_COLUMN QString("sortColumn")
 
 namespace Ui {
 class PreferenceDialog;
@@ -49,6 +53,10 @@ private slots:
     void readPreferences();
 
     void on_seeInfoButton_clicked();
+
+    void on_outputFileMethodComboBox_currentIndexChanged(int index);
+
+    void on_browseButton_clicked();
 
 private:
     Ui::PreferenceDialog *ui;
