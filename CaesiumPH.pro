@@ -81,5 +81,6 @@ DISTFILES += \
     TODO \
     qss/style_osx.qss \
     qss/style_win.qss \
-    qss/style_linux.qss
+    qss/style_linux.qss \
+    README.md
 

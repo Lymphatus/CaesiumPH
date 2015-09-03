@@ -1,5 +1,5 @@
 ## CaesiumPH
-##### CaesiumPH - v 0.9.9 BETA (build 20150830) - Copyright &copy; Matteo Paonessa, 2015. All Rights Reserved.
+##### CaesiumPH - v 0.9.1 BETA (build 20150903) - Copyright &copy; Matteo Paonessa, 2015. All Rights Reserved.
 
 ----------
 
@@ -26,7 +26,7 @@ See TODO
 ----------
 
 ###### CHANGELOG
-* 0.9.9 - Initial development stage
+* 0.9.1 - Initial development stage
 For a more detailed list of beta commits, see the [GitHub Repository](https://github.com/Lymphatus/CaesiumPH)
 
 ----------

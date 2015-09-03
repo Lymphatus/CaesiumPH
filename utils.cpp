@@ -21,7 +21,7 @@ QStringList osAndExtension = QStringList() <<
         #elif __APPLE__
             "osx" << ".dmg";
         #else
-            "linux";
+            "linux" << "";
         #endif
 
 QString formatSize(int size) {
@@ -73,7 +73,7 @@ double ratioToDouble(QString ratio) {
 
 bool isJPEG(char* path) {
     FILE* fp;
-    unsigned char* type_buffer = (unsigned char*) valloc(2);
+    unsigned char* type_buffer = (unsigned char*) malloc(2);
 
     fp = fopen(path, "r");
 
