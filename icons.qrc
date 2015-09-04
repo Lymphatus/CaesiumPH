@@ -26,5 +26,6 @@
         <file>icons/ui/exif.png</file>
         <file>icons/main/icon.ico</file>
         <file>icons/ui/update.png</file>
+        <file>icons/ui/dropdown_arrow.png</file>
     </qresource>
 </RCC>

@@ -68,7 +68,7 @@ QDockWidget::title {
     background: #FFFFFF;
 }
 
-QTextEdit#exifTextEdit {
+QTextEdit {
     background: #FFFFFF;
     color: #757575;
     font-family: "Lucida Console", Monaco, monospace;
@@ -100,4 +100,43 @@ QMenu:separator {
 QDockWidget {
     titlebar-close-icon: url(:/icons/ui/dock_close.png);
     titlebar-normal-icon: url(:/icons/ui/dock_float.png);
+}
+
+QPushButton, QDialogButtonBox {
+    background-color: #FFFFFF;
+    border: 1px solid #1cb495;
+    padding: 3px 10px 4px 10px;
+    color: #757575;
+}
+
+QLineEdit {
+    border: 1px solid #1cb495;
+    padding: 2px 5px 2px 5px;
+}
+
+QComboBox {
+    background: none;
+    border: 1px solid #1cb495;
+    padding: 2px 5px 2px 5px;
+}
+
+QComboBox::down-arrow {
+    image: url(:/icons/ui/dropdown_arrow.png);
+}
+
+QComboBox::drop-down {
+    padding: 5px;
+    background: transparent;
+}
+
+QComboBox QAbstractItemView {
+    border: 1px solid #1cb495;
+}
+
+QAction:active {
+    background-color: #1cb495;
+}
+
+QLabel {
+    color: #757575;
 }

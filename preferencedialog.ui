@@ -16,6 +16,9 @@
   <property name="windowTitle">
    <string>Preferences</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">color: #757575;</string>
+  </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
   </property>
@@ -39,7 +42,7 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <property name="spacing">
-       <number>-1</number>
+       <number>6</number>
       </property>
       <item>
        <widget class="QStackedWidget" name="stackedWidget">
@@ -55,7 +58,7 @@
         <widget class="QWidget" name="generalPage">
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <property name="spacing">
-           <number>-1</number>
+           <number>6</number>
           </property>
           <property name="leftMargin">
            <number>0</number>
@@ -75,7 +78,7 @@
              <enum>QLayout::SetMaximumSize</enum>
             </property>
             <property name="verticalSpacing">
-             <number>-1</number>
+             <number>6</number>
             </property>
             <item row="5" column="0">
              <widget class="QLabel" name="languageLabel">
@@ -137,6 +140,9 @@
               <property name="styleSheet">
                <string notr="true"/>
               </property>
+              <property name="frame">
+               <bool>true</bool>
+              </property>
               <item>
                <property name="text">
                 <string>Custom suffix</string>
@@ -158,6 +164,9 @@
              <widget class="QPushButton" name="browseButton">
               <property name="text">
                <string notr="true">...</string>
+              </property>
+              <property name="flat">
+               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -346,6 +355,9 @@
    </property>
    <property name="movable">
     <bool>false</bool>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::NoToolBarArea</set>
    </property>
    <property name="iconSize">
     <size>

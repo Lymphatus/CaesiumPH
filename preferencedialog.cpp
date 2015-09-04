@@ -112,7 +112,7 @@ void PreferenceDialog::on_outputFileMethodComboBox_currentIndexChanged(int index
         break;
     case 2:
         ui->outputFileMethodLineEdit->setText(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) +
-                                              QDir::separator() + "CaesiumPH");
+                                              "/CaesiumPH");
         break;
     default:
         break;

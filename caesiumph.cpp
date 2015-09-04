@@ -242,16 +242,15 @@ void CaesiumPH::showImportProgressDialog(QStringList list) {
     progress.show();
     progress.setWindowModality(Qt::WindowModal);
 
-    QString prefix = ""; //Prefix for full path folder import
 
     if (QDir(list[0]).exists()) {
         QDirIterator it(list[0], inputFilterList, QDir::AllEntries, scanSubdir ? QDirIterator::Subdirectories : QDirIterator::NoIteratorFlags);
-        //prefix = list[0] + QDir::separator();
         while(it.hasNext()) {
             qDebug() << it.next();
             list.append(it.filePath());
         }
-        //list = QDir(list[0]).entryList(inputFilterList, QDir::Files);
+    } else {
+        qDebug() << list;
     }
 
     for (int i = 0; i < list.size(); i++) {
@@ -342,6 +341,7 @@ extern void compressRoutine(CTreeWidgetItem* item) {
                   params.exif,
                   params.progressive,
                   QStringToChar(inputPath));
+
     //Gets new file info
     QFileInfo* fileInfo = new QFileInfo(outputPath);
     item->setText(2, formatSize(fileInfo->size()));
@@ -531,6 +531,7 @@ bool CaesiumPH::hasADuplicateInList(CImageInfo *c) {
             return true;
         }
     }
+    return false;
 }
 
 void CaesiumPH::on_updateButton_clicked() {

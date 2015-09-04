@@ -27,7 +27,12 @@ void UsageInfo::initialize() {
     } else {
         UUID = QUuid::createUuid().toString();
         timestamp = QDateTime::currentMSecsSinceEpoch();
-        productName = QSysInfo::prettyProductName();
+        productName = QSysInfo::prettyProductName() + " -- " +
+#ifdef _WIN32
+                QString::number(QSysInfo::windowsVersion());
+#elif __APPLE__
+                QString::number(QSysInfo::macVersion());
+#endif
         locale = QLocale().bcp47Name();
         arch = QSysInfo::currentCpuArchitecture();
         appVersion = versionNumber;
