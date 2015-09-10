@@ -32,6 +32,8 @@ void UsageInfo::initialize() {
                 QString::number(QSysInfo::windowsVersion());
 #elif __APPLE__
                 QString::number(QSysInfo::macVersion());
+#else
+                "";
 #endif
         locale = QLocale().bcp47Name();
         arch = QSysInfo::currentCpuArchitecture();
