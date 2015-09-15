@@ -7,7 +7,11 @@
 #include <QProgressDialog>
 
 NetworkOperations::NetworkOperations(QObject *parent) : QObject(parent) {
-    releaseURL = "http://download.saerasoft.com/caesiumph/" + osAndExtension.at(0) + "/current/";
+    releaseURL = "https://github.com/Lymphatus/CaesiumPH/releases/download/v" +
+            versionString +
+            "/caesiumph-" +
+            versionString +
+            "." + osAndExtension.at(1);
 }
 
 void NetworkOperations::uploadUsageStatistics() {
@@ -51,10 +55,11 @@ void NetworkOperations::downloadUpdateRequest() {
     pDialog->setLabelText(tr("Downloading updates..."));
     //Set the right URL according to OS
     QUrl url;
-    url.setUrl("http://download.saerasoft.com/caesiumph/" +
-               osAndExtension.at(0) +
-               "/current/caesiumph_update" +
-               osAndExtension.at(1));
+    url.setUrl("https://github.com/Lymphatus/CaesiumPH/releases/download/v" +
+               versionString +
+               "/caesiumph-" +
+               versionString +
+               "." + osAndExtension.at(1));
 
     //Get request
     downloadUpdateReply = networkManager->get(QNetworkRequest(url));

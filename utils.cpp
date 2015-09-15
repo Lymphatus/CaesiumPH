@@ -8,8 +8,8 @@
 
 QString inputFilter =  QIODevice::tr("Image Files (*.jpg *.jpeg)");
 QStringList inputFilterList = QStringList() << "*.jpg" << "*.jpeg";
-QString versionString = "0.9.1 (BETA)";
-int versionNumber = 91;
+QString versionString = "0.9.2-beta";
+int versionNumber = 92;
 int buildNumber = QDate::currentDate().toString("yyyyMMdd").toInt();
 long originalsSize = 0;
 long compressedSize = 0;

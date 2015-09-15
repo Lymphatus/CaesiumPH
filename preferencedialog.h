@@ -19,6 +19,9 @@
 
 //Compression group keys
 #define KEY_PREF_COMPRESSION_EXIF QString("exif")
+#define KEY_PREF_COMPRESSION_EXIF_COPYRIGHT QString("exifCopyright")
+#define KEY_PREF_COMPRESSION_EXIF_DATE QString("exifDate")
+#define KEY_PREF_COMPRESSION_EXIF_COMMENT QString("exifComment")
 #define KEY_PREF_COMPRESSION_PROGRESSIVE QString("progressive")
 
 //Privacy group keys

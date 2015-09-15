@@ -7,8 +7,15 @@
 #include <QStringList>
 #include <QSize>
 
+enum cexifs {
+    EXIF_COPYRIGHT,
+    EXIF_DATE,
+    EXIF_COMMENTS
+};
+
 typedef struct var {
     int exif;
+    QList<cexifs> importantExifs;
     int progressive;
     bool overwrite;
     int outMethodIndex;

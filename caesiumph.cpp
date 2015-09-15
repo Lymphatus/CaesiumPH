@@ -27,6 +27,8 @@
 #include <QDesktopServices>
 #include <QDirIterator>
 
+#include <exiv2/exiv2.hpp>
+
 #include <QDebug>
 
 CaesiumPH::CaesiumPH(QWidget *parent) :
@@ -121,6 +123,16 @@ void CaesiumPH::readPreferences() {
     settings.beginGroup(KEY_PREF_GROUP_COMPRESSION);
     params.exif = settings.value(KEY_PREF_COMPRESSION_EXIF).value<bool>();
     params.progressive = settings.value(KEY_PREF_COMPRESSION_PROGRESSIVE).value<bool>();
+    params.importantExifs.clear();
+    if (settings.value(KEY_PREF_COMPRESSION_EXIF_COPYRIGHT).value<bool>()) {
+        params.importantExifs.append(EXIF_COPYRIGHT);
+    }
+    if (settings.value(KEY_PREF_COMPRESSION_EXIF_DATE).value<bool>()) {
+        params.importantExifs.append(EXIF_DATE);
+    }
+    if (settings.value(KEY_PREF_COMPRESSION_EXIF_COMMENT).value<bool>()) {
+        params.importantExifs.append(EXIF_COMMENTS);
+    }
     settings.endGroup();
 
     settings.beginGroup(KEY_PREF_GROUP_GENERAL);
@@ -332,15 +344,23 @@ extern void compressRoutine(CTreeWidgetItem* item) {
         default:
             break;
         }
-
-
     }
+
+
+    //Not really necessary if we copy the whole EXIF data
+    Exiv2::ExifData exifData = getExifFromPath(QStringToChar(inputPath));
     //BUG Sometimes files are empty. Check it out.
     cclt_optimize(QStringToChar(inputPath),
                   QStringToChar(outputPath),
                   params.exif,
                   params.progressive,
                   QStringToChar(inputPath));
+
+    //Write important metadata as user requested
+    if (!params.exif && !params.importantExifs.isEmpty()) {
+        qDebug() << params.importantExifs;
+        writeSpecificExifTags(exifData, outputPath, params.importantExifs);
+    }
 
     //Gets new file info
     QFileInfo* fileInfo = new QFileInfo(outputPath);
@@ -456,7 +476,7 @@ void CaesiumPH::on_listTreeWidget_itemSelectionChanged() {
 
         //Load EXIF info
         //TODO Should run in another thread too?
-        ui->exifTextEdit->setText(getExifFromPath(QStringToChar(currentItem->text(4))));
+        ui->exifTextEdit->setText(exifDataToString(getExifFromPath(QStringToChar(currentItem->text(4)))));
     }
 }
 
