@@ -27,34 +27,33 @@ Linux source code must be compiled using Qt5.5.
 
 ----------
 
-##### KNOWN BUGS
-- Cancel button does not work while compressing (the job finishes anyway)
-- On preferences, the browse button for folders shows up everytime
-- "ExifTag" is copied too when copying critical parameters
-- Some images don't show in preview. Track why.
-- JPEG module is not correctly loaded on OSX bundle
-- Remove item does not act well
-- The EXIF box has the focus (CTRL+A)
+##### KNOWN ISSUES
+- Some images don't show in preview
+- The combobox selection is not clearly visible on OSX
 
 ----------
 
 ##### TODO
 - Translations
 - Logging
-- Clear preview and EXIF tag box when clearing the list or deleting an item
 
 ----------
 
 ##### CHANGELOG
 
-###### 0.9.1-beta
-Initial release
-
 ###### 0.9.2-beta
 * FIXED
     * Wrong OS recognition under Linux
+    * The list now correcly reads focus and keyboard shortcuts
+    * JPEG module on OSX is now correcly bundled
+    * Items removal now correctly removes all the selected items
+    * Fixed the browse button behaviour in preferences
 * ADDED
     * You can now keep only Copyright, Datetime and Comments in EXIF
+    * By deleting an item or clearing the list, the preview and EXIF box will empty
+
+###### 0.9.1-beta
+Initial release
 
 For a more detailed list of beta commits, see the [GitHub Repository](https://github.com/Lymphatus/CaesiumPH)
 

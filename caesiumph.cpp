@@ -45,6 +45,7 @@ CaesiumPH::CaesiumPH(QWidget *parent) :
 #ifdef _WIN32
     QThreadPool::globalInstance()->setMaxThreadCount(1);
 #endif
+    QThreadPool::globalInstance()->setMaxThreadCount(QThread::idealThreadCount());
 }
 
 CaesiumPH::~CaesiumPH() {
@@ -88,6 +89,9 @@ void CaesiumPH::initializeUI() {
 
     //Default EXIF value
     ui->exifTextEdit->setText(tr("No EXIF info available"));
+
+    //No blue border on focus on Mac
+    ui->listTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
 
 }
 
@@ -310,9 +314,18 @@ void CaesiumPH::on_actionAdd_folder_triggered() {
 }
 
 void CaesiumPH::on_actionRemove_items_triggered() {
-    for (int i = 0; i < ui->listTreeWidget->selectedItems().count(); i++) {
-        ui->listTreeWidget->takeTopLevelItem(ui->listTreeWidget->indexOfTopLevelItem(ui->listTreeWidget->selectedItems().at(i)));
+    int count = ui->listTreeWidget->selectedItems().count();
+    if (count == ui->listTreeWidget->topLevelItemCount()) {
+        qDebug() << "Clear called";
+        ui->listTreeWidget->clear();
+    } else {
+        qDebug() << "Some item remove";
+        for (int i = 0; i < count; i++) {
+            ui->listTreeWidget->takeTopLevelItem(ui->listTreeWidget->indexOfTopLevelItem(ui->listTreeWidget->selectedItems().at(0)));
+        }
     }
+    clearUI();
+
 }
 
 extern void compressRoutine(CTreeWidgetItem* item) {
@@ -358,7 +371,6 @@ extern void compressRoutine(CTreeWidgetItem* item) {
 
     //Write important metadata as user requested
     if (!params.exif && !params.importantExifs.isEmpty()) {
-        qDebug() << params.importantExifs;
         writeSpecificExifTags(exifData, outputPath, params.importantExifs);
     }
 
@@ -399,6 +411,13 @@ void CaesiumPH::on_actionCompress_triggered() {
     //Setup watcher
     QFutureWatcher<void> watcher;
 
+    //Gets the list filled
+    for (int i = 0; i < ui->listTreeWidget->topLevelItemCount(); i++) {
+        list.append((CTreeWidgetItem*) ui->listTreeWidget->topLevelItem(i));
+    }
+
+    QFuture<void> future = QtConcurrent::map(list, compressRoutine);
+
     //Setting up connections
     //Progress dialog
     connect(&watcher, SIGNAL(progressValueChanged(int)), &progressDialog, SLOT(setValue(int)));
@@ -409,16 +428,14 @@ void CaesiumPH::on_actionCompress_triggered() {
     connect(&watcher, SIGNAL(started()), this, SLOT(compressionStarted()));
     connect(&watcher, SIGNAL(finished()), this, SLOT(compressionFinished()));
 
-    //Gets the list filled
-    for (int i = 0; i < ui->listTreeWidget->topLevelItemCount(); i++) {
-        list.append((CTreeWidgetItem*) ui->listTreeWidget->topLevelItem(i));
-    }
 
     //And start
-    watcher.setFuture(QtConcurrent::map(list, compressRoutine));
+    watcher.setFuture(future);
 
     //Show the dialog
     progressDialog.exec();
+
+    qDebug() << "Canceled?" << watcher.future().isCanceled();
 }
 
 void CaesiumPH::compressionStarted() {
@@ -477,6 +494,9 @@ void CaesiumPH::on_listTreeWidget_itemSelectionChanged() {
         //Load EXIF info
         //TODO Should run in another thread too?
         ui->exifTextEdit->setText(exifDataToString(getExifFromPath(QStringToChar(currentItem->text(4)))));
+    } else {
+        imageWatcher.cancel();
+        clearUI();
     }
 }
 
@@ -564,4 +584,9 @@ void CaesiumPH::startUpdateProcess(QString path) {
     QDesktopServices::openUrl(QUrl("file://" + path, QUrl::TolerantMode));
     this->close();
     qDebug() << path;
+}
+
+void CaesiumPH::clearUI() {
+    ui->exifTextEdit->clear();
+    ui->imagePreviewLabel->clear();
 }

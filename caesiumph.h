@@ -53,6 +53,7 @@ private slots:
     void updateAvailable(int);
     void on_updateButton_clicked();
     void startUpdateProcess(QString);
+    void clearUI();
 
 private:
     Ui::CaesiumPH *ui;

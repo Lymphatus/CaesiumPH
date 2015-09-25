@@ -40,16 +40,24 @@
     <item row="0" column="0" colspan="2">
      <widget class="QDropTreeWidget" name="listTreeWidget">
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::ClickFocus</enum>
       </property>
       <property name="acceptDrops">
        <bool>true</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QTreeWidget:focus {
+	outline: none;
+}</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Plain</enum>
+      </property>
+      <property name="lineWidth">
+       <number>0</number>
       </property>
       <property name="dragEnabled">
        <bool>false</bool>
@@ -624,6 +632,9 @@ border-bottom: 1px solid #757575
        </property>
        <item>
         <widget class="QTextEdit" name="exifTextEdit">
+         <property name="focusPolicy">
+          <enum>Qt::ClickFocus</enum>
+         </property>
          <property name="styleSheet">
           <string notr="true"/>
          </property>

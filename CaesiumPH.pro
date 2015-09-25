@@ -11,6 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = CaesiumPH
 TEMPLATE = app
 
+QMAKE_MAC_SDK = macosx10.11
+
 macx {
     QMAKE_CXXFLAGS_CXX11 = -std=gnu++1y
     CONFIG *= c++11

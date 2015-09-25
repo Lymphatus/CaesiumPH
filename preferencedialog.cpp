@@ -14,6 +14,9 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) :
     ui(new Ui::PreferenceDialog) {
     ui->setupUi(this);
     readPreferences();
+
+    //If we want a custom folder, show the browse button
+    ui->browseButton->setVisible(ui->outputFileMethodComboBox->currentIndex() == 2);
 }
 
 PreferenceDialog::~PreferenceDialog() {

@@ -7,11 +7,9 @@
 #include <QProgressDialog>
 
 NetworkOperations::NetworkOperations(QObject *parent) : QObject(parent) {
-    releaseURL = "https://github.com/Lymphatus/CaesiumPH/releases/download/v" +
+    releaseURL = "http://download.saerasoft.com/caesiumph/current/caesiumph-" +
             versionString +
-            "/caesiumph-" +
-            versionString +
-            "." + osAndExtension.at(1);
+            osAndExtension.at(1);
 }
 
 void NetworkOperations::uploadUsageStatistics() {
@@ -34,6 +32,7 @@ void NetworkOperations::uploadFinished(QNetworkReply * reply) {
 
 void NetworkOperations::checkForUpdates() {
     //Request current build from network
+    //TODO Rewrite with GitHub API
     updateReply = networkManager->get(QNetworkRequest(QUrl("http://download.saerasoft.com/caesiumph/current")));
     connect(updateReply, SIGNAL(readyRead()), this, SLOT(getCurrentBuild()));
 }
@@ -55,11 +54,7 @@ void NetworkOperations::downloadUpdateRequest() {
     pDialog->setLabelText(tr("Downloading updates..."));
     //Set the right URL according to OS
     QUrl url;
-    url.setUrl("https://github.com/Lymphatus/CaesiumPH/releases/download/v" +
-               versionString +
-               "/caesiumph-" +
-               versionString +
-               "." + osAndExtension.at(1));
+    url.setUrl(releaseURL);
 
     //Get request
     downloadUpdateReply = networkManager->get(QNetworkRequest(url));
@@ -73,10 +68,11 @@ void NetworkOperations::downloadUpdateRequest() {
 void NetworkOperations::showUpdateDownloadProgress(qint64 c, qint64 t) {
     //Show the progress in the ProgressDialog
     if (downloadUpdateReply->error() == QNetworkReply::NoError) {
+        qDebug() << "Update found: " + releaseURL;
         pDialog->setRange(0, t);
         pDialog->setValue(c);
     } else {
-        qDebug() << "Network error";
+        qDebug() << "Network error: " + downloadUpdateReply->errorString();
         pDialog->close();
         downloadUpdateReply->abort();
     }
@@ -98,7 +94,6 @@ void NetworkOperations::flushUpdate() {
         file->close();
         emit updateDownloadFinished(tmpPath);
         downloadUpdateReply->deleteLater();
-
     } else {
         downloadUpdateReply->deleteLater();
         qDebug() << "Failed to write file";
