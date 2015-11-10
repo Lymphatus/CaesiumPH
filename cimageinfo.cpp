@@ -8,7 +8,7 @@ CImageInfo::CImageInfo(QString path) {
     fullPath = path;
     baseName = fi->completeBaseName();
     size = fi->size();
-    formattedSize = formatSize(size);
+    formattedSize = toHumanSize(size);
 }
 
 CImageInfo::CImageInfo() {

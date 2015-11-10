@@ -27,5 +27,8 @@ void AboutDialog::setupUI() {
     ui->logoGraphicsView->setScene(scene);
 
     //Version label
-    ui->versionLabel->setText(tr("Version") + " " + versionString + " build " + QString::number(buildNumber));
+    ui->versionLabel->setText(tr("Version") +
+                              " <strong>" + versionString +
+                              "</strong><br /> (build " +
+                              QString::number(buildNumber) + ")");
 }

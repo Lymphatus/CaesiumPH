@@ -36,10 +36,18 @@ Linux source code must be compiled using Qt5.5.
 ##### TODO
 - Translations
 - Logging
+- Context menu in file list
 
 ----------
 
 ##### CHANGELOG
+
+###### 0.9.3-beta
+* FIXED
+    * The EXIF checkbox now it's tri-state
+    * Fixed sorting for ```NEW SIZE``` and ```RATIO``` columns
+* ADDED
+    * Nothing
 
 ###### 0.9.2-beta
 * FIXED

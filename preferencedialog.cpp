@@ -135,3 +135,32 @@ void PreferenceDialog::on_browseButton_clicked() {
                                                   QStandardPaths::writableLocation(QStandardPaths::PicturesLocation),
                                                   QFileDialog::ShowDirsOnly));
 }
+
+void PreferenceDialog::on_keepCopyrightCheckBox_toggled(bool checked) {
+    ui->exifCheckBox->setCheckState(getExifsCheckBoxGroupState());
+}
+
+void PreferenceDialog::on_keepDateCheckBox_toggled(bool checked) {
+    ui->exifCheckBox->setCheckState(getExifsCheckBoxGroupState());
+}
+
+void PreferenceDialog::on_keepCommentsCheckBox_toggled(bool checked) {
+    ui->exifCheckBox->setCheckState(getExifsCheckBoxGroupState());
+}
+
+enum Qt::CheckState PreferenceDialog::getExifsCheckBoxGroupState() {
+    if (ui->keepDateCheckBox->isChecked() &&
+            ui->keepCommentsCheckBox->isChecked() &&
+            ui->keepCopyrightCheckBox->isChecked()) {
+        //All selected
+        return Qt::Checked;
+    } else if (ui->keepDateCheckBox->isChecked() ||
+               ui->keepCommentsCheckBox->isChecked() ||
+               ui->keepCopyrightCheckBox->isChecked()) {
+        //At least one is selected
+        return Qt::PartiallyChecked;
+    } else {
+        //None is selected
+        return Qt::Unchecked;
+    }
+}

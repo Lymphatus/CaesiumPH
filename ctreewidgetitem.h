@@ -4,6 +4,8 @@
 #include <QTreeWidgetItem>
 #include <QFileInfo>
 
+#include <utils.h>
+
 class CTreeWidgetItem : public QTreeWidgetItem
 {
 public:
@@ -17,7 +19,14 @@ private:
             return QFileInfo(text(4)).size() < QFileInfo(other.text(4)).size();
         case 2:
             //Sort by compressed size
-            return QFileInfo(text(4)).size() < QFileInfo(other.text(4)).size();
+            /*
+             * WARNING This methods ignores the less significant bytes of the size
+             * and may lead to inaccurate sorting. Won't fix for now as not critical.
+             */
+            return humanToDouble(text(column)) < humanToDouble(other.text(column));
+        case 3:
+            //Sort by saved space
+            return ratioToDouble(text(column)) < ratioToDouble(other.text(column));
         default:
             //Sort by path
             return text(column).toLower() < other.text(column).toLower();

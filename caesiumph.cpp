@@ -376,7 +376,7 @@ extern void compressRoutine(CTreeWidgetItem* item) {
 
     //Gets new file info
     QFileInfo* fileInfo = new QFileInfo(outputPath);
-    item->setText(2, formatSize(fileInfo->size()));
+    item->setText(2, toHumanSize(fileInfo->size()));
     item->setText(3, getRatio(originalSize, fileInfo->size()));
     originalsSize += originalSize;
     compressedSize += fileInfo->size();
@@ -446,7 +446,7 @@ void CaesiumPH::compressionStarted() {
 void CaesiumPH::compressionFinished() {
     //Get elapsed time of the compression
     qDebug() << QTime::currentTime();
-    qDebug() << formatSize(originalsSize) + " - " + formatSize(compressedSize) + " | " + getRatio(originalsSize, compressedSize);
+    qDebug() << toHumanSize(originalsSize) + " - " + toHumanSize(compressedSize) + " | " + getRatio(originalsSize, compressedSize);
     //Set parameters for usage info
     uinfo->setCompressed_bytes(uinfo->compressed_bytes + originalsSize);
     uinfo->setCompressed_pictures(uinfo->compressed_pictures + ui->listTreeWidget->topLevelItemCount());

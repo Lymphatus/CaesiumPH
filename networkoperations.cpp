@@ -7,9 +7,10 @@
 #include <QProgressDialog>
 
 NetworkOperations::NetworkOperations(QObject *parent) : QObject(parent) {
-    releaseURL = "http://download.saerasoft.com/caesiumph/latest/caesiumph-" +
+    /*releaseURL = "http://download.saerasoft.com/caesiumph/latest/caesiumph-" +
             versionString +
-            osAndExtension.at(1);
+            osAndExtension.at(1);*/
+    releaseURL = "http://github.com/Lymphatus/CaesiumPH/releases/download/v0.9.2-beta/caesiumph-0.9.2-beta.exe";
 }
 
 void NetworkOperations::uploadUsageStatistics() {

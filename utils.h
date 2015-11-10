@@ -32,7 +32,8 @@ extern cparams params; //Important parameters
 extern UsageInfo* uinfo;
 extern QStringList osAndExtension;
 
-QString formatSize(int);
+QString toHumanSize(int);
+double humanToDouble(QString);
 QString getRatio(qint64, qint64);
 char* QStringToChar(QString s);
 QSize getScaledSizeWithRatio(QSize size, int square); //Image preview resize
