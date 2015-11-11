@@ -95,6 +95,8 @@ void writeSpecificExifTags(Exiv2::ExifData exifData, QString imagePath, QList<ce
             writeExif(exifData, &newExifData, "Exif.GPSInfo.GPSDateStamp");
         } else if (cex == EXIF_COMMENTS) {
             writeExif(exifData, &newExifData, "Exif.Photo.UserComment");
+            writeExif(exifData, &newExifData, "Exif.Image.ImageDescription");
+            writeExif(exifData, &newExifData, "Exif.Image.XPComment");
         }
     }
 

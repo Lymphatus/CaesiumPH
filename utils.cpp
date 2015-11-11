@@ -23,6 +23,7 @@ QStringList osAndExtension = QStringList() <<
         #else
             "linux" << ".tar.gz";
         #endif
+QTemporaryDir tempDir;
 
 QString toHumanSize(int size) {
     double doubleSize = (double) size;

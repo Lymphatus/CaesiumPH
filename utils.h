@@ -6,6 +6,7 @@
 #include <QList>
 #include <QStringList>
 #include <QSize>
+#include <QTemporaryDir>
 
 enum cexifs {
     EXIF_COPYRIGHT,
@@ -31,6 +32,7 @@ extern long originalsSize, compressedSize; //Before and after bytes count
 extern cparams params; //Important parameters
 extern UsageInfo* uinfo;
 extern QStringList osAndExtension;
+extern QTemporaryDir tempDir;
 
 QString toHumanSize(int);
 double humanToDouble(QString);

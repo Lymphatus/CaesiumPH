@@ -102,7 +102,7 @@ extern int cclt_optimize(char* input_file, char* output_file, int exif_flag, int
     jpeg_stdio_src(&srcinfo, fp);
 
     //Save EXIF info
-    if (exif_flag == 1) {
+    if (exif_flag == 2) {
         for (int m = 0; m < 16; m++) {
             jpeg_save_markers(&srcinfo, JPEG_APP0 + m, 0xFFFF);
         }
@@ -147,7 +147,7 @@ extern int cclt_optimize(char* input_file, char* output_file, int exif_flag, int
     jpeg_write_coefficients(&dstinfo, dst_coef_arrays);
 
     //Write EXIF
-    if (exif_flag == 1) {
+    if (exif_flag == 2) {
         if (strcmp(input_file, exif_src) == 0) {
             jcopy_markers_execute(&srcinfo, &dstinfo);
         } else {

@@ -83,5 +83,6 @@ DISTFILES += \
     qss/style_osx.qss \
     qss/style_win.qss \
     qss/style_linux.qss \
-    README.md
+    README.md \
+    CHANGELOG.md
 

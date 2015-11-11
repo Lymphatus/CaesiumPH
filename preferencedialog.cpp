@@ -55,7 +55,8 @@ void PreferenceDialog::writePreferences() {
 
     //Compression
     settings.beginGroup(KEY_PREF_GROUP_COMPRESSION);
-    settings.setValue(KEY_PREF_COMPRESSION_EXIF, ui->exifCheckBox->isChecked());
+    qDebug() << ui->exifCheckBox->checkState();
+    settings.setValue(KEY_PREF_COMPRESSION_EXIF, ui->exifCheckBox->checkState());
     settings.setValue(KEY_PREF_COMPRESSION_EXIF_COPYRIGHT, ui->keepCopyrightCheckBox->isChecked());
     settings.setValue(KEY_PREF_COMPRESSION_EXIF_DATE, ui->keepDateCheckBox->isChecked());
     settings.setValue(KEY_PREF_COMPRESSION_EXIF_COMMENT, ui->keepCommentsCheckBox->isChecked());
@@ -83,7 +84,8 @@ void PreferenceDialog::readPreferences() {
 
     //Compression
     settings.beginGroup(KEY_PREF_GROUP_COMPRESSION);
-    ui->exifCheckBox->setChecked(settings.value(KEY_PREF_COMPRESSION_EXIF).value<bool>());
+    qDebug() << settings.value(KEY_PREF_COMPRESSION_EXIF).value<Qt::CheckState>();
+    ui->exifCheckBox->setCheckState(settings.value(KEY_PREF_COMPRESSION_EXIF).value<Qt::CheckState>());
     ui->keepCopyrightCheckBox->setChecked(settings.value(KEY_PREF_COMPRESSION_EXIF_COPYRIGHT).value<bool>());
     ui->keepDateCheckBox->setChecked(settings.value(KEY_PREF_COMPRESSION_EXIF_DATE).value<bool>());
     ui->keepCommentsCheckBox->setChecked(settings.value(KEY_PREF_COMPRESSION_EXIF_COMMENT).value<bool>());
