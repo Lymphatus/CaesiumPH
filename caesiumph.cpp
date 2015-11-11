@@ -258,18 +258,16 @@ void CaesiumPH::showImportProgressDialog(QStringList list) {
     progress.show();
     progress.setWindowModality(Qt::WindowModal);
 
-
-    if (QDir(list[0]).exists()) {
-        QDirIterator it(list[0], inputFilterList, QDir::AllEntries, scanSubdir ? QDirIterator::Subdirectories : QDirIterator::NoIteratorFlags);
-        while(it.hasNext()) {
-            qDebug() << it.next();
-            list.append(it.filePath());
-        }
-    } else {
-        qDebug() << list;
-    }
-
     for (int i = 0; i < list.size(); i++) {
+
+        //Check if it's a folder
+        if (QDir(list[i]).exists()) {
+            //If so, add the whole content to the end of the list
+            QDirIterator it(list[i], inputFilterList, QDir::AllEntries, scanSubdir ? QDirIterator::Subdirectories : QDirIterator::NoIteratorFlags);
+            while(it.hasNext()) {
+                list.append(it.filePath());
+            }
+        }
 
         //Validate extension
         if (!isJPEG(QStringToChar(list.at(i)))) {
