@@ -14,7 +14,7 @@
 ----------
 
 ##### TESTED PLATFORMS
-* MacOSX Yosemite (v. 10.10.5)
+* MacOSX El Capitan (v. 10.11.1)
 * Windows 10 64 bit
 * ArchLinux
 
