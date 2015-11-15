@@ -5,8 +5,10 @@
     * The EXIF checkbox now it's tri-state
     * Fixed sorting for ```NEW SIZE``` and ```RATIO``` columns
     * Dropping multiple folders now correctly adds them all instead of the only one active
+    * Progressive support working as intended
 * ADDED
     * If the compressed file is bigger than the original it now skips it
+    * A little status bar, documenting actions (and compression results)
 
 ----------
 

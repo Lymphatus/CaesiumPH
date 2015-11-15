@@ -54,6 +54,7 @@ private slots:
     void on_updateButton_clicked();
     void startUpdateProcess(QString);
     void clearUI();
+    void updateStatusBarCount();
 
 private:
     Ui::CaesiumPH *ui;

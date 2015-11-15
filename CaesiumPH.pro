@@ -84,5 +84,6 @@ DISTFILES += \
     qss/style_win.qss \
     qss/style_linux.qss \
     README.md \
-    CHANGELOG.md
+    CHANGELOG.md \
+    LICENSE
 

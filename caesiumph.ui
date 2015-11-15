@@ -17,6 +17,9 @@
    <iconset resource="icons.qrc">
     <normaloff>:/icons/main/logo.png</normaloff>:/icons/main/logo.png</iconset>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
   </property>
@@ -563,8 +566,15 @@ border-bottom: 1px solid #757575
     </property>
     <addaction name="actionAbout_CaesiumPH"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionStatus_bar"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
    <addaction name="menuActions"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -648,8 +658,8 @@ border-bottom: 1px solid #757575
           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.Helvetica Neue DeskInterface'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;No EXIF info available&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.Helvetica Neue DeskInterface';&quot;&gt;No EXIF info available&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="tabStopWidth">
           <number>150</number>
@@ -707,6 +717,24 @@ p, li { white-space: pre-wrap; }
     </layout>
    </widget>
   </widget>
+  <widget class="QStatusBar" name="statusBar">
+   <property name="styleSheet">
+    <string notr="true">QStatusBar {
+	color: #757575;
+	font-size: 11pt;
+	background-color: #FFFFFF;
+	border-top: 1px solid #CCCCCC;
+	margin-left: 4px;
+	margin-right: 4px;
+}
+
+QStatusBar QLabel {
+	color: #757575;
+	font-size: 11pt;
+	border: none;
+}</string>
+   </property>
+  </widget>
   <action name="actionAdd_pictures">
    <property name="text">
     <string>Add pictures...</string>
@@ -753,6 +781,17 @@ p, li { white-space: pre-wrap; }
     <enum>QAction::AboutRole</enum>
    </property>
   </action>
+  <action name="actionStatus_bar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Status bar</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -779,6 +818,22 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>326</x>
      <y>233</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionStatus_bar</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>statusBar</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>439</x>
+     <y>489</y>
     </hint>
    </hints>
   </connection>

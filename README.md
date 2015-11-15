@@ -1,5 +1,5 @@
 ## CaesiumPH
-##### v 0.9.3-beta (build 20151111) - Copyright &copy; Matteo Paonessa, 2015. All Rights Reserved.
+##### v 0.9.3-beta (build 20151115) - Copyright &copy; Matteo Paonessa, 2015. All Rights Reserved.
 
 ----------
 

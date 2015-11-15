@@ -31,6 +31,8 @@
 
 #include <QDebug>
 
+//TODO GENERAL: handle plurals in counts
+
 CaesiumPH::CaesiumPH(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::CaesiumPH)
@@ -93,12 +95,27 @@ void CaesiumPH::initializeUI() {
     //No blue border on focus on Mac
     ui->listTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
 
+    //Status bar widgets
+    //Vertical line
+    QFrame* statusBarLine = new QFrame();
+    statusBarLine->setObjectName("statusBarLine");
+    statusBarLine->setFrameShape(QFrame::VLine);
+    statusBarLine->setFrameShadow(QFrame::Raised);
+    //List info label
+    QLabel* statusBarLabel = new QLabel();
+    statusBarLabel->setObjectName("statusBarLabel");
+    statusBarLabel->setText(tr("Welcome to CaesiumPH!"));
+    //Add them to the status bar
+    ui->statusBar->addPermanentWidget(statusBarLine);
+    ui->statusBar->addPermanentWidget(statusBarLabel);
+
 }
 
 void CaesiumPH::initializeConnections() {
     //Edit menu
     //List clear
     connect(ui->actionClear_list, SIGNAL(triggered()), ui->listTreeWidget, SLOT(clear()));
+    connect(ui->actionClear_list, SIGNAL(triggered()), this, SLOT(updateStatusBarCount()));
     //List select all
     connect(ui->actionSelect_all, SIGNAL(triggered()), ui->listTreeWidget, SLOT(selectAll()));
     //UI buttons
@@ -107,6 +124,7 @@ void CaesiumPH::initializeConnections() {
     connect(ui->addFolderButton, SIGNAL(released()), this, SLOT(on_actionAdd_folder_triggered()));
     connect(ui->removeItemButton, SIGNAL(released()), this, SLOT(on_actionRemove_items_triggered()));
     connect(ui->clearButton, SIGNAL(released()), ui->listTreeWidget, SLOT(clear()));
+    connect(ui->clearButton, SIGNAL(released()), this, SLOT(updateStatusBarCount()));
 
     //TreeWidget drop event
     connect(ui->listTreeWidget, SIGNAL(dropFinished(QStringList)), this, SLOT(showImportProgressDialog(QStringList)));
@@ -229,16 +247,14 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
     }
 }
 
-void CaesiumPH::on_actionAbout_CaesiumPH_triggered()
-{
+void CaesiumPH::on_actionAbout_CaesiumPH_triggered() {
     //Start the about dialog
     AboutDialog* ad = new AboutDialog(this);
     ad->setWindowFlags(Qt::Tool | Qt::WindowTitleHint | Qt::WindowCloseButtonHint | Qt::CustomizeWindowHint);
     ad->show();
 }
 
-void CaesiumPH::on_actionAdd_pictures_triggered()
-{
+void CaesiumPH::on_actionAdd_pictures_triggered() {
     //Generate file dialog for import and call the progress dialog indicator
     QStringList fileList = QFileDialog::getOpenFileNames(this,
                                   tr("Import files..."),
@@ -258,6 +274,10 @@ void CaesiumPH::showImportProgressDialog(QStringList list) {
     progress.show();
     progress.setWindowModality(Qt::WindowModal);
 
+    //Actual added item count and duplicate count
+    int item_count = 0;
+    int duplicate_count = 0;
+
     for (int i = 0; i < list.size(); i++) {
 
         //Check if it's a folder
@@ -265,9 +285,12 @@ void CaesiumPH::showImportProgressDialog(QStringList list) {
             //If so, add the whole content to the end of the list
             QDirIterator it(list[i], inputFilterList, QDir::AllEntries, scanSubdir ? QDirIterator::Subdirectories : QDirIterator::NoIteratorFlags);
             while(it.hasNext()) {
+                it.next();
                 list.append(it.filePath());
             }
         }
+
+        progress.setValue(i);
 
         //Validate extension
         if (!isJPEG(QStringToChar(list.at(i)))) {
@@ -279,6 +302,7 @@ void CaesiumPH::showImportProgressDialog(QStringList list) {
 
         //Check if it has a duplicate
         if (hasADuplicateInList(currentItemInfo)) {
+            duplicate_count++;
             continue;
         }
 
@@ -292,13 +316,20 @@ void CaesiumPH::showImportProgressDialog(QStringList list) {
         ui->listTreeWidget->addTopLevelItem(new CTreeWidgetItem(ui->listTreeWidget,
                                                                 itemContent));
 
-        progress.setValue(i);
+        item_count++;
 
         if (progress.wasCanceled()) {
             break;
         }
     }
     progress.setValue(list.count());
+
+    //Show import stats in the status bar
+    ui->statusBar->showMessage(duplicate_count > 0 ?
+                                   QString::number(item_count) + tr(" files added to the list") + ", " +
+                                                   QString::number(duplicate_count) + tr(" duplicates found")
+                                 : QString::number(item_count) + tr(" files added to the list"));
+    updateStatusBarCount();
 }
 
 void CaesiumPH::on_actionAdd_folder_triggered() {
@@ -314,15 +345,18 @@ void CaesiumPH::on_actionAdd_folder_triggered() {
 void CaesiumPH::on_actionRemove_items_triggered() {
     int count = ui->listTreeWidget->selectedItems().count();
     if (count == ui->listTreeWidget->topLevelItemCount()) {
-        qDebug() << "Clear called";
         ui->listTreeWidget->clear();
     } else {
-        qDebug() << "Some item remove";
         for (int i = 0; i < count; i++) {
             ui->listTreeWidget->takeTopLevelItem(ui->listTreeWidget->indexOfTopLevelItem(ui->listTreeWidget->selectedItems().at(0)));
         }
     }
+    //Clear boxes
     clearUI();
+    //Update count
+    updateStatusBarCount();
+    //Show a message
+    ui->statusBar->showMessage(QString::number(count) + tr(" items removed"));
 }
 
 extern void compressRoutine(CTreeWidgetItem* item) {
@@ -381,6 +415,8 @@ extern void compressRoutine(CTreeWidgetItem* item) {
                   params.progressive,
                   QStringToChar(inputPath));
 
+
+
     //Write important metadata as user requested
     if (params.exif != 2 && !params.importantExifs.isEmpty()) {
         writeSpecificExifTags(exifData, outputPath, params.importantExifs);
@@ -417,7 +453,6 @@ extern void compressRoutine(CTreeWidgetItem* item) {
         //Set the importat stats to point to the original file
         outputSize = originalSize;
     } else {
-        qDebug() << "New file is smaller.";
         //The new file is smaller
         //If overwrite is on, move the file from the temp folder into the original
         if (params.overwrite) {
@@ -436,6 +471,7 @@ extern void compressRoutine(CTreeWidgetItem* item) {
     //Global compression counters for the entire compression process
     originalsSize += originalSize;
     compressedSize += outputSize;
+    compressedFiles++;
 
     //Usage reports
     if (originalInfo->size() > uinfo->max_bytes) {
@@ -452,7 +488,7 @@ void CaesiumPH::on_actionCompress_triggered() {
     //Read preferences again
     readPreferences();
     //Reset counters
-    originalsSize = compressedSize = 0;
+    originalsSize = compressedSize = compressedFiles = 0;
     //Register metatype for emitting changes
     qRegisterMetaType<QVector<int> >("QVector<int>");
 
@@ -489,19 +525,27 @@ void CaesiumPH::on_actionCompress_triggered() {
 
     //Show the dialog
     progressDialog.exec();
-
-    qDebug() << "Canceled?" << watcher.future().isCanceled();
 }
 
 void CaesiumPH::compressionStarted() {
     //Start monitoring time while compressing
-    qDebug() << QTime::currentTime();
+    timer.start();
 }
 
 void CaesiumPH::compressionFinished() {
     //Get elapsed time of the compression
     qDebug() << QTime::currentTime();
     qDebug() << toHumanSize(originalsSize) + " - " + toHumanSize(compressedSize) + " | " + getRatio(originalsSize, compressedSize);
+
+    //Display statistics in the status bar
+    ui->statusBar->showMessage(tr("Compression completed! ") +
+                               QString::number(compressedFiles) + tr(" files compressed in ") +
+                               msToFormattedString(timer.elapsed()) + ", " +
+                               tr("from ") + toHumanSize(originalsSize) + tr(" to ") + toHumanSize(compressedSize) +
+                               ". " + tr("Saved ") + toHumanSize(originalsSize - compressedSize) +
+                               " (" + getRatio(originalsSize, compressedSize) + ")"
+                               );
+    timer.invalidate();
     //Set parameters for usage info
     uinfo->setCompressed_bytes(uinfo->compressed_bytes + originalsSize);
     uinfo->setCompressed_pictures(uinfo->compressed_pictures + ui->listTreeWidget->topLevelItemCount());
@@ -644,4 +688,15 @@ void CaesiumPH::startUpdateProcess(QString path) {
 void CaesiumPH::clearUI() {
     ui->exifTextEdit->clear();
     ui->imagePreviewLabel->clear();
+}
+
+void CaesiumPH::updateStatusBarCount() {
+    ui->statusBar->findChild<QLabel*>("statusBarLabel")->setText(
+                QString::number(ui->listTreeWidget->topLevelItemCount()) +
+                tr(" files in list"));
+
+    //If the list is empty, we got a call from the clear SIGNAL, so handle the general message too
+    if (ui->listTreeWidget->topLevelItemCount() == 0) {
+       ui->statusBar->showMessage(tr("List cleared"));
+    }
 }

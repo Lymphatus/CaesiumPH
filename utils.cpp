@@ -13,6 +13,7 @@ int versionNumber = 93;
 int buildNumber = QDate::currentDate().toString("yyyyMMdd").toInt();
 long originalsSize = 0;
 long compressedSize = 0;
+int compressedFiles = 0;
 cparams params;
 UsageInfo* uinfo = new UsageInfo();
 QStringList osAndExtension = QStringList() <<
@@ -24,6 +25,7 @@ QStringList osAndExtension = QStringList() <<
             "linux" << ".tar.gz";
         #endif
 QTemporaryDir tempDir;
+QElapsedTimer timer;
 
 QString toHumanSize(int size) {
     double doubleSize = (double) size;
@@ -107,5 +109,15 @@ bool isJPEG(char* path) {
     } else {
         fprintf(stderr, "Unsupported file type. Skipping.\n");
         return false;
+    }
+}
+
+QString msToFormattedString(qint64 ms) {
+    if (ms < 1000) {
+        return QString::number(ms) + " ms";
+    } else if (ms >= 1000 && ms < 60000) {
+        return QString::number(((double) ms) / 1000, 'f', 1) + "s";
+    } else {
+        return QString::number(ms / 60000) + ":" + (ms < 70000 ? "0" : "") + QString::number(ms / 1000 % 60) + QT_TR_NOOP(" minutes");
     }
 }

@@ -113,7 +113,6 @@ extern int cclt_optimize(char* input_file, char* output_file, int exif_flag, int
 
     //Read input coefficents
     src_coef_arrays = jpeg_read_coefficients(&srcinfo);
-    //jcopy_markers_setup(&srcinfo, copyoption);
 
     //Copy parameters
     jpeg_copy_critical_parameters(&srcinfo, &dstinfo);
@@ -136,8 +135,11 @@ extern int cclt_optimize(char* input_file, char* output_file, int exif_flag, int
     dstinfo.optimize_coding = TRUE;
 
     //Progressive
-    if (progressive_flag) {
+    if (progressive_flag) {        
         jpeg_simple_progression(&dstinfo);
+    } else {
+        //Outputs a baseline image
+        dstinfo.scan_info = NULL;
     }
 
     //Set the output file parameters
