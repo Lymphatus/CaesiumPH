@@ -655,12 +655,13 @@ void CaesiumPH::checkUpdates() {
     qDebug() << "Check updates called";
     NetworkOperations* op = new NetworkOperations();
     op->checkForUpdates();
-    connect(op, SIGNAL(checkForUpdatesFinished(int)), this, SLOT(updateAvailable(int)));
+    connect(op, SIGNAL(checkForUpdatesFinished(int, QString)), this, SLOT(updateAvailable(int, QString)));
 }
 
-void CaesiumPH::updateAvailable(int version) {
-    qDebug() << version;
+void CaesiumPH::updateAvailable(int version, QString versionTag) {
+    qDebug() << "FOUND VERSION " << version;
     ui->updateButton->setVisible(version > versionNumber);
+    updateVersionTag = versionTag;
 }
 
 bool CaesiumPH::hasADuplicateInList(CImageInfo *c) {

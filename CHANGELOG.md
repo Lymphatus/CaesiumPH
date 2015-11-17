@@ -9,6 +9,7 @@
 * ADDED
     * If the compressed file is bigger than the original it now skips it
     * A little status bar, documenting actions (and compression results)
+    * ImageDescription and XPComment are now saved if we choose to keep the EXIF comments
 
 ----------
 

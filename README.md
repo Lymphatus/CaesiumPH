@@ -30,6 +30,8 @@ Linux source code must be compiled using Qt5.5.
 ##### KNOWN ISSUES
 - Some images don't show in preview
 - The combobox selection is not clearly visible on OSX
+- Updater still not working on Windows/Linux
+- Sorting by ```NEW SIZE``` uses a rounded value and may not be 100% accurate
 
 ----------
 

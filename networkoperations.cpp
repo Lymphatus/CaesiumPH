@@ -2,15 +2,17 @@
 #include "usageinfo.h"
 #include "utils.h"
 
+#include <curl/curl.h>
+
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QProgressDialog>
+#include <QJsonDocument>
 
 NetworkOperations::NetworkOperations(QObject *parent) : QObject(parent) {
-    /*releaseURL = "http://download.saerasoft.com/caesiumph/latest/caesiumph-" +
-            versionString +
-            osAndExtension.at(1);*/
-    releaseURL = "http://github.com/Lymphatus/CaesiumPH/releases/download/v0.9.2-beta/caesiumph-0.9.2-beta.exe";
+    releaseURL = "https://github.com/Lymphatus/CaesiumPH/releases/download/v" +
+            updateVersionTag + "/caesiumph-" + updateVersionTag +
+            osAndExtension.at(1);
 }
 
 void NetworkOperations::uploadUsageStatistics() {
@@ -34,14 +36,20 @@ void NetworkOperations::uploadFinished(QNetworkReply * reply) {
 void NetworkOperations::checkForUpdates() {
     //Request current build from network
     //TODO Rewrite with GitHub API
-    updateReply = networkManager->get(QNetworkRequest(QUrl("http://download.saerasoft.com/caesiumph/current")));
+    QNetworkRequest request;
+    request.setUrl(QUrl("http://download.saerasoft.com/caesiumph/current"));
+    request.setRawHeader( "User-Agent" , "Mozilla Firefox" );
+    updateReply = networkManager->get(request);
     connect(updateReply, SIGNAL(readyRead()), this, SLOT(getCurrentBuild()));
 }
 
 void NetworkOperations::getCurrentBuild() {
     //Actually gets the build number
     if (updateReply->error() == QNetworkReply::NoError) {
-        emit checkForUpdatesFinished(updateReply->readAll().toInt());
+        int v_number = updateReply->readLine().split('\n').at(0).toInt();
+        QString v_string = updateReply->readLine().replace("\n", "");
+        emit checkForUpdatesFinished(v_number,
+                                     v_string);
     } else {
         qDebug() << updateReply->errorString();
     }
@@ -49,6 +57,7 @@ void NetworkOperations::getCurrentBuild() {
 }
 
 void NetworkOperations::downloadUpdateRequest() {
+
     //ProgressDialog for progress display
     pDialog = new QProgressDialog();
     pDialog->setWindowTitle(tr("CaesiumPH"));
@@ -57,11 +66,18 @@ void NetworkOperations::downloadUpdateRequest() {
     QUrl url;
     url.setUrl(releaseURL);
 
+    //Build a request and set an header
+    QNetworkRequest request;
+    request.setUrl(url);
+    request.setRawHeader( "User-Agent" , "Mozilla Firefox" );
+
     //Get request
-    downloadUpdateReply = networkManager->get(QNetworkRequest(url));
+    downloadUpdateReply = networkManager->get(request);
+    qDebug() << "Get started";
 
     //Connections
     connect(downloadUpdateReply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(showUpdateDownloadProgress(qint64,qint64)));
+    connect(downloadUpdateReply, SIGNAL(finished()), pDialog, SLOT(close()));
     connect(pDialog, SIGNAL(canceled()), downloadUpdateReply, SLOT(abort()));
     connect(downloadUpdateReply, SIGNAL(finished()), this, SLOT(flushUpdate()));
 }
@@ -69,34 +85,59 @@ void NetworkOperations::downloadUpdateRequest() {
 void NetworkOperations::showUpdateDownloadProgress(qint64 c, qint64 t) {
     //Show the progress in the ProgressDialog
     if (downloadUpdateReply->error() == QNetworkReply::NoError) {
-        qDebug() << "Update found: " + releaseURL;
-        pDialog->setRange(0, t);
-        pDialog->setValue(c);
+        if (downloadUpdateReply->attribute(QNetworkRequest::RedirectionTargetAttribute).isNull()) {
+            pDialog->setRange(0, t);
+            pDialog->setValue(c);
+        } else {
+            return;
+        }
     } else {
-        qDebug() << "Network error: " + downloadUpdateReply->errorString();
+        qDebug() << "Network error: " + downloadUpdateReply->errorString() << " " << releaseURL;
         pDialog->close();
         downloadUpdateReply->abort();
     }
 }
 
 void NetworkOperations::flushUpdate() {
-    //Gets a temporary path where we can write
-    QString tmpPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) +
-            QDir::separator() +
-            "cph_u" +
-            osAndExtension.at(1);
+    //TODO If it's cancelled it closes CaesiumPH anyways
 
-    QFile *file = new QFile(tmpPath);
+    if (downloadUpdateReply->error() == QNetworkReply::NoError) {
 
-    //Flush the file
-    if (file->open(QFile::WriteOnly)) {
-        file->write(downloadUpdateReply->readAll());
-        file->flush();
-        file->close();
-        emit updateDownloadFinished(tmpPath);
-        downloadUpdateReply->deleteLater();
-    } else {
-        downloadUpdateReply->deleteLater();
-        qDebug() << "Failed to write file";
+        //Gets a temporary path where we can write
+        QString tmpPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) +
+                QDir::separator() +
+                "cph_u" +
+                osAndExtension.at(1);
+
+        //Check if we are being redirected
+        QVariant variant = downloadUpdateReply->attribute(QNetworkRequest::RedirectionTargetAttribute);
+
+        if (!variant.isNull()) {
+            //Handle redirection; abort the current operation
+            downloadUpdateReply->abort();
+            //Change the url to the new one
+            releaseURL = variant.toString();
+            qDebug() << releaseURL;
+            //Go again
+            NetworkOperations::downloadUpdateRequest();
+            //Don't forget to return to abort the current function
+            return;
+        }
+
+        QFile *file = new QFile(tmpPath);
+
+        //Flush the file
+        if (file->open(QFile::WriteOnly)) {
+            file->write(downloadUpdateReply->readAll());
+            file->flush();
+            file->close();
+            emit updateDownloadFinished(tmpPath);
+            downloadUpdateReply->deleteLater();
+        } else {
+            downloadUpdateReply->deleteLater();
+            qDebug() << "Failed to write file";
+        }
+    } else if (downloadUpdateReply->error() == QNetworkReply::OperationCanceledError) {
+        qDebug() << "Aborted";
     }
 }

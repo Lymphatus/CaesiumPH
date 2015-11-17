@@ -28,6 +28,7 @@ extern QString inputFilter;
 extern QStringList inputFilterList;
 extern QString versionString;
 extern int versionNumber;
+extern QString updateVersionTag;
 extern int buildNumber;
 extern long originalsSize, compressedSize; //Before and after bytes count
 extern int compressedFiles; //Compressed files count

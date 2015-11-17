@@ -8,22 +8,21 @@
 class NetworkOperations : public QObject
 {
     Q_OBJECT
+
 public:
     explicit NetworkOperations(QObject *parent = 0);
+    void checkForUpdates();
+    void downloadUpdateRequest();
 
 public slots:
     void uploadUsageStatistics();
     void uploadFinished(QNetworkReply*);
     void getCurrentBuild();
     void showUpdateDownloadProgress(qint64, qint64);
-    void flushUpdate();
-
-public:
-    void checkForUpdates();
-    void downloadUpdateRequest();
+    void flushUpdate(); 
 
 signals:
-    void checkForUpdatesFinished(int);
+    void checkForUpdatesFinished(int, QString);
     void updateDownloadFinished(QString);
 
 private:

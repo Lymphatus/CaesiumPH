@@ -9,8 +9,9 @@
 QString inputFilter =  QIODevice::tr("Image Files (*.jpg *.jpeg)");
 QStringList inputFilterList = QStringList() << "*.jpg" << "*.jpeg";
 QString versionString = "0.9.3-beta";
-int versionNumber = 93;
+int versionNumber = 0;
 int buildNumber = QDate::currentDate().toString("yyyyMMdd").toInt();
+QString updateVersionTag = "";
 long originalsSize = 0;
 long compressedSize = 0;
 int compressedFiles = 0;

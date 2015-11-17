@@ -50,7 +50,7 @@ private slots:
     void closeEvent(QCloseEvent *event);
     void on_settingsButton_clicked();
     void showImportProgressDialog(QStringList);
-    void updateAvailable(int);
+    void updateAvailable(int, QString);
     void on_updateButton_clicked();
     void startUpdateProcess(QString);
     void clearUI();
