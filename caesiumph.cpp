@@ -681,7 +681,7 @@ void CaesiumPH::on_updateButton_clicked() {
 }
 
 void CaesiumPH::startUpdateProcess(QString path) {
-    QDesktopServices::openUrl(QUrl("file://" + path, QUrl::TolerantMode));
+    QDesktopServices::openUrl(QUrl::fromLocalFile(path));
     this->close();
     qDebug() << path;
 }

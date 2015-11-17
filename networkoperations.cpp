@@ -2,7 +2,6 @@
 #include "usageinfo.h"
 #include "utils.h"
 
-#include <curl/curl.h>
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -60,8 +59,9 @@ void NetworkOperations::downloadUpdateRequest() {
 
     //ProgressDialog for progress display
     pDialog = new QProgressDialog();
-    pDialog->setWindowTitle(tr("CaesiumPH"));
+    pDialog->setWindowTitle(tr("CaesiumPH Updater"));
     pDialog->setLabelText(tr("Downloading updates..."));
+    pDialog->setWindowModality(Qt::WindowModal);
     //Set the right URL according to OS
     QUrl url;
     url.setUrl(releaseURL);
