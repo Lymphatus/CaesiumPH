@@ -56,12 +56,6 @@ void NetworkOperations::getCurrentBuild() {
 }
 
 void NetworkOperations::downloadUpdateRequest() {
-
-    //ProgressDialog for progress display
-    pDialog = new QProgressDialog();
-    pDialog->setWindowTitle(tr("CaesiumPH Updater"));
-    pDialog->setLabelText(tr("Downloading updates..."));
-    pDialog->setWindowModality(Qt::WindowModal);
     //Set the right URL according to OS
     QUrl url;
     url.setUrl(releaseURL);
@@ -77,30 +71,26 @@ void NetworkOperations::downloadUpdateRequest() {
 
     //Connections
     connect(downloadUpdateReply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(showUpdateDownloadProgress(qint64,qint64)));
-    connect(downloadUpdateReply, SIGNAL(finished()), pDialog, SLOT(close()));
-    connect(pDialog, SIGNAL(canceled()), downloadUpdateReply, SLOT(abort()));
     connect(downloadUpdateReply, SIGNAL(finished()), this, SLOT(flushUpdate()));
 }
 
+
+//WARNING LEGACY, not used. Remove if necessary
 void NetworkOperations::showUpdateDownloadProgress(qint64 c, qint64 t) {
     //Show the progress in the ProgressDialog
     if (downloadUpdateReply->error() == QNetworkReply::NoError) {
         if (downloadUpdateReply->attribute(QNetworkRequest::RedirectionTargetAttribute).isNull()) {
-            pDialog->setRange(0, t);
-            pDialog->setValue(c);
+            //qDebug() << c << "/" << t;
         } else {
             return;
         }
     } else {
         qDebug() << "Network error: " + downloadUpdateReply->errorString() << " " << releaseURL;
-        pDialog->close();
         downloadUpdateReply->abort();
     }
 }
 
 void NetworkOperations::flushUpdate() {
-    //TODO If it's cancelled it closes CaesiumPH anyways
-
     if (downloadUpdateReply->error() == QNetworkReply::NoError) {
 
         //Gets a temporary path where we can write
@@ -117,7 +107,6 @@ void NetworkOperations::flushUpdate() {
             downloadUpdateReply->abort();
             //Change the url to the new one
             releaseURL = variant.toString();
-            qDebug() << releaseURL;
             //Go again
             NetworkOperations::downloadUpdateRequest();
             //Don't forget to return to abort the current function
@@ -131,6 +120,7 @@ void NetworkOperations::flushUpdate() {
             file->write(downloadUpdateReply->readAll());
             file->flush();
             file->close();
+            qDebug() << "Download finished and flushed";
             emit updateDownloadFinished(tmpPath);
             downloadUpdateReply->deleteLater();
         } else {

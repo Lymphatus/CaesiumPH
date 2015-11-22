@@ -8,6 +8,8 @@
 #include <QTreeWidgetItem>
 #include <QFutureWatcher>
 #include <QTime>
+#include <QToolButton>
+#include <QLabel>
 
 namespace Ui {
 class CaesiumPH;
@@ -52,13 +54,19 @@ private slots:
     void showImportProgressDialog(QStringList);
     void updateAvailable(int, QString);
     void on_updateButton_clicked();
-    void startUpdateProcess(QString);
+    void updateDownloadFinished(QString);
     void clearUI();
     void updateStatusBarCount();
 
 private:
     Ui::CaesiumPH *ui;
     QFutureWatcher<QImage> imageWatcher; //Image preview loader
+    //Status bar widgets
+    QToolButton* updateButton = new QToolButton();
+    QFrame* statusStatusBarLine = new QFrame();
+    QFrame* updateStatusBarLine = new QFrame();
+    QLabel* statusBarLabel = new QLabel();
+    QString updatePath;
 
     void checkUpdates();
     bool hasADuplicateInList(CImageInfo* c);

@@ -80,6 +80,12 @@ QLabel#imagePreviewLabel {
     padding-top:3px;
 }
 
+QToolButton {
+    background-color: transparent;
+    border: none;
+    color: #757575;
+}
+
 /* OSX specific look */
 
 QMainWindow::separator {

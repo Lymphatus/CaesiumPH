@@ -76,6 +76,12 @@ QTextEdit {
     padding-bottom: 5px;
 }
 
+QToolButton {
+    background-color: transparent;
+    border: none;
+    color: #757575;
+}
+
 /* Windows specific look */
 
 QMenu, QMenuBar {

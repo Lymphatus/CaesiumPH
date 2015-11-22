@@ -59,3 +59,9 @@ QProgressBar {
 QDialog {
     color: #FFFFFF;
 }
+
+QToolButton {
+    background-color: transparent;
+    border: none;
+    color: #757575;
+}

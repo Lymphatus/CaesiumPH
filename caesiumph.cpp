@@ -76,9 +76,6 @@ void CaesiumPH::initializeUI() {
     //Set menu invisible for Windows/Linux
     ui->menuBar->setVisible(false);
 
-    //Update button visibility
-    ui->updateButton->setVisible(false);
-
     //Restore window state
     settings.beginGroup(KEY_PREF_GROUP_GEOMETRY);
     resize(settings.value(KEY_PREF_GEOMETRY_SIZE, QSize(880, 500)).toSize());
@@ -96,18 +93,25 @@ void CaesiumPH::initializeUI() {
     ui->listTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
 
     //Status bar widgets
-    //Vertical line
-    QFrame* statusBarLine = new QFrame();
-    statusBarLine->setObjectName("statusBarLine");
-    statusBarLine->setFrameShape(QFrame::VLine);
-    statusBarLine->setFrameShadow(QFrame::Raised);
+    //Vertical lines
+    statusStatusBarLine->setFrameShape(QFrame::VLine);
+    statusStatusBarLine->setFrameShadow(QFrame::Raised);
+    updateStatusBarLine->setFrameShape(QFrame::VLine);
+    updateStatusBarLine->setFrameShadow(QFrame::Raised);
+    updateStatusBarLine->setVisible(false);
     //List info label
-    QLabel* statusBarLabel = new QLabel();
-    statusBarLabel->setObjectName("statusBarLabel");
     statusBarLabel->setText(tr("Welcome to CaesiumPH!"));
+    //Update Button
+    updateButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    updateButton->setAutoRaise(false);
+    updateButton->setText(tr("A new version is available!"));
+    updateButton->setIcon(QIcon(":/icons/ui/update.png"));
+    updateButton->setVisible(false);
     //Add them to the status bar
-    ui->statusBar->addPermanentWidget(statusBarLine);
+    ui->statusBar->addPermanentWidget(statusStatusBarLine);
     ui->statusBar->addPermanentWidget(statusBarLabel);
+    ui->statusBar->addPermanentWidget(updateStatusBarLine);
+    ui->statusBar->addPermanentWidget(updateButton);
 
 }
 
@@ -128,6 +132,9 @@ void CaesiumPH::initializeConnections() {
 
     //TreeWidget drop event
     connect(ui->listTreeWidget, SIGNAL(dropFinished(QStringList)), this, SLOT(showImportProgressDialog(QStringList)));
+
+    //Update button
+    connect(updateButton, SIGNAL(released()), this, SLOT(on_updateButton_clicked()));
 }
 
 void CaesiumPH::initializeSettings() {
@@ -659,9 +666,11 @@ void CaesiumPH::checkUpdates() {
 }
 
 void CaesiumPH::updateAvailable(int version, QString versionTag) {
-    qDebug() << "FOUND VERSION " << version;
-    ui->updateButton->setVisible(version > versionNumber);
+    qDebug() << "FOUND UPDATE VERSION " << version;
     updateVersionTag = versionTag;
+    NetworkOperations* op = new NetworkOperations();
+    connect(op, SIGNAL(updateDownloadFinished(QString)), this, SLOT(updateDownloadFinished(QString)));
+    op->downloadUpdateRequest();
 }
 
 bool CaesiumPH::hasADuplicateInList(CImageInfo *c) {
@@ -675,15 +684,21 @@ bool CaesiumPH::hasADuplicateInList(CImageInfo *c) {
 }
 
 void CaesiumPH::on_updateButton_clicked() {
-    NetworkOperations* op = new NetworkOperations();
-    connect(op, SIGNAL(updateDownloadFinished(QString)), this, SLOT(startUpdateProcess(QString)));
-    op->downloadUpdateRequest();
+    //Show a confirmation dialog
+    int ret = QMessageBox::warning(this,
+                         tr("Update available"),
+                         tr("This will close CaesiumPH. Do you really want to update now?"),
+                         QMessageBox::Ok | QMessageBox::Cancel);
+    if (ret == QMessageBox::Ok) {
+        QDesktopServices::openUrl(QUrl::fromLocalFile(updatePath));
+        this->close();
+    }
 }
 
-void CaesiumPH::startUpdateProcess(QString path) {
-    QDesktopServices::openUrl(QUrl::fromLocalFile(path));
-    this->close();
-    qDebug() << path;
+void CaesiumPH::updateDownloadFinished(QString path) {
+    updateButton->setVisible(true);
+    updateStatusBarLine->setVisible(true);
+    updatePath = path;
 }
 
 void CaesiumPH::clearUI() {
@@ -692,7 +707,7 @@ void CaesiumPH::clearUI() {
 }
 
 void CaesiumPH::updateStatusBarCount() {
-    ui->statusBar->findChild<QLabel*>("statusBarLabel")->setText(
+    statusBarLabel->setText(
                 QString::number(ui->listTreeWidget->topLevelItemCount()) +
                 tr(" files in list"));
 
