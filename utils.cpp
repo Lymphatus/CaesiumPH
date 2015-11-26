@@ -9,7 +9,7 @@
 QString inputFilter =  QIODevice::tr("Image Files (*.jpg *.jpeg)");
 QStringList inputFilterList = QStringList() << "*.jpg" << "*.jpeg";
 QString versionString = "0.9.3-beta";
-int versionNumber = 0;
+int versionNumber = 93;
 int buildNumber = QDate::currentDate().toString("yyyyMMdd").toInt();
 QString updateVersionTag = "";
 long originalsSize = 0;

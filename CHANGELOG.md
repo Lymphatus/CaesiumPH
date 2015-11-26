@@ -6,11 +6,13 @@
     * Fixed sorting for ```NEW SIZE``` and ```RATIO``` columns
     * Dropping multiple folders now correctly adds them all instead of the only one active
     * Progressive support working as intended
+    * Style tuning
 * ADDED
     * If the compressed file is bigger than the original it now skips it
     * A little status bar, documenting actions (and compression results)
     * ImageDescription and XPComment are now saved if we choose to keep the EXIF comments
     * The update process is now performed at startup
+    * New brand compress button
 
 ----------
 

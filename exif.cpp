@@ -56,7 +56,7 @@ QString exifDataToString(Exiv2::ExifData exifData) {
                       << i->count() << "  "
                       << std::dec << i->value()
                       << "\n";*/
-            tmpExif = "<span style='color:#1cb495'>" + QString::fromStdString(i->key()).split(".").at(2) + "</span>&emsp;" +
+            tmpExif = "<span style='color:#1cb495;'>" + QString::fromStdString(i->key()).split(".").at(2) + "</span>&emsp;" +
                     //QString::number(i->tag()) + "\t" +
                     //(tn ? tn : "Unknown") + "\t" +
                     //QString::number(i->count()) + "\t" +

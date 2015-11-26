@@ -44,9 +44,6 @@ CaesiumPH::CaesiumPH(QWidget *parent) :
     readPreferences();
     checkUpdates();
 
-#ifdef _WIN32
-    QThreadPool::globalInstance()->setMaxThreadCount(1);
-#endif
     QThreadPool::globalInstance()->setMaxThreadCount(QThread::idealThreadCount());
 }
 
@@ -84,12 +81,13 @@ void CaesiumPH::initializeUI() {
     on_sidePanelDockWidget_visibilityChanged(settings.value(KEY_PREF_GEOMETRY_PANEL_VISIBLE).value<bool>());
     ui->listTreeWidget->sortByColumn(settings.value(KEY_PREF_GEOMETRY_SORT_COLUMN).value<int>(),
                                      settings.value(KEY_PREF_GEOMETRY_SORT_ORDER).value<Qt::SortOrder>());
+    ui->statusBar->setVisible(settings.value(KEY_PREF_GEOMETRY_STATUSBAR).value<bool>());
     settings.endGroup();
 
     //Default EXIF value
     ui->exifTextEdit->setText(tr("No EXIF info available"));
 
-    //No blue border on focus on Mac
+    //No blue border on focus for Mac
     ui->listTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
 
     //Status bar widgets
@@ -100,7 +98,7 @@ void CaesiumPH::initializeUI() {
     updateStatusBarLine->setFrameShadow(QFrame::Raised);
     updateStatusBarLine->setVisible(false);
     //List info label
-    statusBarLabel->setText(tr("Welcome to CaesiumPH!"));
+    statusBarLabel->setText(" v" + versionString);
     //Update Button
     updateButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     updateButton->setAutoRaise(false);
@@ -668,9 +666,11 @@ void CaesiumPH::checkUpdates() {
 void CaesiumPH::updateAvailable(int version, QString versionTag) {
     qDebug() << "FOUND UPDATE VERSION " << version;
     updateVersionTag = versionTag;
-    NetworkOperations* op = new NetworkOperations();
-    connect(op, SIGNAL(updateDownloadFinished(QString)), this, SLOT(updateDownloadFinished(QString)));
-    op->downloadUpdateRequest();
+    if (version > versionNumber) {
+        NetworkOperations* op = new NetworkOperations();
+        connect(op, SIGNAL(updateDownloadFinished(QString)), this, SLOT(updateDownloadFinished(QString)));
+        op->downloadUpdateRequest();
+    }
 }
 
 bool CaesiumPH::hasADuplicateInList(CImageInfo *c) {

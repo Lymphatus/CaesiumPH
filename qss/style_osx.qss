@@ -71,7 +71,8 @@ QDockWidget::title {
 QTextEdit#exifTextEdit {
     background: #FFFFFF;
     color: #757575;
-    font-family: "Lucida Console", Monaco, monospace;
+    font-family: Monaco, monospace;
+    font-size: 11px;
     border-bottom: 1px solid #CCCCCC;
     padding-bottom: 5px;
 }
@@ -122,4 +123,16 @@ QDockWidget::close-button:hover {
 
 QDockWidget::float-button:hover {
 
+}
+
+QStatusBar {
+        font-size: 11pt;
+}
+
+QStatusBar QLabel {
+        font-size: 11pt;
+}
+
+QStatusBar QToolButton {
+        font-size: 11pt;
 }

@@ -42,6 +42,12 @@
     </property>
     <item row="0" column="0" colspan="2">
      <widget class="QDropTreeWidget" name="listTreeWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="focusPolicy">
        <enum>Qt::ClickFocus</enum>
       </property>
@@ -125,7 +131,23 @@
       </column>
      </widget>
     </item>
-    <item row="2" column="0" colspan="2">
+    <item row="0" column="3" rowspan="3">
+     <widget class="Line" name="sidePanelLine">
+      <property name="styleSheet">
+       <string notr="true">margin-bottom:10px;</string>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <property name="lineWidth">
+       <number>1</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" rowspan="2" colspan="2">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QToolButton" name="settingsButton">
@@ -276,12 +298,12 @@ QToolButton:hover {
         <property name="minimumSize">
          <size>
           <width>90</width>
-          <height>0</height>
+          <height>74</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>16777215</width>
+          <width>64</width>
           <height>64</height>
          </size>
         </property>
@@ -308,8 +330,8 @@ QToolButton:hover {
         </property>
         <property name="iconSize">
          <size>
-          <width>32</width>
-          <height>32</height>
+          <width>48</width>
+          <height>48</height>
          </size>
         </property>
         <property name="toolButtonStyle">
@@ -451,22 +473,6 @@ border: none;</string>
       </item>
      </layout>
     </item>
-    <item row="0" column="3" rowspan="3">
-     <widget class="Line" name="sidePanelLine">
-      <property name="styleSheet">
-       <string notr="true">margin-bottom:10px;</string>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-      <property name="lineWidth">
-       <number>1</number>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -508,15 +514,8 @@ border: none;</string>
     </property>
     <addaction name="actionAbout_CaesiumPH"/>
    </widget>
-   <widget class="QMenu" name="menuView">
-    <property name="title">
-     <string>View</string>
-    </property>
-    <addaction name="actionStatus_bar"/>
-   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
-   <addaction name="menuView"/>
    <addaction name="menuActions"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -663,7 +662,6 @@ p, li { white-space: pre-wrap; }
    <property name="styleSheet">
     <string notr="true">QStatusBar {
 	color: #757575;
-	font-size: 11pt;
 	background-color: #FFFFFF;
 	border-top: 1px solid #CCCCCC;
 	margin-left: 4px;
@@ -672,7 +670,6 @@ p, li { white-space: pre-wrap; }
 
 QStatusBar QLabel, QToolButton {
 	color: #757575;
-	font-size: 11pt;
 	border: none;
 }</string>
    </property>
