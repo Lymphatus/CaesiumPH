@@ -146,3 +146,12 @@ QAction:active {
 QLabel {
     color: #757575;
 }
+
+QStatusBar QToolButton {
+    background-color: transparent;
+    border: none;
+}
+
+QStatusBar QFrame {
+    background: transparent;
+}
