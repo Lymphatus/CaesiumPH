@@ -81,7 +81,6 @@ void CaesiumPH::initializeUI() {
     on_sidePanelDockWidget_visibilityChanged(settings.value(KEY_PREF_GEOMETRY_PANEL_VISIBLE).value<bool>());
     ui->listTreeWidget->sortByColumn(settings.value(KEY_PREF_GEOMETRY_SORT_COLUMN).value<int>(),
                                      settings.value(KEY_PREF_GEOMETRY_SORT_ORDER).value<Qt::SortOrder>());
-    ui->statusBar->setVisible(settings.value(KEY_PREF_GEOMETRY_STATUSBAR).value<bool>());
     settings.endGroup();
 
     //Default EXIF value

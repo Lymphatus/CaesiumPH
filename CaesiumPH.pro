@@ -17,31 +17,19 @@ macx {
     QMAKE_CXXFLAGS_CXX11 = -std=gnu++1y
     CONFIG *= c++11
     QMAKE_CXXFLAGS += -stdlib=libc++
-    LIBS += -stdlib=libc++
-}
-
-macx {
-    LIBS += -L/usr/local/lib -lexiv2.14 -L/opt/mozjpeg/lib -ljpeg.62
-}
-win32 {
-    LIBS += -LC:\\mozjpeg\\lib -ljpeg
-    LIBS += -LC:\\exiv2\\src\\.libs -lexiv2
-}
-
-macx {
+    LIBS += -L/usr/local/lib -lexiv2.14 -L/opt/mozjpeg/lib -ljpeg.62 -stdlib=libc++
     INCLUDEPATH += /opt/mozjpeg/include /usr/local/include
-}
-win32 {
-    INCLUDEPATH += C:\\mozjpeg\\include
-    INCLUDEPATH += C:\\exiv2\\include
-}
-
-macx {
     ICON = icons/icons/icon.icns
 }
 
 win32 {
+    LIBS += -LC:\\mozjpeg\\lib -ljpeg -LC:\\exiv2\\src\\.libs -lexiv2
+    INCLUDEPATH += C:\\mozjpeg\\include C:\\exiv2\\include
     RC_ICONS = icons/main/icon.ico
+}
+
+unix {
+    LIBS += -ljpeg -lexiv2
 }
 
 CONFIG += warn_off c++11
