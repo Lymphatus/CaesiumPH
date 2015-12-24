@@ -8,6 +8,7 @@
 #include <QSize>
 #include <QTemporaryDir>
 #include <QElapsedTimer>
+#include <QTreeWidgetItem>
 
 enum cexifs {
     EXIF_COPYRIGHT,
@@ -46,5 +47,6 @@ QSize getScaledSizeWithRatio(QSize size, int square); //Image preview resize
 double ratioToDouble(QString ratio);
 bool isJPEG(char* path);
 QString msToFormattedString(qint64);
+bool haveSameRootFolder(QList<QTreeWidgetItem *> items);
 
 #endif // UTILS_H

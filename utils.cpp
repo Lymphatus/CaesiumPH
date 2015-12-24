@@ -4,12 +4,13 @@
 
 #include <QIODevice>
 #include <QDate>
+#include <QTreeWidgetItem>
 #include <QDebug>
 
 QString inputFilter =  QIODevice::tr("Image Files (*.jpg *.jpeg)");
 QStringList inputFilterList = QStringList() << "*.jpg" << "*.jpeg";
-QString versionString = "0.9.3-beta";
-int versionNumber = 93;
+QString versionString = "0.9.4-beta";
+int versionNumber = 94;
 int buildNumber = QDate::currentDate().toString("yyyyMMdd").toInt();
 QString updateVersionTag = "";
 long originalsSize = 0;
@@ -121,4 +122,16 @@ QString msToFormattedString(qint64 ms) {
     } else {
         return QString::number(ms / 60000) + ":" + (ms < 70000 ? "0" : "") + QString::number(ms / 1000 % 60) + QT_TR_NOOP(" minutes");
     }
+}
+
+bool haveSameRootFolder(QList<QTreeWidgetItem *> items) {
+    QDir root = QFileInfo(items.at(0)->text(4)).dir();
+    for (int i = 1; i < items.length(); i++) {
+        if (QString::compare(QFileInfo(items.at(i)->text(4)).dir().absolutePath(),
+                             root.absolutePath(),
+                             Qt::CaseSensitive) != 0) {
+            return false;
+        }
+    }
+    return true;
 }

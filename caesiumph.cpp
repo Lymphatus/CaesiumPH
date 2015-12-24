@@ -42,6 +42,8 @@ CaesiumPH::CaesiumPH(QWidget *parent) :
     initializeConnections();
     initializeUI();
     readPreferences();
+    createMenuActions();
+    createMenus();
     checkUpdates();
 
     QThreadPool::globalInstance()->setMaxThreadCount(QThread::idealThreadCount());
@@ -129,6 +131,8 @@ void CaesiumPH::initializeConnections() {
 
     //TreeWidget drop event
     connect(ui->listTreeWidget, SIGNAL(dropFinished(QStringList)), this, SLOT(showImportProgressDialog(QStringList)));
+    //TreeWidget context menu
+    connect(ui->listTreeWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showListContextMenu(QPoint)));
 
     //Update button
     connect(updateButton, SIGNAL(released()), this, SLOT(on_updateButton_clicked()));
@@ -368,47 +372,7 @@ extern void compressRoutine(CTreeWidgetItem* item) {
     QString inputPath = item->text(4);
     QFileInfo* originalInfo = new QFileInfo(item->text(4));
     qint64 originalSize = originalInfo->size();
-    QString outputPath;
-
-    if (params.overwrite) {
-        /*
-         * Overwrite
-         * Set the output path to a temporary directory
-         * so we can check if it is actually bigger than the original
-         * and eventually overwrite it
-         *
-        */
-        if (tempDir.isValid()) {
-            //Unique temporary directory
-            outputPath = tempDir.path() + QDir::separator() + originalInfo->fileName();
-            qDebug() << outputPath;
-        } else {
-            qDebug() << "Cannot create a temporary folder. Abort.";
-            exit(-1);
-        }
-    } else {
-        switch (params.outMethodIndex) {
-        case 0:
-            //Add a suffix
-            outputPath = originalInfo->filePath().replace(originalInfo->completeBaseName(),
-                                                          originalInfo->baseName() + params.outMethodString);
-            break;
-        case 1:
-            //Compress in a subfolder
-            outputPath = originalInfo->path() + QDir::separator() + params.outMethodString + QDir::separator() + originalInfo->fileName();
-            //Create it
-            //WARNING This does not check for user permission
-            QDir().mkdir(originalInfo->path() + QDir::separator() + params.outMethodString + QDir::separator());
-            break;
-        case 2:
-            //Compress in a custom directory
-            outputPath = params.outMethodString + QDir::separator() + originalInfo->fileName();
-            //WARNING This does not check for user permission
-            QDir().mkdir(params.outMethodString);
-        default:
-            break;
-        }
-    }
+    QString outputPath = CaesiumPH::getOutputPath(originalInfo);
 
     //Not really necessary if we copy the whole EXIF data
     Exiv2::ExifData exifData = getExifFromPath(QStringToChar(inputPath));
@@ -418,7 +382,6 @@ extern void compressRoutine(CTreeWidgetItem* item) {
                   params.exif,
                   params.progressive,
                   QStringToChar(inputPath));
-
 
 
     //Write important metadata as user requested
@@ -486,6 +449,51 @@ extern void compressRoutine(CTreeWidgetItem* item) {
             && fileInfo->size() != 0) {
         uinfo->setBest_ratio((originalInfo->size() - fileInfo->size()) * 100 / (double) originalInfo->size());
     }
+}
+
+QString CaesiumPH::getOutputPath(QFileInfo* originalInfo) {
+    QString outputPath;
+    if (params.overwrite) {
+        /*
+         * Overwrite
+         * Set the output path to a temporary directory
+         * so we can check if it is actually bigger than the original
+         * and eventually overwrite it
+         *
+        */
+        if (tempDir.isValid()) {
+            //Unique temporary directory
+            outputPath = tempDir.path() + QDir::separator() + originalInfo->fileName();
+            qDebug() << outputPath;
+        } else {
+            qDebug() << "Cannot create a temporary folder. Abort.";
+            exit(-1);
+        }
+    } else {
+        switch (params.outMethodIndex) {
+        case 0:
+            //Add a suffix
+            outputPath = originalInfo->filePath().replace(originalInfo->completeBaseName(),
+                                                          originalInfo->baseName() + params.outMethodString);
+            break;
+        case 1:
+            //Compress in a subfolder
+            outputPath = originalInfo->path() + QDir::separator() + params.outMethodString + QDir::separator() + originalInfo->fileName();
+            //Create it
+            //WARNING This does not check for user permission
+            QDir().mkdir(originalInfo->path() + QDir::separator() + params.outMethodString + QDir::separator());
+            break;
+        case 2:
+            //Compress in a custom directory
+            outputPath = params.outMethodString + QDir::separator() + originalInfo->fileName();
+            //WARNING This does not check for user permission
+            QDir().mkdir(params.outMethodString);
+        default:
+            break;
+        }
+    }
+
+    return outputPath;
 }
 
 void CaesiumPH::on_actionCompress_triggered() {
@@ -713,5 +721,69 @@ void CaesiumPH::updateStatusBarCount() {
     //If the list is empty, we got a call from the clear SIGNAL, so handle the general message too
     if (ui->listTreeWidget->topLevelItemCount() == 0) {
        ui->statusBar->showMessage(tr("List cleared"));
+    }
+}
+
+void CaesiumPH::on_actionShow_input_folder_triggered() {
+    //Open the input folder
+    //TODO Check cross-platform compatibility
+    QDesktopServices::openUrl(QUrl("file:///" +
+                                  QFileInfo(ui->listTreeWidget->selectedItems().at(0)->text(4)).dir().absolutePath(),
+                                        QUrl::TolerantMode));
+}
+
+void CaesiumPH::on_actionShow_output_folder_triggered() {
+    //Read preferences first
+    readPreferences();
+    //Open the output folder
+    //TODO Check cross-platform compatibility
+    QDesktopServices::openUrl(QUrl("file:///" +
+                                  QFileInfo(
+                                       CaesiumPH::getOutputPath(
+                                           new QFileInfo(ui->listTreeWidget->selectedItems().at(0)->text(4)))).dir().absolutePath(),
+                                                QUrl::TolerantMode));
+}
+
+void CaesiumPH::createMenuActions() {
+    //List Remove action
+    listRemoveAction = new QAction(tr("Remove item"), this);
+    listRemoveAction->setStatusTip(tr("Remove the item from the list"));
+    connect(listRemoveAction, SIGNAL(triggered()), this, SLOT(on_actionRemove_items_triggered()));
+
+    //List source dir action
+    listShowInputFolderAction = new QAction(tr("Show in folder"), this);
+    listShowInputFolderAction->setStatusTip(tr("Opens the folder containing the file"));
+    connect(listShowInputFolderAction, SIGNAL(triggered()), this, SLOT(on_actionShow_input_folder_triggered()));
+
+    //List output dir action
+    listShowOutputFolderAction = new QAction(tr("Show destination folder"), this);
+    listShowOutputFolderAction->setStatusTip(tr("Opens the destination folder for the file"));
+    connect(listShowOutputFolderAction, SIGNAL(triggered()), this, SLOT(on_actionShow_output_folder_triggered()));
+
+    //List clear action
+    listClearAction = new QAction(tr("Clear list"), this);
+    listClearAction->setStatusTip(tr("Clears the list"));
+    connect(listClearAction, SIGNAL(triggered()), ui->listTreeWidget, SLOT(clear()));
+    connect(listClearAction, SIGNAL(triggered()), this, SLOT(updateStatusBarCount()));
+}
+
+void CaesiumPH::createMenus() {
+    //Creates the list context menu
+    listMenu = new QMenu(this);
+    listMenu->addAction(listRemoveAction);
+    listMenu->addSeparator();
+    listMenu->addAction(listShowInputFolderAction);
+    listMenu->addAction(listShowOutputFolderAction);
+    listMenu->addSeparator();
+    listMenu->addAction(listClearAction);
+}
+
+void CaesiumPH::showListContextMenu(QPoint pos) {
+    //No menu if the there're no items int he list
+    if (ui->listTreeWidget->topLevelItemCount() > 0) {
+        //Check if we have the same root folder in the selection
+        //and activate the IN menu option
+        listShowInputFolderAction->setEnabled(haveSameRootFolder(ui->listTreeWidget->selectedItems()));
+        listMenu->exec(ui->listTreeWidget->mapToGlobal(pos));
     }
 }

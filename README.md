@@ -1,5 +1,5 @@
 ## CaesiumPH
-##### v0.9.3-beta (build 20151124) - Copyright &copy; Matteo Paonessa, 2015. All Rights Reserved.
+##### v0.9.3-beta (build 20151207) - Copyright &copy; Matteo Paonessa, 2015. All Rights Reserved.
 
 ----------
 
@@ -37,8 +37,8 @@ Linux source code must be compiled using Qt5.5.
 ##### TODO
 - Translations
 - Logging
-- Context menu in file list
 - Save/Load list feature
+- Usage reports
 
 ----------
 

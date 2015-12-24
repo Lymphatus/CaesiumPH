@@ -1,5 +1,13 @@
 ### CHANGELOG
 
+###### 0.9.4-beta
+* FIXED
+
+* ADDED
+    * Context menu for the file list
+
+----------
+
 ###### 0.9.3-beta
 * FIXED
     * The EXIF checkbox now it's tri-state

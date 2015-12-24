@@ -28,6 +28,9 @@ public:
         return &window;
     }
 
+    //Gets the right output folder
+    static QString getOutputPath(QFileInfo *originalInfo);
+
 signals:
     void dropAccepted(QStringList);
 
@@ -57,6 +60,9 @@ private slots:
     void updateDownloadFinished(QString);
     void clearUI();
     void updateStatusBarCount();
+    void showListContextMenu(QPoint);
+    void on_actionShow_input_folder_triggered();
+    void on_actionShow_output_folder_triggered();
 
 private:
     Ui::CaesiumPH *ui;
@@ -68,7 +74,21 @@ private:
     QLabel* statusBarLabel = new QLabel();
     QString updatePath;
 
+    //List Menu
+    QMenu* listMenu;
+    //List menu actions
+    QAction* listRemoveAction;
+    QAction* listShowInputFolderAction;
+    QAction* listShowOutputFolderAction;
+    QAction* listClearAction;
+
+    //Update
     void checkUpdates();
+    //Menus
+    void createMenuActions();
+    void createMenus();
+
+    //Check list duplicates
     bool hasADuplicateInList(CImageInfo* c);
 
 };
