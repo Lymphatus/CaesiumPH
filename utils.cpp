@@ -7,7 +7,8 @@
 #include <QTreeWidgetItem>
 #include <QDebug>
 
-QString inputFilter =  QIODevice::tr("Image Files (*.jpg *.jpeg)");
+QString inputFilter = QIODevice::tr("Image Files") + " (*.jpg *.jpeg)";
+QString clfFilter = "Caesium List File (*.clf)";
 QStringList inputFilterList = QStringList() << "*.jpg" << "*.jpeg";
 QString versionString = "0.9.4-beta";
 int versionNumber = 94;

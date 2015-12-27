@@ -64,6 +64,12 @@ private slots:
     void on_actionShow_input_folder_triggered();
     void on_actionShow_output_folder_triggered();
 
+    void on_actionSave_list_triggered();
+
+    void on_actionSave_list_as_triggered();
+
+    void on_actionOpen_list_triggered();
+
 private:
     Ui::CaesiumPH *ui;
     QFutureWatcher<QImage> imageWatcher; //Image preview loader

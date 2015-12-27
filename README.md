@@ -37,8 +37,8 @@ Linux source code must be compiled using Qt5.5.
 ##### TODO
 - Translations
 - Logging
-- Save/Load list feature
 - Usage reports
+- Open list files
 
 ----------
 

@@ -5,6 +5,7 @@
 
 * ADDED
     * Context menu for the file list
+    * Save/Open list
 
 ----------
 

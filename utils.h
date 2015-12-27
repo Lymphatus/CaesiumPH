@@ -10,10 +10,20 @@
 #include <QElapsedTimer>
 #include <QTreeWidgetItem>
 
+#define MAX_COLUMNS 5
+
 enum cexifs {
     EXIF_COPYRIGHT,
     EXIF_DATE,
     EXIF_COMMENTS
+};
+
+enum list_columns {
+    COLUMNS_NAME = 0,
+    COLUMNS_ORIGINAL_SIZE = 1,
+    COLUMNS_NEW_SIZE = 2,
+    COLUMNS_SAVED = 3,
+    COLUMNS_PATH = 4
 };
 
 typedef struct var {
@@ -26,6 +36,7 @@ typedef struct var {
 } cparams;
 
 extern QString inputFilter;
+extern QString clfFilter;
 extern QStringList inputFilterList;
 extern QString versionString;
 extern int versionNumber;

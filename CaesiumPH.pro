@@ -45,7 +45,8 @@ SOURCES += main.cpp\
     usageinfo.cpp \
     networkoperations.cpp \
     qdroptreewidget.cpp \
-    ctreewidgetitem.cpp
+    ctreewidgetitem.cpp \
+    clist.cpp
 
 HEADERS  += caesiumph.h \
     aboutdialog.h \
@@ -57,7 +58,8 @@ HEADERS  += caesiumph.h \
     usageinfo.h \
     networkoperations.h \
     qdroptreewidget.h \
-    ctreewidgetitem.h
+    ctreewidgetitem.h \
+    clist.h
 
 FORMS    += caesiumph.ui \
     aboutdialog.ui \
