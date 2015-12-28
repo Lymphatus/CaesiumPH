@@ -1,5 +1,5 @@
 ## CaesiumPH
-##### v0.9.3-beta (build 20151207) - Copyright &copy; Matteo Paonessa, 2015. All Rights Reserved.
+##### v0.9.4-beta (build 20151228) - Copyright &copy; Matteo Paonessa, 2015. All Rights Reserved.
 
 ----------
 
@@ -31,14 +31,6 @@ Linux source code must be compiled using Qt5.5.
 - Some images don't show in preview
 - The combobox selection is not clearly visible on OSX
 - Sorting by ```NEW SIZE``` uses a rounded value and may not be 100% accurate
-
-----------
-
-##### TODO
-- Translations
-- Logging
-- Usage reports
-- Open list files
 
 ----------
 

@@ -13,19 +13,19 @@
 
 
 UsageInfo::UsageInfo() {
-
+    jsonPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) +
+            QDir::separator() +
+            USAGE_INFO_FILENAME;
 }
 
 void UsageInfo::initialize() {
-    jsonPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) +
-            QDir::separator() +
-            "caesium.ph";
     QFile jsonFile(jsonPath);
     qDebug() << jsonPath;
     if (jsonFile.exists()) {
         readJSON();
     } else {
-        UUID = QUuid::createUuid().toString();
+        QString temp = QUuid::createUuid().toString();
+        UUID = (temp.remove('{')).remove('}');
         timestamp = QDateTime::currentMSecsSinceEpoch();
         productName = QSysInfo::prettyProductName() + " -- " +
 #ifdef _WIN32
@@ -41,6 +41,7 @@ void UsageInfo::initialize() {
         build = buildNumber;
 
         compressed_bytes = compressed_pictures = max_bytes = best_ratio = 0;
+
         writeJSON();
     }
 }

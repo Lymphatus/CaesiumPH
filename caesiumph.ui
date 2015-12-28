@@ -344,6 +344,9 @@ QToolButton:hover {
       </item>
       <item>
        <widget class="QToolButton" name="removeItemButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -390,6 +393,9 @@ QToolButton:hover {
       </item>
       <item>
        <widget class="QToolButton" name="clearButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -484,7 +490,7 @@ border: none;</string>
      <x>0</x>
      <y>0</y>
      <width>880</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -609,8 +615,8 @@ border: none;</string>
           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.Helvetica Neue DeskInterface'; font-size:13pt;&quot;&gt;No EXIF info available&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.Helvetica Neue DeskInterface';&quot;&gt;No EXIF info available&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="tabStopWidth">
           <number>150</number>
@@ -703,11 +709,17 @@ QStatusBar QLabel, QToolButton {
    </property>
   </action>
   <action name="actionRemove_items">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Remove items</string>
    </property>
   </action>
   <action name="actionClear_list">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Clear list</string>
    </property>
@@ -731,11 +743,17 @@ QStatusBar QLabel, QToolButton {
    </property>
   </action>
   <action name="actionSave_list">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Save list</string>
    </property>
   </action>
   <action name="actionSave_list_as">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Save list as...</string>
    </property>

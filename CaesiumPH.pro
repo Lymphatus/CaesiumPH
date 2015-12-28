@@ -46,7 +46,7 @@ SOURCES += main.cpp\
     networkoperations.cpp \
     qdroptreewidget.cpp \
     ctreewidgetitem.cpp \
-    clist.cpp
+    cphlist.cpp
 
 HEADERS  += caesiumph.h \
     aboutdialog.h \
@@ -59,7 +59,7 @@ HEADERS  += caesiumph.h \
     networkoperations.h \
     qdroptreewidget.h \
     ctreewidgetitem.h \
-    clist.h
+    cphlist.h
 
 FORMS    += caesiumph.ui \
     aboutdialog.ui \
@@ -75,5 +75,6 @@ DISTFILES += \
     qss/style_linux.qss \
     README.md \
     CHANGELOG.md \
-    LICENSE
+    LICENSE \
+    TODO.md
 

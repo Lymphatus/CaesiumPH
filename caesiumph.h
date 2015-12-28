@@ -3,6 +3,7 @@
 
 #include "usageinfo.h"
 #include "cimageinfo.h"
+#include "cphlist.h"
 
 #include <QMainWindow>
 #include <QTreeWidgetItem>
@@ -35,10 +36,6 @@ signals:
     void dropAccepted(QStringList);
 
 private slots:
-    void initializeConnections();
-    void initializeUI();
-    void initializeSettings();
-    void readPreferences();
     void on_actionAbout_CaesiumPH_triggered();
     void on_actionAdd_pictures_triggered();
     void on_actionAdd_folder_triggered();
@@ -63,12 +60,12 @@ private slots:
     void showListContextMenu(QPoint);
     void on_actionShow_input_folder_triggered();
     void on_actionShow_output_folder_triggered();
-
     void on_actionSave_list_triggered();
-
     void on_actionSave_list_as_triggered();
-
     void on_actionOpen_list_triggered();
+    void listChanged();
+    //TODO Remove, just test slot
+    void testSignal();
 
 private:
     Ui::CaesiumPH *ui;
@@ -88,6 +85,11 @@ private:
     QAction* listShowOutputFolderAction;
     QAction* listClearAction;
 
+    void initializeConnections();
+    void initializeUI();
+    void initializeSettings();
+    void readPreferences();
+
     //Update
     void checkUpdates();
     //Menus
@@ -96,6 +98,9 @@ private:
 
     //Check list duplicates
     bool hasADuplicateInList(CImageInfo* c);
+
+    //CPHList save function
+    void saveCPHListToFile(QString path);
 
 };
 

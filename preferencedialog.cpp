@@ -55,7 +55,6 @@ void PreferenceDialog::writePreferences() {
 
     //Compression
     settings.beginGroup(KEY_PREF_GROUP_COMPRESSION);
-    qDebug() << ui->exifCheckBox->checkState();
     settings.setValue(KEY_PREF_COMPRESSION_EXIF, ui->exifCheckBox->checkState());
     settings.setValue(KEY_PREF_COMPRESSION_EXIF_COPYRIGHT, ui->keepCopyrightCheckBox->isChecked());
     settings.setValue(KEY_PREF_COMPRESSION_EXIF_DATE, ui->keepDateCheckBox->isChecked());

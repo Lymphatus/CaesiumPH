@@ -16,7 +16,7 @@ private:
         int column = treeWidget()->sortColumn();
         switch (column) {
         case 1:
-            return QFileInfo(text(4)).size() < QFileInfo(other.text(4)).size();
+            return QFileInfo(text(COLUMN_PATH)).size() < QFileInfo(other.text(COLUMN_PATH)).size();
         case 2:
             //Sort by compressed size
             /*

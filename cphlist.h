@@ -8,9 +8,9 @@
 
 #define CLF_VERSION 1
 
-class CList {
+class CPHList {
 public:
-    CList();
+    CPHList();
     QList<QTreeWidgetItem *> readFile(QString path);
     void writeToFile(QList<QTreeWidgetItem *> list, QString path);
 };

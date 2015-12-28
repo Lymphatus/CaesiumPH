@@ -10,7 +10,7 @@
 #include "networkoperations.h"
 #include "qdroptreewidget.h"
 #include "ctreewidgetitem.h"
-#include "clist.h"
+#include "cphlist.h"
 
 #include <QProgressDialog>
 #include <QFileDialog>
@@ -130,13 +130,17 @@ void CaesiumPH::initializeConnections() {
     connect(ui->clearButton, SIGNAL(released()), ui->listTreeWidget, SLOT(clear()));
     connect(ui->clearButton, SIGNAL(released()), this, SLOT(updateStatusBarCount()));
 
-    //TreeWidget drop event
+    //TreeWidget
+    //Drop event
     connect(ui->listTreeWidget, SIGNAL(dropFinished(QStringList)), this, SLOT(showImportProgressDialog(QStringList)));
-    //TreeWidget context menu
+    //Context menu
     connect(ui->listTreeWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showListContextMenu(QPoint)));
 
     //Update button
     connect(updateButton, SIGNAL(released()), this, SLOT(on_updateButton_clicked()));
+
+    //List changed signal
+    connect(ui->listTreeWidget, SIGNAL(itemsChanged()), this, SLOT(listChanged()));
 }
 
 void CaesiumPH::initializeSettings() {
@@ -176,7 +180,7 @@ void CaesiumPH::readPreferences() {
 //Button hover functions
 bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
     if (obj == (QObject*) ui->addFilesButton) {
-        if (event->type() == QEvent::Enter) {
+        if (event->type() == QEvent::Enter && ui->addFilesButton->isEnabled()) {
             ui->addFilesButton->setIcon(QIcon(":/icons/ui/add_hover.png"));
             return true;
         } else if (event->type() == QEvent::Leave){
@@ -186,7 +190,7 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
             return false;
         }
     } else if (obj == (QObject*) ui->addFolderButton) {
-        if (event->type() == QEvent::Enter) {
+        if (event->type() == QEvent::Enter && ui->addFolderButton->isEnabled()) {
             ui->addFolderButton->setIcon(QIcon(":/icons/ui/folder_hover.png"));
             return true;
         } else if (event->type() == QEvent::Leave){
@@ -196,7 +200,7 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
             return false;
         }
     } else if (obj == (QObject*) ui->compressButton) {
-        if (event->type() == QEvent::Enter) {
+        if (event->type() == QEvent::Enter && ui->compressButton->isEnabled()) {
             ui->compressButton->setIcon(QIcon(":/icons/ui/compress_hover.png"));
             return true;
         } else if (event->type() == QEvent::Leave){
@@ -206,7 +210,7 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
             return false;
         }
     } else if (obj == (QObject*) ui->removeItemButton) {
-        if (event->type() == QEvent::Enter) {
+        if (event->type() == QEvent::Enter && ui->removeItemButton->isEnabled()) {
             ui->removeItemButton->setIcon(QIcon(":/icons/ui/remove_hover.png"));
             return true;
         } else if (event->type() == QEvent::Leave){
@@ -216,7 +220,7 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
             return false;
         }
     } else if (obj == (QObject*) ui->clearButton) {
-        if (event->type() == QEvent::Enter) {
+        if (event->type() == QEvent::Enter && ui->clearButton->isEnabled()) {
             ui->clearButton->setIcon(QIcon(":/icons/ui/clear_hover.png"));
             return true;
         } else if (event->type() == QEvent::Leave){
@@ -227,7 +231,7 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
         }
     } else if (obj == (QObject*) ui->showSidePanelButton) {
         if (!ui->sidePanelDockWidget->isVisible()) {
-            if (event->type() == QEvent::Enter) {
+            if (event->type() == QEvent::Enter  && ui->showSidePanelButton->isEnabled()) {
                 ui->showSidePanelButton->setIcon(QIcon(":/icons/ui/side_panel_active.png"));
                 return true;
             } else if (event->type() == QEvent::Leave){
@@ -241,7 +245,7 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
             return false;
         }
     } else if (obj == (QObject*) ui->settingsButton) {
-        if (event->type() == QEvent::Enter) {
+        if (event->type() == QEvent::Enter && ui->settingsButton->isEnabled()) {
             ui->settingsButton->setIcon(QIcon(":/icons/ui/settings_hover.png"));
             return true;
         } else if (event->type() == QEvent::Leave){
@@ -370,8 +374,8 @@ void CaesiumPH::on_actionRemove_items_triggered() {
 
 extern void compressRoutine(CTreeWidgetItem* item) {
     //Input file path
-    QString inputPath = item->text(4);
-    QFileInfo* originalInfo = new QFileInfo(item->text(4));
+    QString inputPath = item->text(COLUMN_PATH);
+    QFileInfo* originalInfo = new QFileInfo(item->text(COLUMN_PATH));
     qint64 originalSize = originalInfo->size();
     QString outputPath = CaesiumPH::getOutputPath(originalInfo);
 
@@ -414,8 +418,8 @@ extern void compressRoutine(CTreeWidgetItem* item) {
             }
             //Rename the original file with the output path
             //TODO Better error handling please
-            if (!QFile(item->text(4)).copy(outputPath)) {
-                qDebug() << "ERROR: Failed while moving: " << item->text(4);
+            if (!QFile(item->text(COLUMN_PATH)).copy(outputPath)) {
+                qDebug() << "ERROR: Failed while moving: " << item->text(COLUMN_PATH);
             }
         }
         //Set the importat stats to point to the original file
@@ -425,11 +429,11 @@ extern void compressRoutine(CTreeWidgetItem* item) {
         //If overwrite is on, move the file from the temp folder into the original
         if (params.overwrite) {
             //Remove the original
-            QFile(item->text(4)).remove();
+            QFile(item->text(COLUMN_PATH)).remove();
             //Move the compressed
             //TODO Better error handling please
-            if (!QFile(outputPath).rename(item->text(4))) {
-                qDebug() << "ERROR: Failed while moving: " << item->text(4);
+            if (!QFile(outputPath).rename(item->text(COLUMN_PATH))) {
+                qDebug() << "ERROR: Failed while moving: " << item->text(COLUMN_PATH);
             }
         }
     }
@@ -593,23 +597,29 @@ void CaesiumPH::on_showSidePanelButton_clicked(bool checked) {
 
 
 void CaesiumPH::on_listTreeWidget_itemSelectionChanged() {
+    bool itemsSelected = (ui->listTreeWidget->selectedItems().length() > 0);
     //Check if there's a selection
-    if (ui->listTreeWidget->selectedItems().length() > 0) {
+    if (itemsSelected) {
         //Get the first item selected
         CTreeWidgetItem* currentItem = (CTreeWidgetItem*) ui->listTreeWidget->selectedItems().at(0);
 
         //Connect the global watcher to the slot
         connect(&imageWatcher, SIGNAL(resultReadyAt(int)), this, SLOT(finishPreviewLoading(int)));
         //Run the image loader function
-        imageWatcher.setFuture(QtConcurrent::run<QImage>(this, &CaesiumPH::loadImagePreview, currentItem->text(4)));
+        imageWatcher.setFuture(QtConcurrent::run<QImage>(this, &CaesiumPH::loadImagePreview, currentItem->text(COLUMN_PATH)));
 
         //Load EXIF info
         //TODO Should run in another thread too?
-        ui->exifTextEdit->setText(exifDataToString(getExifFromPath(QStringToChar(currentItem->text(4)))));
+        ui->exifTextEdit->setText(exifDataToString(getExifFromPath(QStringToChar(currentItem->text(COLUMN_PATH)))));
+
     } else {
         imageWatcher.cancel();
         clearUI();
     }
+
+    //Rule the remove button/action
+    ui->actionRemove_items->setEnabled(itemsSelected);
+    ui->removeItemButton->setEnabled(itemsSelected);
 }
 
 QImage CaesiumPH::loadImagePreview(QString path) {
@@ -683,7 +693,7 @@ void CaesiumPH::updateAvailable(int version, QString versionTag) {
 
 bool CaesiumPH::hasADuplicateInList(CImageInfo *c) {
     for (int i = 0; i < ui->listTreeWidget->topLevelItemCount(); i++) {
-        if (c->isEqual(ui->listTreeWidget->topLevelItem(i)->text(4))) {
+        if (c->isEqual(ui->listTreeWidget->topLevelItem(i)->text(COLUMN_PATH))) {
             qDebug() << "Duplicate detected. Skipping.";
             return true;
         }
@@ -723,13 +733,15 @@ void CaesiumPH::updateStatusBarCount() {
     if (ui->listTreeWidget->topLevelItemCount() == 0) {
        ui->statusBar->showMessage(tr("List cleared"));
     }
+
+    //Emit the itemsChanged SIGNAL for the TreeWidget
+    emit ui->listTreeWidget->itemsChanged();
 }
 
 void CaesiumPH::on_actionShow_input_folder_triggered() {
     //Open the input folder
-    //TODO Check cross-platform compatibility
     QDesktopServices::openUrl(QUrl("file:///" +
-                                  QFileInfo(ui->listTreeWidget->selectedItems().at(0)->text(4)).dir().absolutePath(),
+                                  QFileInfo(ui->listTreeWidget->selectedItems().at(0)->text(COLUMN_PATH)).dir().absolutePath(),
                                         QUrl::TolerantMode));
 }
 
@@ -737,11 +749,10 @@ void CaesiumPH::on_actionShow_output_folder_triggered() {
     //Read preferences first
     readPreferences();
     //Open the output folder
-    //TODO Check cross-platform compatibility
     QDesktopServices::openUrl(QUrl("file:///" +
                                   QFileInfo(
                                        CaesiumPH::getOutputPath(
-                                           new QFileInfo(ui->listTreeWidget->selectedItems().at(0)->text(4)))).dir().absolutePath(),
+                                           new QFileInfo(ui->listTreeWidget->selectedItems().at(0)->text(COLUMN_PATH)))).dir().absolutePath(),
                                                 QUrl::TolerantMode));
 }
 
@@ -790,36 +801,82 @@ void CaesiumPH::showListContextMenu(QPoint pos) {
 }
 
 void CaesiumPH::on_actionSave_list_triggered() {
-
+    //If the path is not set, we need to call the saveAs instead
+    if (lastCPHListPath.isEmpty()) {
+        on_actionSave_list_as_triggered();
+    } else {
+        //Save to the last path
+        saveCPHListToFile(lastCPHListPath);
+        //And disable yourself
+        ui->actionSave_list->setEnabled(false);
+    }
 }
 
 void CaesiumPH::on_actionSave_list_as_triggered() {
-    //TODO Comment
-    QList<QTreeWidgetItem* > list;
+    //Give a path if it's not passed
     QString path = QFileDialog::getSaveFileName(this,
                                                 tr("Save list as..."),
-                                                QDir::currentPath(),
+                                                QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),
                                                 clfFilter);
+    //Call the generic function
+    saveCPHListToFile(path);
+}
 
+void CaesiumPH::saveCPHListToFile(QString path) {
+    QList<QTreeWidgetItem* > list;
+    //Check if it's valid
     if (!path.isEmpty()) {
+        //Get a list of items
         for (int i = 0; i < ui->listTreeWidget->topLevelItemCount(); i++) {
             list.append(ui->listTreeWidget->topLevelItem(i));
         }
-        CList* clf = new CList();
+        //And generate the file
+        CPHList* clf = new CPHList();
         clf->writeToFile(list, path);
+        //Set the global path
+        lastCPHListPath = path;
+        //Deactivate the "save" action
+        ui->actionSave_list->setEnabled(false);
     }
 }
 
 void CaesiumPH::on_actionOpen_list_triggered() {
-    //TODO Comment
+    //TODO Run an integrity check for the imported data and edit eventually
+    //Get the filepath
     QString filePath = QFileDialog::getOpenFileName(this,
                                   tr("Import files..."),
-                                  QDir::currentPath(),
+                                  QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),
                                   clfFilter);
+    //If it's valid and not empty
     if (!filePath.isEmpty()) {
-        CList* clf = new CList();
-        qDebug() << clf->readFile(filePath);
+        //Clear the list first
+        ui->listTreeWidget->clear();
+        //Create an instance of the reader
+        CPHList* clf = new CPHList();
+        //Read the file
         ui->listTreeWidget->addTopLevelItems(clf->readFile(filePath));
+        //Set the global path
+        lastCPHListPath = filePath;
+        //Deactivate the "save" action
+        ui->actionSave_list->setEnabled(false);
+        //But be sure the saveAs is enabled
+        ui->actionSave_list_as->setEnabled(true);
+        //Update UI count
+        updateStatusBarCount();
     }
-    //TODO Using this may give WRONG info if the file is changed
+}
+
+void CaesiumPH::listChanged() {
+    qDebug() << lastCPHListPath;
+    //List changed, so we need to enable the save feature
+    ui->actionSave_list->setEnabled(true);
+    ui->actionSave_list_as->setEnabled(true);
+
+    //If the list is empty, we don't need the clear button
+    ui->actionClear_list->setDisabled(ui->listTreeWidget->topLevelItemCount() == 0);
+    ui->clearButton->setDisabled(ui->listTreeWidget->topLevelItemCount() == 0);
+}
+
+void CaesiumPH::testSignal() {
+    qDebug() << "TEST SLOT TRIGGERED";
 }

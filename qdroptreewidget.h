@@ -17,6 +17,7 @@ public:
 
 signals:
     void dropFinished(QStringList);
+    void itemsChanged();
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event);

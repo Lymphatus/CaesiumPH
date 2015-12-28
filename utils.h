@@ -19,11 +19,11 @@ enum cexifs {
 };
 
 enum list_columns {
-    COLUMNS_NAME = 0,
-    COLUMNS_ORIGINAL_SIZE = 1,
-    COLUMNS_NEW_SIZE = 2,
-    COLUMNS_SAVED = 3,
-    COLUMNS_PATH = 4
+    COLUMN_NAME = 0,
+    COLUMN_ORIGINAL_SIZE = 1,
+    COLUMN_NEW_SIZE = 2,
+    COLUMN_SAVED = 3,
+    COLUMN_PATH = 4
 };
 
 typedef struct var {
@@ -49,6 +49,7 @@ extern UsageInfo* uinfo;
 extern QStringList osAndExtension;
 extern QTemporaryDir tempDir;
 extern QElapsedTimer timer;
+extern QString lastCPHListPath; //Path of the last list saved
 
 QString toHumanSize(int);
 double humanToDouble(QString);

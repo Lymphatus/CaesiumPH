@@ -2,14 +2,15 @@
 
 ###### 0.9.4-beta
 * FIXED
-
+    * Remove/Clear button behaviour
+    * Bugfixes
 * ADDED
     * Context menu for the file list
     * Save/Open list
 
 ----------
 
-###### 0.9.3-beta
+###### 0.9.3-beta (01/12/2015)
 * FIXED
     * The EXIF checkbox now it's tri-state
     * Fixed sorting for ```NEW SIZE``` and ```RATIO``` columns
@@ -25,7 +26,7 @@
 
 ----------
 
-###### 0.9.2-beta
+###### 0.9.2-beta (25/09/2015)
 * FIXED
     * Wrong OS recognition under Linux
     * The list now correcly reads focus and keyboard shortcuts
@@ -38,7 +39,7 @@
 
 ----------
 
-###### 0.9.1-beta
+###### 0.9.1-beta (04/09/2015)
 Initial release
 
 ----------

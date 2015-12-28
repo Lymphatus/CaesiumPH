@@ -1,15 +1,14 @@
-#include "clist.h"
+#include "cphlist.h"
 #include "utils.h"
 
 #include <QFile>
 #include <QDebug>
 
-CList::CList() {
+CPHList::CPHList() {
 
 }
 
-QList<QTreeWidgetItem*> CList::readFile(QString path) {
-
+QList<QTreeWidgetItem*> CPHList::readFile(QString path) {
     //Create a QFile to perform some checks
     QFile in(path);
     //And the container list
@@ -39,7 +38,6 @@ QList<QTreeWidgetItem*> CList::readFile(QString path) {
             for (int j = 0; j < column_count; j++) {
                 buffer.append(QString(in.readLine()).split("\n").at(0));
             }
-            qDebug() << buffer;
             //Add the compiled specs to the Items list
             items.append(new QTreeWidgetItem(buffer));
         }
@@ -51,7 +49,7 @@ QList<QTreeWidgetItem*> CList::readFile(QString path) {
     return items;
 }
 
-void CList::writeToFile(QList<QTreeWidgetItem *> list, QString path) {
+void CPHList::writeToFile(QList<QTreeWidgetItem *> list, QString path) {
     //Create a QFile to perform some checks
     QFile out(path);
 

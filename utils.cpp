@@ -8,11 +8,11 @@
 #include <QDebug>
 
 QString inputFilter = QIODevice::tr("Image Files") + " (*.jpg *.jpeg)";
-QString clfFilter = "Caesium List File (*.clf)";
+QString clfFilter = "CaesiumPH List File (*.cphlf)";
 QStringList inputFilterList = QStringList() << "*.jpg" << "*.jpeg";
 QString versionString = "0.9.4-beta";
 int versionNumber = 94;
-int buildNumber = QDate::currentDate().toString("yyyyMMdd").toInt();
+int buildNumber = 20151228;
 QString updateVersionTag = "";
 long originalsSize = 0;
 long compressedSize = 0;
@@ -29,6 +29,7 @@ QStringList osAndExtension = QStringList() <<
         #endif
 QTemporaryDir tempDir;
 QElapsedTimer timer;
+QString lastCPHListPath = "";
 
 QString toHumanSize(int size) {
     double doubleSize = (double) size;
@@ -126,9 +127,9 @@ QString msToFormattedString(qint64 ms) {
 }
 
 bool haveSameRootFolder(QList<QTreeWidgetItem *> items) {
-    QDir root = QFileInfo(items.at(0)->text(4)).dir();
+    QDir root = QFileInfo(items.at(0)->text(COLUMN_PATH)).dir();
     for (int i = 1; i < items.length(); i++) {
-        if (QString::compare(QFileInfo(items.at(i)->text(4)).dir().absolutePath(),
+        if (QString::compare(QFileInfo(items.at(i)->text(COLUMN_PATH)).dir().absolutePath(),
                              root.absolutePath(),
                              Qt::CaseSensitive) != 0) {
             return false;

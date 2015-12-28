@@ -7,6 +7,8 @@
 #include <QDir>
 #include <QCoreApplication>
 
+#define USAGE_INFO_FILENAME QString("usageinfo.ph")
+
 class UsageInfo
 {
 
