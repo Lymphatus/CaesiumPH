@@ -31,19 +31,24 @@ QTemporaryDir tempDir;
 QElapsedTimer timer;
 QString lastCPHListPath = "";
 
-QString toHumanSize(int size) {
-    double doubleSize = (double) size;
-    if (size == 1) {
-        return QString::number(size) + " bytes";
-    } else if (size < 1024) {
-        return QString::number(size) + " bytes";
-    } else if (size >= 1024 && size < 1048576) {
-        return QString::number(doubleSize / 1024, 'f', 2) + " Kb";
-    } else if (size >= 1048576) {
-        return QString::number(doubleSize / 1048576, 'f', 2) + " Mb";
-    } else {
-        return QString::number(size) + " bytes";
+QString toHumanSize(long size) {
+    //Check if size is 0 to avoid crashes
+    if (size == 0) {
+        return "0 bytes";
     }
+
+    QStringList unit;
+    unit << "Bytes" << "Kb" << "Mb" << "Gb" << "Tb";
+    //Index of the array containing the correct unit
+    double order = floor(log2(labs(size)) / 10);
+
+    //We should never handle files over 1k Tb, but...
+    if (order > 4) {
+        qDebug() << "Woah, huge collection!";
+        order = 4;
+    }
+
+    return QString::number(size / (pow(1024, order)), 'f', 2) + unit[(int)order];
 }
 
 double humanToDouble(QString human_size) {

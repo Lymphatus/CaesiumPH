@@ -51,7 +51,7 @@ extern QTemporaryDir tempDir;
 extern QElapsedTimer timer;
 extern QString lastCPHListPath; //Path of the last list saved
 
-QString toHumanSize(int);
+QString toHumanSize(long);
 double humanToDouble(QString);
 QString getRatio(qint64, qint64);
 char* QStringToChar(QString s);
