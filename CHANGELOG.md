@@ -2,11 +2,17 @@
 
 ###### 0.9.4-beta
 * FIXED
-    * Remove/Clear button behaviour
+    * Remove/Clear button behaviour with empty lists
+    * Overflow for big file sizes converted to human form
     * Bugfixes
+    * From LGPL to GPL
 * ADDED
     * Context menu for the file list
     * Save/Open list
+    * Copyright notice in source files
+    * Update system now detects already downloaded updates
+    * Checksum check for downloaded updates
+    * Loggin to file
 
 ----------
 

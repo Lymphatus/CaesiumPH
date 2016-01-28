@@ -1,3 +1,26 @@
+/**
+ *
+ * This file is part of CaesiumPH.
+ *
+ * CaesiumPH - A Caesium version featuring lossless JPEG optimization/compression
+ * for photographers and webmasters.
+ *
+ * Copyright (C) 2016 - Matteo Paonessa
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.
+ * If not, see <http://www.gnu.org/licenses/>
+ *
+ */
+
 #include "networkoperations.h"
 #include "usageinfo.h"
 #include "utils.h"
@@ -12,10 +35,15 @@ NetworkOperations::NetworkOperations(QObject *parent) : QObject(parent) {
     releaseURL = "https://github.com/Lymphatus/CaesiumPH/releases/download/v" +
             updateVersionTag + "/caesiumph-" + updateVersionTag +
             osAndExtension.at(1);
+
+    updatePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) +
+            QDir::separator() +
+            "cph_u" +
+            osAndExtension.at(1);
 }
 
 void NetworkOperations::uploadUsageStatistics() {
-    qDebug() << "Upload stats called";
+    qInfo() << "Upload stats called";
     QString path = UsageInfo().jsonPath;
     QFile jsonFile(path);
     if (jsonFile.open(QFile::ReadOnly)) {
@@ -29,7 +57,7 @@ void NetworkOperations::uploadUsageStatistics() {
 }
 
 void NetworkOperations::uploadFinished(QNetworkReply * reply) {
-    qDebug() << reply->errorString();
+    qInfo() << "Upload stats finished with " << reply->errorString();
 }
 
 void NetworkOperations::checkForUpdates() {
@@ -47,15 +75,47 @@ void NetworkOperations::getCurrentBuild() {
     if (updateReply->error() == QNetworkReply::NoError) {
         int v_number = updateReply->readLine().split('\n').at(0).toInt();
         QString v_string = updateReply->readLine().replace("\n", "");
-        emit checkForUpdatesFinished(v_number,
-                                     v_string);
+
+        //Start reading for checksums
+        QString line = updateReply->readLine();
+        while (!line.isEmpty()) {
+            //Read the right release checksum
+            if (line.contains(osAndExtension.at(0))) {
+                line = line.split(' ').at(1);
+                updateChecksum = line.replace("\n", "");
+                qInfo() << "Remote update checksum is " << updateChecksum;
+                break;
+            }
+            line = updateReply->readLine();
+        }
+        //If the file already exists check it's the correct one
+        QFile updateFile(updatePath);
+        if (updateFile.exists()) {
+            qInfo() << "Already found an update";
+            if (updateFile.open(QFile::ReadOnly)) {
+                QByteArray data = updateFile.readAll();
+                qInfo() << "Checking integrity";
+                if (compareUpdateChecksums(updateChecksum, &data) != 0) {
+                    qInfo() << "Different checksums, download again";
+                    emit checkForUpdatesFinished(v_number,
+                                                 v_string,
+                                                 updateChecksum);
+                } else {
+                    qInfo() << "Checksums are equal, skip downloading";
+                    emit updateDownloadFinished(updatePath);
+                }
+            } else {
+                qCritical() << "Failed to open the already downloaded update";
+            }
+        }
     } else {
-        qDebug() << updateReply->errorString();
+        qCritical() << "Failed to get latest release build. Error: " << updateReply->errorString();
     }
     updateReply->close();
 }
 
-void NetworkOperations::downloadUpdateRequest() {
+void NetworkOperations::downloadUpdateRequest(QString checksum) {
+    updateChecksum = checksum;
     //Set the right URL according to OS
     QUrl url;
     url.setUrl(releaseURL);
@@ -67,38 +127,14 @@ void NetworkOperations::downloadUpdateRequest() {
 
     //Get request
     downloadUpdateReply = networkManager->get(request);
-    qDebug() << "Get started";
+    qInfo() << "Update GET request started";
 
     //Connections
-    connect(downloadUpdateReply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(showUpdateDownloadProgress(qint64,qint64)));
     connect(downloadUpdateReply, SIGNAL(finished()), this, SLOT(flushUpdate()));
 }
 
-
-//WARNING LEGACY, not used. Remove if necessary
-void NetworkOperations::showUpdateDownloadProgress(qint64 c, qint64 t) {
-    //Show the progress in the ProgressDialog
-    if (downloadUpdateReply->error() == QNetworkReply::NoError) {
-        if (downloadUpdateReply->attribute(QNetworkRequest::RedirectionTargetAttribute).isNull()) {
-            //qDebug() << c << "/" << t;
-        } else {
-            return;
-        }
-    } else {
-        qDebug() << "Network error: " + downloadUpdateReply->errorString() << " " << releaseURL;
-        downloadUpdateReply->abort();
-    }
-}
-
 void NetworkOperations::flushUpdate() {
-    if (downloadUpdateReply->error() == QNetworkReply::NoError) {
-
-        //Gets a temporary path where we can write
-        QString tmpPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) +
-                QDir::separator() +
-                "cph_u" +
-                osAndExtension.at(1);
-
+    if (downloadUpdateReply->error() == QNetworkReply::NoError) {        
         //Check if we are being redirected
         QVariant variant = downloadUpdateReply->attribute(QNetworkRequest::RedirectionTargetAttribute);
 
@@ -108,26 +144,42 @@ void NetworkOperations::flushUpdate() {
             //Change the url to the new one
             releaseURL = variant.toString();
             //Go again
-            NetworkOperations::downloadUpdateRequest();
+            NetworkOperations::downloadUpdateRequest(updateChecksum);
             //Don't forget to return to abort the current function
             return;
         }
 
-        QFile *file = new QFile(tmpPath);
+        QFile *file = new QFile(updatePath);
 
         //Flush the file
         if (file->open(QFile::WriteOnly)) {
-            file->write(downloadUpdateReply->readAll());
+            QByteArray data = downloadUpdateReply->readAll();
+            file->write(data);
             file->flush();
-            file->close();
-            qDebug() << "Download finished and flushed";
-            emit updateDownloadFinished(tmpPath);
+            qInfo() << "Download finished and flushed";
+            if (compareUpdateChecksums(updateChecksum, &data) == 0) {
+                file->close();
+                //Correct checksum
+                qInfo() << "Correct checksum";
+                emit updateDownloadFinished(updatePath);
+            } else {
+                //Failure
+                //By now, retry on the next CaesiumPH start
+            }
             downloadUpdateReply->deleteLater();
         } else {
             downloadUpdateReply->deleteLater();
-            qDebug() << "Failed to write file";
+            qCritical() << "Cannot write update to file";
         }
     } else if (downloadUpdateReply->error() == QNetworkReply::OperationCanceledError) {
-        qDebug() << "Aborted";
+        qCritical() << "Update write aborted";
     }
+}
+
+int NetworkOperations::compareUpdateChecksums(QString checksum, QByteArray* file) {
+    QCryptographicHash hash(QCryptographicHash::Sha256);
+    hash.addData(*file);
+    QString downloadedChecksum = hash.result().toHex();
+    qInfo() << "Comparing checksums. Original: " << checksum << "\nDownloaded: " << downloadedChecksum;
+    return QString::compare(downloadedChecksum, checksum);
 }

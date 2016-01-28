@@ -1,3 +1,26 @@
+/**
+ *
+ * This file is part of CaesiumPH.
+ *
+ * CaesiumPH - A Caesium version featuring lossless JPEG optimization/compression
+ * for photographers and webmasters.
+ *
+ * Copyright (C) 2016 - Matteo Paonessa
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.
+ * If not, see <http://www.gnu.org/licenses/>
+ *
+ */
+
 #include "utils.h"
 #include "math.h"
 #include <stdlib.h>
@@ -5,14 +28,15 @@
 #include <QIODevice>
 #include <QDate>
 #include <QTreeWidgetItem>
+
 #include <QDebug>
 
 QString inputFilter = QIODevice::tr("Image Files") + " (*.jpg *.jpeg)";
 QString clfFilter = "CaesiumPH List File (*.cphlf)";
 QStringList inputFilterList = QStringList() << "*.jpg" << "*.jpeg";
 QString versionString = "0.9.4-beta";
-int versionNumber = 94;
-int buildNumber = 20151228;
+int versionNumber = 92;
+int buildNumber = 20160126;
 QString updateVersionTag = "";
 long originalsSize = 0;
 long compressedSize = 0;
@@ -44,7 +68,7 @@ QString toHumanSize(long size) {
 
     //We should never handle files over 1k Tb, but...
     if (order > 4) {
-        qDebug() << "Woah, huge collection!";
+        qWarning() << "Woah, huge collection!";
         order = 4;
     }
 

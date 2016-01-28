@@ -1,3 +1,26 @@
+/**
+ *
+ * This file is part of CaesiumPH.
+ *
+ * CaesiumPH - A Caesium version featuring lossless JPEG optimization/compression
+ * for photographers and webmasters.
+ *
+ * Copyright (C) 2016 - Matteo Paonessa
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.
+ * If not, see <http://www.gnu.org/licenses/>
+ *
+ */
+
 #include "caesiumph.h"
 #include "ui_caesiumph.h"
 #include "aboutdialog.h"
@@ -678,16 +701,17 @@ void CaesiumPH::checkUpdates() {
     qDebug() << "Check updates called";
     NetworkOperations* op = new NetworkOperations();
     op->checkForUpdates();
-    connect(op, SIGNAL(checkForUpdatesFinished(int, QString)), this, SLOT(updateAvailable(int, QString)));
+    connect(op, SIGNAL(updateDownloadFinished(QString)), this, SLOT(updateDownloadFinished(QString)));
+    connect(op, SIGNAL(checkForUpdatesFinished(int, QString, QString)), this, SLOT(updateAvailable(int, QString, QString)));
 }
 
-void CaesiumPH::updateAvailable(int version, QString versionTag) {
+void CaesiumPH::updateAvailable(int version, QString versionTag, QString checksum) {
     qDebug() << "FOUND UPDATE VERSION " << version;
     updateVersionTag = versionTag;
     if (version > versionNumber) {
         NetworkOperations* op = new NetworkOperations();
         connect(op, SIGNAL(updateDownloadFinished(QString)), this, SLOT(updateDownloadFinished(QString)));
-        op->downloadUpdateRequest();
+        op->downloadUpdateRequest(checksum);
     }
 }
 

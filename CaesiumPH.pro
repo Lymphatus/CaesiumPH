@@ -45,7 +45,6 @@ SOURCES += main.cpp\
     usageinfo.cpp \
     networkoperations.cpp \
     qdroptreewidget.cpp \
-    ctreewidgetitem.cpp \
     cphlist.cpp
 
 HEADERS  += caesiumph.h \
