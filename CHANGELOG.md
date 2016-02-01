@@ -1,6 +1,6 @@
 ### CHANGELOG
 
-###### 0.9.4-beta
+###### 0.9.4-beta (01/02/2016)
 * FIXED
     * Remove/Clear button behaviour with empty lists
     * Overflow for big file sizes converted to human form

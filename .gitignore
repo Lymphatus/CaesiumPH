@@ -35,6 +35,3 @@ Makefile*
 
 #QtCtreator CMake
 CMakeLists.txt.user
-
-#QM files
-*.qm
