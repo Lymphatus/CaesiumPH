@@ -25,6 +25,7 @@
 #define PREFERENCEDIALOG_H
 
 #include <QMainWindow>
+#include <QSettings>
 
 //Preference group keys
 #define KEY_PREF_GROUP_GENERAL QString("PreferenceGeneral/")
@@ -38,6 +39,7 @@
 #define KEY_PREF_GENERAL_OUTPUT_METHOD QString("outMethod")
 #define KEY_PREF_GENERAL_OUTPUT_STRING QString("outString")
 #define KEY_PREF_GENERAL_LOCALE QString("locale")
+#define KEY_PREF_GENERAL_LOCALE_STRING QString("localeString")
 #define KEY_PREF_GENERAL_PROMPT QString("promptExit")
 
 //Compression group keys
@@ -77,6 +79,7 @@ private slots:
     void closeEvent(QCloseEvent *event);
     void writePreferences();
     void readPreferences();
+    void loadTranslations();
 
     void on_seeInfoButton_clicked();
     void on_outputFileMethodComboBox_currentIndexChanged(int index);
@@ -84,10 +87,12 @@ private slots:
     void on_keepCopyrightCheckBox_toggled(bool checked);
     void on_keepDateCheckBox_toggled(bool checked);
     void on_keepCommentsCheckBox_toggled(bool checked);
+    void on_languageComboBox_currentIndexChanged(int index);
 
 private:
     Ui::PreferenceDialog *ui;
     enum Qt::CheckState getExifsCheckBoxGroupState();
+    QSettings settings;
 
 };
 

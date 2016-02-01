@@ -23,11 +23,13 @@
 
 #include "caesiumph.h"
 #include "utils.h"
+#include "preferencedialog.h"
 #include <QApplication>
 #include <QStyleFactory>
 #include <QFile>
 #include <QLibraryInfo>
 #include <QTranslator>
+#include <QSettings>
 
 void logHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     //TODO Close the file?
@@ -93,8 +95,24 @@ void logHandler(QtMsgType type, const QMessageLogContext &context, const QString
 int main(int argc, char *argv[]) {
     qInstallMessageHandler(logHandler);
     QApplication a(argc, argv);
-    CaesiumPH w;
-    w.show();
+
+    QCoreApplication::setApplicationName("CaesiumPH");
+    QCoreApplication::setOrganizationName("SaeraSoft");
+    QCoreApplication::setOrganizationDomain("saerasoft.com");
+
+    QSettings settings;
+
+    qInfo() << "----------------- CaesiumPH session started at "
+            << QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") << "-----------------";
+
+    //Load languages
+    loadLocales();
+    QString locale;
+    if (settings.value(KEY_PREF_GENERAL_LOCALE_STRING).value<QString>().isEmpty()) {
+        locale = locales.at(0).name();
+    } else {
+        locale = settings.value(KEY_PREF_GENERAL_LOCALE_STRING).value<QString>();
+    }
 
     //2x images for OSX Retina
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
@@ -114,18 +132,25 @@ int main(int argc, char *argv[]) {
     a.setStyleSheet(style);
 
     //Translation support
-    //QT Widgets
+    //Qt Widgets
     QTranslator qtTranslator;
-    qtTranslator.load("qt_" + QLocale::system().name(),
+    qtTranslator.load("qt_" + locale,
                       QLibraryInfo::location(QLibraryInfo::TranslationsPath));
     a.installTranslator(&qtTranslator);
 
     //App translations
     QTranslator myappTranslator;
-    myappTranslator.load("caesiumph_" + QLocale::system().name(),
+    bool tr_loaded = myappTranslator.load("caesiumph_" +
+                                          locale,
                          QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-    qInfo() << "Translation path is: " << QLibraryInfo::location(QLibraryInfo::TranslationsPath);
     a.installTranslator(&myappTranslator);
+
+    CaesiumPH w;
+    w.show();
+
+    qInfo() << "Translation path is: " << QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+    qInfo() << "Trying to load translation for language" << locale;
+    qInfo() << "Translation loading result was" << tr_loaded;
 
     return a.exec();
 }

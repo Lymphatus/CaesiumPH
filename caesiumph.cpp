@@ -167,10 +167,6 @@ void CaesiumPH::initializeConnections() {
 }
 
 void CaesiumPH::initializeSettings() {
-    QCoreApplication::setApplicationName("CaesiumPH");
-    QCoreApplication::setOrganizationName("SaeraSoft");
-    QCoreApplication::setOrganizationDomain("saerasoft.com");
-
     uinfo->initialize();
 }
 
@@ -430,7 +426,7 @@ extern void compressRoutine(CTreeWidgetItem* item) {
          * Instead, if we compressed in a custom folder, copy the original over the compressed one
          * and set all the output results to point to the original file
          */
-        qDebug() << "Output is bigger than input";
+        qInfo() << "Output is bigger than input";
         if (!params.overwrite) {
             //Copy the original file over the compressed one
             QFile* outputFile = new QFile(outputPath);
@@ -442,7 +438,7 @@ extern void compressRoutine(CTreeWidgetItem* item) {
             //Rename the original file with the output path
             //TODO Better error handling please
             if (!QFile(item->text(COLUMN_PATH)).copy(outputPath)) {
-                qDebug() << "ERROR: Failed while moving: " << item->text(COLUMN_PATH);
+                qCritical() << "Failed while moving " << item->text(COLUMN_PATH);
             }
         }
         //Set the importat stats to point to the original file
@@ -456,7 +452,7 @@ extern void compressRoutine(CTreeWidgetItem* item) {
             //Move the compressed
             //TODO Better error handling please
             if (!QFile(outputPath).rename(item->text(COLUMN_PATH))) {
-                qDebug() << "ERROR: Failed while moving: " << item->text(COLUMN_PATH);
+                qCritical() << "Failed while moving " << item->text(COLUMN_PATH);
             }
         }
     }
@@ -492,9 +488,8 @@ QString CaesiumPH::getOutputPath(QFileInfo* originalInfo) {
         if (tempDir.isValid()) {
             //Unique temporary directory
             outputPath = tempDir.path() + QDir::separator() + originalInfo->fileName();
-            qDebug() << outputPath;
         } else {
-            qDebug() << "Cannot create a temporary folder. Abort.";
+            qFatal("Cannot create a temporary folder. Abort.");
             exit(-1);
         }
     } else {
@@ -574,8 +569,7 @@ void CaesiumPH::compressionStarted() {
 
 void CaesiumPH::compressionFinished() {
     //Get elapsed time of the compression
-    qDebug() << QTime::currentTime();
-    qDebug() << toHumanSize(originalsSize) + " - " + toHumanSize(compressedSize) + " | " + getRatio(originalsSize, compressedSize);
+    qInfo() << "Starting compression at " << QTime::currentTime();
 
     //Display statistics in the status bar
     ui->statusBar->showMessage(tr("Compression completed! ") +
@@ -685,6 +679,8 @@ void CaesiumPH::closeEvent(QCloseEvent *event) {
         //TODO Translate?
         switch (res) {
             case QMessageBox::Ok:
+            qInfo() << "----------------- CaesiumPH session stopped at "
+                    << QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") << "-----------------";
                 event->accept();
                 break;
             case QMessageBox::Cancel:
@@ -693,12 +689,14 @@ void CaesiumPH::closeEvent(QCloseEvent *event) {
                 break;
         }
     } else {
+        qInfo() << "----------------- CaesiumPH session stopped at "
+                << QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") << "-----------------";
         event->accept();
     }
 }
 
 void CaesiumPH::checkUpdates() {
-    qDebug() << "Check updates called";
+    qInfo() << "Check for updates called";
     NetworkOperations* op = new NetworkOperations();
     op->checkForUpdates();
     connect(op, SIGNAL(updateDownloadFinished(QString)), this, SLOT(updateDownloadFinished(QString)));
@@ -706,7 +704,7 @@ void CaesiumPH::checkUpdates() {
 }
 
 void CaesiumPH::updateAvailable(int version, QString versionTag, QString checksum) {
-    qDebug() << "FOUND UPDATE VERSION " << version;
+    qInfo() << "Connection to update server was succesful. Latest build is " << version;
     updateVersionTag = versionTag;
     if (version > versionNumber) {
         NetworkOperations* op = new NetworkOperations();
@@ -718,7 +716,7 @@ void CaesiumPH::updateAvailable(int version, QString versionTag, QString checksu
 bool CaesiumPH::hasADuplicateInList(CImageInfo *c) {
     for (int i = 0; i < ui->listTreeWidget->topLevelItemCount(); i++) {
         if (c->isEqual(ui->listTreeWidget->topLevelItem(i)->text(COLUMN_PATH))) {
-            qDebug() << "Duplicate detected. Skipping.";
+            qInfo() << "Duplicate detected. Skipping";
             return true;
         }
     }
@@ -891,7 +889,6 @@ void CaesiumPH::on_actionOpen_list_triggered() {
 }
 
 void CaesiumPH::listChanged() {
-    qDebug() << lastCPHListPath;
     //List changed, so we need to enable the save feature
     ui->actionSave_list->setEnabled(true);
     ui->actionSave_list_as->setEnabled(true);

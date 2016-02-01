@@ -99,6 +99,7 @@ private:
     QFrame* updateStatusBarLine = new QFrame();
     QLabel* statusBarLabel = new QLabel();
     QString updatePath;
+    QString inputFilter = QIODevice::tr("Image Files") + " (*.jpg *.jpeg)";
 
     //List Menu
     QMenu* listMenu;

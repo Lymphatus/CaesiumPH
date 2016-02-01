@@ -1,5 +1,3 @@
 ### TODO
-- Translations
-- Logging
 - Usage reports upload
-- .cphlf association
+- .cphlf association (Windows only)

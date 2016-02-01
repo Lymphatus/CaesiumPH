@@ -31,15 +31,26 @@
 #include <QSettings>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QLibraryInfo>
+#include <QDirIterator>
+#include <QStyledItemDelegate>
+#include <QTranslator>
 
 PreferenceDialog::PreferenceDialog(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::PreferenceDialog) {
     ui->setupUi(this);
+    QSettings settings;
+    loadTranslations();
     readPreferences();
 
     //If we want a custom folder, show the browse button
     ui->browseButton->setVisible(ui->outputFileMethodComboBox->currentIndex() == 2);
+
+    //Override the item delegate for styling QComboBox on OSX
+    QStyledItemDelegate* itemDelegate = new QStyledItemDelegate();
+    ui->languageComboBox->setItemDelegate(itemDelegate);
+    ui->outputFileMethodComboBox->setItemDelegate(itemDelegate);
 }
 
 PreferenceDialog::~PreferenceDialog() {
@@ -64,8 +75,6 @@ void PreferenceDialog::closeEvent(QCloseEvent *event) {
 }
 
 void PreferenceDialog::writePreferences() {
-    QSettings settings;
-
     //General
     settings.beginGroup(KEY_PREF_GROUP_GENERAL);
     settings.setValue(KEY_PREF_GENERAL_OVERWRITE, ui->overwriteOriginalCheckBox->isChecked());
@@ -92,8 +101,6 @@ void PreferenceDialog::writePreferences() {
 }
 
 void PreferenceDialog::readPreferences() {
-    QSettings settings;
-
     //General
     settings.beginGroup(KEY_PREF_GROUP_GENERAL);
     ui->overwriteOriginalCheckBox->setChecked(settings.value(KEY_PREF_GENERAL_OVERWRITE).value<bool>());
@@ -186,4 +193,15 @@ enum Qt::CheckState PreferenceDialog::getExifsCheckBoxGroupState() {
         //None is selected
         return Qt::Unchecked;
     }
+}
+
+void PreferenceDialog::loadTranslations() {
+    for (int i = 1; i < locales.length(); i++) {
+        ui->languageComboBox->addItem(toCapitalCase(locales.at(i).nativeLanguageName()));
+    }
+}
+
+void PreferenceDialog::on_languageComboBox_currentIndexChanged(int index) {
+    qDebug() << "Writing to settings language" << locales.at(index).name();
+    settings.setValue(KEY_PREF_GENERAL_LOCALE_STRING, locales.at(index).name());
 }

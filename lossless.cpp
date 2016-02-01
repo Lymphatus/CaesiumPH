@@ -28,6 +28,8 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include <QDebug>
+
 #include "lossless.h"
 #include "caesiumph.h"
 

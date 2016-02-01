@@ -6,13 +6,15 @@
     * Overflow for big file sizes converted to human form
     * Bugfixes
     * From LGPL to GPL
+    * ComboBox styling on OSX
 * ADDED
     * Context menu for the file list
     * Save/Open list
     * Copyright notice in source files
     * Update system now detects already downloaded updates
     * Checksum check for downloaded updates
-    * Loggin to file
+    * Logging to file
+    * Multilanguage support
 
 ----------
 

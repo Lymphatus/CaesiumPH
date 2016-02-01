@@ -136,3 +136,9 @@ QStatusBar QLabel {
 QStatusBar QToolButton {
         font-size: 11pt;
 }
+
+QComboBox QAbstractItemView {
+    selection-color: white;
+    selection-background-color: #1cb495;
+    background: white;
+}

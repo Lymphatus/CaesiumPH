@@ -58,7 +58,6 @@ typedef struct var {
     QString outMethodString;
 } cparams;
 
-extern QString inputFilter;
 extern QString clfFilter;
 extern QStringList inputFilterList;
 extern QString versionString;
@@ -73,6 +72,7 @@ extern QStringList osAndExtension;
 extern QTemporaryDir tempDir;
 extern QElapsedTimer timer;
 extern QString lastCPHListPath; //Path of the last list saved
+extern QList<QLocale> locales;
 
 QString toHumanSize(long);
 double humanToDouble(QString);
@@ -83,5 +83,7 @@ double ratioToDouble(QString ratio);
 bool isJPEG(char* path);
 QString msToFormattedString(qint64);
 bool haveSameRootFolder(QList<QTreeWidgetItem *> items);
+QString toCapitalCase(const QString);
+void loadLocales();
 
 #endif // UTILS_H

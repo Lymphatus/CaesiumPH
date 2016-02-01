@@ -28,10 +28,10 @@
 #include <QIODevice>
 #include <QDate>
 #include <QTreeWidgetItem>
-
+#include <QDirIterator>
+#include <QLibraryInfo>
 #include <QDebug>
 
-QString inputFilter = QIODevice::tr("Image Files") + " (*.jpg *.jpeg)";
 QString clfFilter = "CaesiumPH List File (*.cphlf)";
 QStringList inputFilterList = QStringList() << "*.jpg" << "*.jpeg";
 QString versionString = "0.9.4-beta";
@@ -54,6 +54,7 @@ QStringList osAndExtension = QStringList() <<
 QTemporaryDir tempDir;
 QElapsedTimer timer;
 QString lastCPHListPath = "";
+QList<QLocale> locales;
 
 QString toHumanSize(long size) {
     //Check if size is 0 to avoid crashes
@@ -125,12 +126,12 @@ bool isJPEG(char* path) {
     fp = fopen(path, "r");
 
     if (fp == NULL) {
-        fprintf(stderr, "Cannot open input file for type detection. Skipping.\n");
+        qWarning() << "Cannot open" <<  path << "for type detection. Skipping";
         return false;
     }
 
     if (fread(type_buffer, 1, 2, fp) < 2) {
-        fprintf(stderr, "Cannot read file type. Skipping.\n");
+        qWarning() << "Cannot read" <<  path << "type. Skipping";
         return false;
     }
 
@@ -151,7 +152,10 @@ QString msToFormattedString(qint64 ms) {
     } else if (ms >= 1000 && ms < 60000) {
         return QString::number(((double) ms) / 1000, 'f', 1) + "s";
     } else {
-        return QString::number(ms / 60000) + ":" + (ms < 70000 ? "0" : "") + QString::number(ms / 1000 % 60) + QT_TR_NOOP(" minutes");
+        return QString::number(ms / 60000) + ":"
+                + (ms < 70000 ? "0" : "") +
+                QString::number(ms / 1000 % 60) +
+                QT_TRANSLATE_NOOP("Utils"," minutes");
     }
 }
 
@@ -165,4 +169,31 @@ bool haveSameRootFolder(QList<QTreeWidgetItem *> items) {
         }
     }
     return true;
+}
+
+QString toCapitalCase(const QString str) {
+    if (str.size() < 1) {
+        return "";
+    }
+
+    QStringList tokens = str.split(" ");
+    QList<QString>::iterator tokItr = tokens.begin();
+
+    for (tokItr = tokens.begin(); tokItr != tokens.end(); ++tokItr) {
+        (*tokItr) = (*tokItr).at(0).toUpper() + (*tokItr).mid(1);
+    }
+
+    return tokens.join(" ");
+}
+
+void loadLocales() {
+    locales.insert(0, QLocale::system());
+    QString translationPath = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+    //Iterate trough files and get the language string
+    QDirIterator it(translationPath, QStringList() << "*.qm");
+    while (it.hasNext()) {
+        it.next();
+        locales.append(QLocale(it.fileInfo().baseName().replace("caesiumph_", "")));
+    }
+    qInfo() << "Found locales" << locales;
 }
