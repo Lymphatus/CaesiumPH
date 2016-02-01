@@ -90,7 +90,7 @@ void NetworkOperations::getCurrentBuild() {
         }
         //If the file already exists check it's the correct one
         QFile updateFile(updatePath);
-        if (updateFile.exists()) {
+        if (updateFile.exists() && v_number > buildNumber) {
             qInfo() << "Already found an update";
             if (updateFile.open(QFile::ReadOnly)) {
                 QByteArray data = updateFile.readAll();
