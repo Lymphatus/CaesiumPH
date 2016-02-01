@@ -155,3 +155,7 @@ QStatusBar QToolButton {
 QStatusBar QFrame {
     background: transparent;
 }
+
+#languageWarningLabel {
+    font-size: 9px;
+}

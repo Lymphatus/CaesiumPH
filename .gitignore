@@ -35,3 +35,6 @@ Makefile*
 
 #QtCtreator CMake
 CMakeLists.txt.user
+
+#Build folder
+build/*

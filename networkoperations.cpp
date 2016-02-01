@@ -36,8 +36,8 @@ NetworkOperations::NetworkOperations(QObject *parent) : QObject(parent) {
             updateVersionTag + "/caesiumph-" + updateVersionTag +
             osAndExtension.at(1);
 
-    updatePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) +
-            QDir::separator() +
+    updatePath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) +
+            "/" +
             "cph_u" +
             osAndExtension.at(1);
 }
@@ -76,6 +76,8 @@ void NetworkOperations::getCurrentBuild() {
         int v_number = updateReply->readLine().split('\n').at(0).toInt();
         QString v_string = updateReply->readLine().replace("\n", "");
 
+        qInfo() << "Latest remote version is" << v_number << v_string;
+
         //Start reading for checksums
         QString line = updateReply->readLine();
         while (!line.isEmpty()) {
@@ -90,7 +92,8 @@ void NetworkOperations::getCurrentBuild() {
         }
         //If the file already exists check it's the correct one
         QFile updateFile(updatePath);
-        if (updateFile.exists() && v_number > buildNumber) {
+        qInfo() << updatePath << "exists?" << updateFile.exists();
+        if (updateFile.exists()) {
             qInfo() << "Already found an update";
             if (updateFile.open(QFile::ReadOnly)) {
                 QByteArray data = updateFile.readAll();
@@ -100,13 +103,18 @@ void NetworkOperations::getCurrentBuild() {
                     emit checkForUpdatesFinished(v_number,
                                                  v_string,
                                                  updateChecksum);
-                } else {
+                } else if (v_number > versionNumber){
                     qInfo() << "Checksums are equal, skip downloading";
                     emit updateDownloadFinished(updatePath);
                 }
             } else {
                 qCritical() << "Failed to open the already downloaded update";
             }
+        } else {
+            qInfo() << "No already downloaded update found. Get it";
+            emit checkForUpdatesFinished(v_number,
+                                         v_string,
+                                         updateChecksum);
         }
     } else {
         qCritical() << "Failed to get latest release build. Error: " << updateReply->errorString();
