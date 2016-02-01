@@ -35,7 +35,7 @@
 QString clfFilter = "CaesiumPH List File (*.cphlf)";
 QStringList inputFilterList = QStringList() << "*.jpg" << "*.jpeg";
 QString versionString = "0.9.4-beta";
-int versionNumber = 92;
+int versionNumber = 94;
 int buildNumber = 20160126;
 QString updateVersionTag = "";
 long originalsSize = 0;
