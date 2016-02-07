@@ -79,5 +79,5 @@ DISTFILES += \
     qt.conf
 
 TRANSLATIONS = translations/caesiumph_en_US.ts \
-    translations/caesiumph_it_IT.ts
-
+    translations/caesiumph_it_IT.ts \
+    translations/caesiumph_zh_CN.ts
