@@ -18,7 +18,101 @@
     <normaloff>:/icons/main/logo.png</normaloff>:/icons/main/logo.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">QMainWindow, QHeaderView::section, QProgressDialog, QDialog, QGraphicsView {
+    background-color: #FFFFFF;
+    color: #757575;
+    border: none;
+}
+
+QTreeWidget {
+    background-color: #FFFFFF;
+    color: #757575;
+	alternate-background-color: #f6f7f7;
+}
+
+QTreeWidget::item {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+QTreeWidget::item:hover {
+    color: #1cb495;
+    background-color: #F5F5F5;
+}
+
+QTreeWidget::item:selected {
+    color: #1cb495;
+    background-color: #EEEEEE;
+}
+
+QHeaderView {
+	background-color: #FFFFFF;
+    text-transform: uppercase;
+    padding-bottom: 10px;
+    padding-left: 8px;
+    color: #CCCCCC;
+}
+
+QHeaderView::section {
+    height: 25px;
+    padding-left: 5px;
+    border-right: 1px solid #33757575;
+	background-color: #FFFFFF;
+}
+
+QProgressBar::chunk {
+    background-color: #1cb495;
+    border-radius: 2px;
+}
+
+QProgressBar {
+    border: 1px solid #b5b5b5;
+    border-radius: 3px;
+    height: 5px;
+    color: transparent;
+}
+
+QDialog {
+    color: #FFFFFF;
+}
+
+QDockWidget {
+    background-color: #FFFFFF;
+}
+
+QDockWidget::title {
+    background-color: #FFFFFF;
+}
+
+QTextEdit#exifTextEdit {
+	background-color: #FFFFFF;
+    color: #757575;
+    font-family: Monaco, monospace;
+    font-size: 11px;
+    padding-bottom: 5px;
+}
+
+QLabel#imagePreviewLabel {
+    padding-top:3px;
+}
+
+QToolButton {
+    background-color: transparent;
+    border: none;
+    color: #757575;
+}
+
+QStatusBar {
+	background-color: #FFFFFF;
+	color: #757575;
+	margin-left: 4px;
+	margin-right: 4px;
+}
+
+QStatusBar QLabel, QToolButton {
+	color: #757575;
+	border: none;
+}</string>
   </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
@@ -28,6 +122,12 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_2">
+    <property name="leftMargin">
+     <number>12</number>
+    </property>
+    <property name="topMargin">
+     <number>12</number>
+    </property>
     <property name="rightMargin">
      <number>0</number>
     </property>
@@ -40,6 +140,387 @@
     <property name="verticalSpacing">
      <number>3</number>
     </property>
+    <item row="0" column="2">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="2" rowspan="2">
+     <widget class="Line" name="line_3">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="2">
+     <widget class="Line" name="line_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0" rowspan="2" colspan="2">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <item>
+       <widget class="QToolButton" name="settingsButton">
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: transparent;
+border: none;</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/icons/ui/settings.png</normaloff>:/icons/ui/settings.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QToolButton" name="addFilesButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QToolButton {
+    background-color: transparent;
+    border: none;
+    color: #757575;
+    border-bottom: 3px solid transparent;
+    padding-bottom: 8px;
+	padding-top: 4px;
+}
+
+QToolButton:hover {
+    color: #1cb495;
+    border-bottom: 3px solid #1cb495;
+}</string>
+        </property>
+        <property name="text">
+         <string>Add files</string>
+        </property>
+        <property name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/icons/ui/add.png</normaloff>:/icons/ui/add.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>26</width>
+          <height>26</height>
+         </size>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextUnderIcon</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="addFolderButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QToolButton {
+    background-color: transparent;
+    border: none;
+    color: #757575;
+    border-bottom: 3px solid transparent;
+    padding-bottom: 8px;
+	padding-top: 4px;
+}
+
+QToolButton:hover {
+    color: #1cb495;
+    border-bottom: 3px solid #1cb495;
+}</string>
+        </property>
+        <property name="text">
+         <string>Import folder</string>
+        </property>
+        <property name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/icons/ui/folder.png</normaloff>:/icons/ui/folder.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>26</width>
+          <height>26</height>
+         </size>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextUnderIcon</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="compressButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>64</width>
+          <height>64</height>
+         </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QToolButton {
+    background-color: transparent;
+    border: none;
+    color: #757575;
+    border-bottom: 3px solid transparent;
+    padding-bottom: 5px;
+}
+
+QToolButton:hover {
+    color: #1cb495;
+    border-bottom: 3px solid #1cb495;
+}</string>
+        </property>
+        <property name="text">
+         <string>Compress</string>
+        </property>
+        <property name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/icons/ui/compress.png</normaloff>:/icons/ui/compress.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>32</width>
+          <height>32</height>
+         </size>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextUnderIcon</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="removeItemButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QToolButton {
+    background-color: transparent;
+    border: none;
+    color: #757575;
+    border-bottom: 3px solid transparent;
+    padding-bottom: 8px;
+	padding-top: 4px;
+}
+
+QToolButton:hover {
+    color: #1cb495;
+    border-bottom: 3px solid #1cb495;
+}</string>
+        </property>
+        <property name="text">
+         <string>Remove item</string>
+        </property>
+        <property name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/icons/ui/remove.png</normaloff>:/icons/ui/remove.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>26</width>
+          <height>26</height>
+         </size>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextUnderIcon</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="clearButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QToolButton {
+    background-color: transparent;
+    border: none;
+    color: #757575;
+    border-bottom: 3px solid transparent;
+    padding-bottom: 8px;
+	padding-top: 4px;
+}
+
+QToolButton:hover {
+    color: #1cb495;
+    border-bottom: 3px solid #1cb495;
+}</string>
+        </property>
+        <property name="text">
+         <string>Clear list</string>
+        </property>
+        <property name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/icons/ui/clear.png</normaloff>:/icons/ui/clear.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>26</width>
+          <height>26</height>
+         </size>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextUnderIcon</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QToolButton" name="showSidePanelButton">
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: transparent;
+border: none;</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/icons/ui/side_panel_active.png</normaloff>:/icons/ui/side_panel_active.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
     <item row="0" column="0" colspan="2">
      <widget class="QDropTreeWidget" name="listTreeWidget">
       <property name="sizePolicy">
@@ -47,6 +528,12 @@
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
       </property>
       <property name="focusPolicy">
        <enum>Qt::ClickFocus</enum>
@@ -79,6 +566,9 @@
       </property>
       <property name="dragDropMode">
        <enum>QAbstractItemView::DropOnly</enum>
+      </property>
+      <property name="alternatingRowColors">
+       <bool>false</bool>
       </property>
       <property name="selectionMode">
        <enum>QAbstractItemView::ExtendedSelection</enum>
@@ -133,354 +623,6 @@
        </property>
       </column>
      </widget>
-    </item>
-    <item row="0" column="3" rowspan="3">
-     <widget class="Line" name="sidePanelLine">
-      <property name="styleSheet">
-       <string notr="true">margin-bottom:10px;</string>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-      <property name="lineWidth">
-       <number>1</number>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0" rowspan="2" colspan="2">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QToolButton" name="settingsButton">
-        <property name="styleSheet">
-         <string notr="true">background-color: transparent;
-border: none;</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="icons.qrc">
-          <normaloff>:/icons/ui/settings.png</normaloff>:/icons/ui/settings.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>24</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QToolButton" name="addFilesButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>50</height>
-         </size>
-        </property>
-        <property name="baseSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QToolButton {
-    background-color: transparent;
-    border: none;
-    color: #757575;
-    border-bottom: 3px solid transparent;
-    padding-bottom: 5px;
-}
-
-QToolButton:hover {
-    color: #1cb495;
-    border-bottom: 3px solid #1cb495;
-}</string>
-        </property>
-        <property name="text">
-         <string>Add files</string>
-        </property>
-        <property name="icon">
-         <iconset resource="icons.qrc">
-          <normaloff>:/icons/ui/add.png</normaloff>:/icons/ui/add.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>26</width>
-          <height>26</height>
-         </size>
-        </property>
-        <property name="toolButtonStyle">
-         <enum>Qt::ToolButtonTextUnderIcon</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="addFolderButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>50</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QToolButton {
-    background-color: transparent;
-    border: none;
-    color: #757575;
-    border-bottom: 3px solid transparent;
-    padding-bottom: 5px;
-}
-
-QToolButton:hover {
-    color: #1cb495;
-    border-bottom: 3px solid #1cb495;
-}</string>
-        </property>
-        <property name="text">
-         <string>Import folder</string>
-        </property>
-        <property name="icon">
-         <iconset resource="icons.qrc">
-          <normaloff>:/icons/ui/folder.png</normaloff>:/icons/ui/folder.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>26</width>
-          <height>26</height>
-         </size>
-        </property>
-        <property name="toolButtonStyle">
-         <enum>Qt::ToolButtonTextUnderIcon</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="compressButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>64</width>
-          <height>64</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QToolButton {
-    background-color: transparent;
-    border: none;
-    color: #757575;
-    border-bottom: 3px solid transparent;
-    padding-bottom: 5px;
-}
-
-QToolButton:hover {
-    color: #1cb495;
-    border-bottom: 3px solid #1cb495;
-}</string>
-        </property>
-        <property name="text">
-         <string>Compress</string>
-        </property>
-        <property name="icon">
-         <iconset resource="icons.qrc">
-          <normaloff>:/icons/ui/compress.png</normaloff>:/icons/ui/compress.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>32</width>
-          <height>32</height>
-         </size>
-        </property>
-        <property name="toolButtonStyle">
-         <enum>Qt::ToolButtonTextUnderIcon</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="removeItemButton">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>50</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QToolButton {
-    background-color: transparent;
-    border: none;
-    color: #757575;
-    border-bottom: 3px solid transparent;
-    padding-bottom: 5px;
-}
-
-QToolButton:hover {
-    color: #1cb495;
-    border-bottom: 3px solid #1cb495;
-}</string>
-        </property>
-        <property name="text">
-         <string>Remove item</string>
-        </property>
-        <property name="icon">
-         <iconset resource="icons.qrc">
-          <normaloff>:/icons/ui/remove.png</normaloff>:/icons/ui/remove.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>26</width>
-          <height>26</height>
-         </size>
-        </property>
-        <property name="toolButtonStyle">
-         <enum>Qt::ToolButtonTextUnderIcon</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QToolButton" name="clearButton">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>50</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QToolButton {
-    background-color: transparent;
-    border: none;
-    color: #757575;
-    border-bottom: 3px solid transparent;
-    padding-bottom: 5px;
-}
-
-QToolButton:hover {
-    color: #1cb495;
-    border-bottom: 3px solid #1cb495;
-}</string>
-        </property>
-        <property name="text">
-         <string>Clear list</string>
-        </property>
-        <property name="icon">
-         <iconset resource="icons.qrc">
-          <normaloff>:/icons/ui/clear.png</normaloff>:/icons/ui/clear.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>26</width>
-          <height>26</height>
-         </size>
-        </property>
-        <property name="toolButtonStyle">
-         <enum>Qt::ToolButtonTextUnderIcon</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QToolButton" name="showSidePanelButton">
-        <property name="styleSheet">
-         <string notr="true">background-color: transparent;
-border: none;</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="icons.qrc">
-          <normaloff>:/icons/ui/side_panel_active.png</normaloff>:/icons/ui/side_panel_active.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>24</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </item>
    </layout>
   </widget>
@@ -615,8 +757,8 @@ border: none;</string>
           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.Helvetica Neue DeskInterface';&quot;&gt;No EXIF info available&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Monaco,monospace'; font-size:11px; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.Helvetica Neue DeskInterface'; font-size:13pt;&quot;&gt;No EXIF info available&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="tabStopWidth">
           <number>150</number>
@@ -676,18 +818,10 @@ p, li { white-space: pre-wrap; }
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="styleSheet">
-    <string notr="true">QStatusBar {
-	color: #757575;
-	background-color: #FFFFFF;
-	border-top: 1px solid #CCCCCC;
-	margin-left: 4px;
-	margin-right: 4px;
-}
-
-QStatusBar QLabel, QToolButton {
-	color: #757575;
-	border: none;
-}</string>
+    <string notr="true"/>
+   </property>
+   <property name="sizeGripEnabled">
+    <bool>true</bool>
    </property>
   </widget>
   <action name="actionAdd_pictures">

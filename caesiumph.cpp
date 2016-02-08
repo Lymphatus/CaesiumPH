@@ -50,6 +50,7 @@
 #include <QMessageBox>
 #include <QDesktopServices>
 #include <QDirIterator>
+#include <QSizeGrip>
 
 #include <exiv2/exiv2.hpp>
 
@@ -283,7 +284,7 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
 void CaesiumPH::on_actionAbout_CaesiumPH_triggered() {
     //Start the about dialog
     AboutDialog* ad = new AboutDialog(this);
-    ad->setWindowFlags(Qt::Tool | Qt::WindowTitleHint | Qt::WindowCloseButtonHint | Qt::CustomizeWindowHint);
+    ad->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     ad->show();
 }
 

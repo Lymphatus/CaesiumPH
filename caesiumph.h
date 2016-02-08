@@ -109,6 +109,7 @@ private:
     QAction* listShowOutputFolderAction;
     QAction* listClearAction;
 
+
     void initializeConnections();
     void initializeUI();
     void initializeSettings();
