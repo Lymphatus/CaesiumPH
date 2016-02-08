@@ -800,7 +800,7 @@ font-family: monospace;
 font-size: 24pt;</string>
          </property>
          <property name="text">
-          <string/>
+          <string>preview</string>
          </property>
          <property name="pixmap">
           <pixmap>:/icons/ui/picture.png</pixmap>
