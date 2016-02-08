@@ -86,7 +86,8 @@ void CaesiumPH::initializeUI() {
     ui->compressButton->installEventFilter(this);
     ui->removeItemButton->installEventFilter(this);
     ui->clearButton->installEventFilter(this);
-    ui->showSidePanelButton->installEventFilter(this);
+    //WARNING UI CHANGE
+    //ui->showSidePanelButton->installEventFilter(this);
     ui->settingsButton->installEventFilter(this);
 
     //Set the headers size
@@ -103,7 +104,8 @@ void CaesiumPH::initializeUI() {
     settings.beginGroup(KEY_PREF_GROUP_GEOMETRY);
     resize(settings.value(KEY_PREF_GEOMETRY_SIZE, QSize(880, 500)).toSize());
     move(settings.value(KEY_PREF_GEOMETRY_POS, QPoint(200, 200)).toPoint());
-    ui->sidePanelDockWidget->setVisible(settings.value(KEY_PREF_GEOMETRY_PANEL_VISIBLE).value<bool>());
+    //WARNING UI CHANGE
+    //ui->sidePanelDockWidget->setVisible(settings.value(KEY_PREF_GEOMETRY_PANEL_VISIBLE).value<bool>());
     on_sidePanelDockWidget_visibilityChanged(settings.value(KEY_PREF_GEOMETRY_PANEL_VISIBLE).value<bool>());
     ui->listTreeWidget->sortByColumn(settings.value(KEY_PREF_GEOMETRY_SORT_COLUMN).value<int>(),
                                      settings.value(KEY_PREF_GEOMETRY_SORT_ORDER).value<Qt::SortOrder>());
@@ -248,7 +250,9 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
         } else {
             return false;
         }
-    } else if (obj == (QObject*) ui->showSidePanelButton) {
+    }
+    //WARNING UI CHANGE
+    /*else if (obj == (QObject*) ui->showSidePanelButton) {
         if (!ui->sidePanelDockWidget->isVisible()) {
             if (event->type() == QEvent::Enter  && ui->showSidePanelButton->isEnabled()) {
                 ui->showSidePanelButton->setIcon(QIcon(":/icons/ui/side_panel_active.png"));
@@ -263,7 +267,7 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
         else {
             return false;
         }
-    } else if (obj == (QObject*) ui->settingsButton) {
+    }*/ else if (obj == (QObject*) ui->settingsButton) {
         if (event->type() == QEvent::Enter && ui->settingsButton->isEnabled()) {
             ui->settingsButton->setIcon(QIcon(":/icons/ui/settings_hover.png"));
             return true;
@@ -589,27 +593,33 @@ void CaesiumPH::compressionFinished() {
 
 void CaesiumPH::on_sidePanelDockWidget_topLevelChanged(bool topLevel) {
     //Check if it's floating and hide/show the line
-    ui->sidePanelLine->setVisible(!topLevel);
+    //WARNING UI CHANGE
+    //ui->sidePanelLine->setVisible(!topLevel);
 }
 
 void CaesiumPH::on_sidePanelDockWidget_visibilityChanged(bool visible) {
     //Handle the close event
     on_showSidePanelButton_clicked(visible);
-    ui->showSidePanelButton->setChecked(visible);
+    //WARNING UI CHANGE
+    // ui->showSidePanelButton->setChecked(visible);
 }
 
 void CaesiumPH::on_showSidePanelButton_clicked(bool checked) {
-    ui->sidePanelDockWidget->setVisible(checked);
+    //WARNING UI CHANGE
+    //ui->sidePanelDockWidget->setVisible(checked);
     //If it's not floating, we have a dedicated handler for that
-    if (!ui->sidePanelDockWidget->isFloating()) {
+    //WARNING UI CHANGE
+    /*if (!ui->sidePanelDockWidget->isFloating()) {
         ui->sidePanelLine->setVisible(checked);
-    }
+    }*/
     //Set icons
+    //WARNING UI CHANGE
+    /*
     if (checked) {
         ui->showSidePanelButton->setIcon(QIcon(":/icons/ui/side_panel_active.png"));
     } else {
         ui->showSidePanelButton->setIcon(QIcon(":/icons/ui/side_panel.png"));
-    }
+    }*/
 }
 
 
@@ -665,7 +675,8 @@ void CaesiumPH::closeEvent(QCloseEvent *event) {
     settings.beginGroup(KEY_PREF_GROUP_GEOMETRY);
     settings.setValue(KEY_PREF_GEOMETRY_SIZE, size());
     settings.setValue(KEY_PREF_GEOMETRY_POS, pos());
-    settings.setValue(KEY_PREF_GEOMETRY_PANEL_VISIBLE, ui->sidePanelDockWidget->isVisible());
+    //WARNING UI CHANGE
+    //settings.setValue(KEY_PREF_GEOMETRY_PANEL_VISIBLE, ui->sidePanelDockWidget->isVisible());
     settings.setValue(KEY_PREF_GEOMETRY_SORT_COLUMN, ui->listTreeWidget->sortColumn());
     settings.setValue(KEY_PREF_GEOMETRY_SORT_ORDER, ui->listTreeWidget->header()->sortIndicatorOrder());
     settings.endGroup();

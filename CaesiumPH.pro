@@ -60,9 +60,11 @@ HEADERS  += caesiumph.h \
     ctreewidgetitem.h \
     cphlist.h
 
-FORMS    += caesiumph.ui \
+FORMS    += \
     aboutdialog.ui \
-    preferencedialog.ui
+    preferencedialog.ui \
+    caesiumph_n.ui \
+    caesiumph.ui
 
 RESOURCES += \
     icons.qrc \

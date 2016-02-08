@@ -235,8 +235,8 @@ QToolButton:hover {
         </property>
         <property name="iconSize">
          <size>
-          <width>32</width>
-          <height>32</height>
+          <width>26</width>
+          <height>26</height>
          </size>
         </property>
         <property name="toolButtonStyle">
@@ -281,8 +281,8 @@ QToolButton:hover {
         </property>
         <property name="iconSize">
          <size>
-          <width>32</width>
-          <height>32</height>
+          <width>26</width>
+          <height>26</height>
          </size>
         </property>
         <property name="toolButtonStyle">
@@ -300,8 +300,8 @@ QToolButton:hover {
         </property>
         <property name="minimumSize">
          <size>
-          <width>90</width>
-          <height>74</height>
+          <width>0</width>
+          <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
@@ -333,8 +333,8 @@ QToolButton:hover {
         </property>
         <property name="iconSize">
          <size>
-          <width>48</width>
-          <height>48</height>
+          <width>32</width>
+          <height>32</height>
          </size>
         </property>
         <property name="toolButtonStyle">
@@ -382,8 +382,8 @@ QToolButton:hover {
         </property>
         <property name="iconSize">
          <size>
-          <width>32</width>
-          <height>32</height>
+          <width>26</width>
+          <height>26</height>
          </size>
         </property>
         <property name="toolButtonStyle">
@@ -431,8 +431,8 @@ QToolButton:hover {
         </property>
         <property name="iconSize">
          <size>
-          <width>32</width>
-          <height>32</height>
+          <width>26</width>
+          <height>26</height>
          </size>
         </property>
         <property name="toolButtonStyle">
