@@ -27,7 +27,7 @@
 QTreeWidget {
     background-color: #FFFFFF;
     color: #757575;
-	alternate-background-color: #f6f7f7;
+	alternate-background-color: #f1f1f1;
 }
 
 QTreeWidget::item {
@@ -37,12 +37,12 @@ QTreeWidget::item {
 
 QTreeWidget::item:hover {
     color: #1cb495;
-    background-color: #F5F5F5;
+    background-color: #F1F1F1;
 }
 
 QTreeWidget::item:selected {
     color: #1cb495;
-    background-color: #EEEEEE;
+    background-color: #f1f1f1;
 }
 
 QHeaderView {
@@ -58,22 +58,6 @@ QHeaderView::section {
     padding-left: 5px;
     border-right: 1px solid #33757575;
 	background-color: #FFFFFF;
-}
-
-QProgressBar::chunk {
-    background-color: #1cb495;
-    border-radius: 2px;
-}
-
-QProgressBar {
-    border: 1px solid #b5b5b5;
-    border-radius: 3px;
-    height: 5px;
-    color: transparent;
-}
-
-QDialog {
-    color: #FFFFFF;
 }
 
 QDockWidget {
@@ -112,7 +96,20 @@ QStatusBar {
 QStatusBar QLabel, QToolButton {
 	color: #757575;
 	border: none;
-}</string>
+}
+
+QScrollBar:vertical {
+	background: #11ffffff;
+     width: 6px;
+	border-radius: 3px;
+	margin-top: 1px;
+ }
+
+ QScrollBar::handle:vertical {
+     background: #1cb495;
+     min-height: 20px;
+	border-radius: 3px;
+ }</string>
   </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
@@ -545,8 +542,8 @@ border: none;</string>
        <bool>true</bool>
       </property>
       <property name="styleSheet">
-       <string notr="true">QTreeWidget:focus {
-	outline: none;
+       <string notr="true">QTreeWidget#listTreeWidget {
+	background: url(:/icons/main/logo_alpha.png) no-repeat center;
 }</string>
       </property>
       <property name="frameShape">
@@ -758,7 +755,7 @@ border: none;</string>
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Monaco,monospace'; font-size:11px; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.Helvetica Neue DeskInterface'; font-size:13pt;&quot;&gt;No EXIF info available&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="tabStopWidth">
           <number>150</number>
@@ -797,11 +794,16 @@ p, li { white-space: pre-wrap; }
            <height>256</height>
           </size>
          </property>
+         <property name="styleSheet">
+          <string notr="true">color: #f1f1f1;
+font-family: monospace;
+font-size: 24pt;</string>
+         </property>
          <property name="text">
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="icons.qrc">:/icons/ui/picture.png</pixmap>
+          <pixmap>:/icons/ui/picture.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>false</bool>

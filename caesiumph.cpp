@@ -110,8 +110,10 @@ void CaesiumPH::initializeUI() {
                                      settings.value(KEY_PREF_GEOMETRY_SORT_ORDER).value<Qt::SortOrder>());
     settings.endGroup();
 
-    //Default EXIF value
-    ui->exifTextEdit->setText(tr("No EXIF info available"));
+    //Placeholder text for EXIF textbox
+    ui->exifTextEdit->setHtml("<p align=center><span style=\" font-size:24pt; color:#f1f1f1;\">"
+                              + tr("metadata")
+                              + "</span></p>");
 
     //No blue border on focus for Mac
     ui->listTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
@@ -745,7 +747,7 @@ void CaesiumPH::updateDownloadFinished(QString path) {
 
 void CaesiumPH::clearUI() {
     ui->exifTextEdit->clear();
-    ui->imagePreviewLabel->clear();
+    ui->imagePreviewLabel->setText(tr("preview"));
 }
 
 void CaesiumPH::updateStatusBarCount() {
@@ -898,8 +900,23 @@ void CaesiumPH::listChanged() {
     //If the list is empty, we don't need the clear button
     ui->actionClear_list->setDisabled(ui->listTreeWidget->topLevelItemCount() == 0);
     ui->clearButton->setDisabled(ui->listTreeWidget->topLevelItemCount() == 0);
+
+    //Background image for the list
+    if (ui->listTreeWidget->topLevelItemCount() != 0) {
+        ui->listTreeWidget->setStyleSheet("QTreeWidget#listTreeWidget {background: #ffffff;}");
+    } else {
+        ui->listTreeWidget->setStyleSheet("QTreeWidget#listTreeWidget {background: url(:/icons/main/logo_alpha.png) no-repeat center;}");
+    }
 }
 
 void CaesiumPH::testSignal() {
     qDebug() << "TEST SLOT TRIGGERED";
+}
+
+void CaesiumPH::on_exifTextEdit_textChanged() {
+    if (ui->exifTextEdit->toPlainText().isEmpty() || ui->exifTextEdit->toPlainText().isNull()) {
+        ui->exifTextEdit->setHtml("<p align=center><span style=\" font-size:24pt; color:#f1f1f1;\">"
+                                  + tr("metadata")
+                                  + "</span></p>");
+    }
 }

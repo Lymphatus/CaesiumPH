@@ -39,6 +39,8 @@
 PreferenceDialog::PreferenceDialog(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::PreferenceDialog) {
+
+    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     ui->setupUi(this);
     QSettings settings;
     loadTranslations();
@@ -51,22 +53,13 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) :
     QStyledItemDelegate* itemDelegate = new QStyledItemDelegate();
     ui->languageComboBox->setItemDelegate(itemDelegate);
     ui->outputFileMethodComboBox->setItemDelegate(itemDelegate);
+
+    //Initial list state
+    ui->menuListWidget->setCurrentRow(ui->stackedWidget->currentIndex());
 }
 
 PreferenceDialog::~PreferenceDialog() {
     delete ui;
-}
-
-void PreferenceDialog::on_actionCompression_triggered() {
-    ui->stackedWidget->setCurrentIndex(1);
-}
-
-void PreferenceDialog::on_actionGeneral_triggered() {
-    ui->stackedWidget->setCurrentIndex(0);
-}
-
-void PreferenceDialog::on_actionPrivacy_triggered() {
-    ui->stackedWidget->setCurrentIndex(2);
 }
 
 void PreferenceDialog::closeEvent(QCloseEvent *event) {
@@ -204,4 +197,9 @@ void PreferenceDialog::loadTranslations() {
 void PreferenceDialog::on_languageComboBox_currentIndexChanged(int index) {
     qDebug() << "Writing to settings language" << locales.at(index).name();
     settings.setValue(KEY_PREF_GENERAL_LOCALE_STRING, locales.at(index).name());
+}
+
+
+void PreferenceDialog::on_menuListWidget_currentRowChanged(int currentRow) {
+    ui->stackedWidget->setCurrentIndex(currentRow);
 }

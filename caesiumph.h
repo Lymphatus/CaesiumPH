@@ -90,6 +90,9 @@ private slots:
     //TODO Remove, just test slot
     void testSignal();
 
+    void on_exifTextEdit_textChanged();
+
+
 private:
     Ui::CaesiumPH *ui;
     QFutureWatcher<QImage> imageWatcher; //Image preview loader

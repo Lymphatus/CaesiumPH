@@ -73,9 +73,6 @@ public:
     ~PreferenceDialog();
 
 private slots:
-    void on_actionCompression_triggered();
-    void on_actionGeneral_triggered();
-    void on_actionPrivacy_triggered();
     void closeEvent(QCloseEvent *event);
     void writePreferences();
     void readPreferences();
@@ -88,6 +85,8 @@ private slots:
     void on_keepDateCheckBox_toggled(bool checked);
     void on_keepCommentsCheckBox_toggled(bool checked);
     void on_languageComboBox_currentIndexChanged(int index);
+
+    void on_menuListWidget_currentRowChanged(int currentRow);
 
 private:
     Ui::PreferenceDialog *ui;
