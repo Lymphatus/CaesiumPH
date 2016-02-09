@@ -42,7 +42,6 @@ SOURCES += main.cpp\
     utils.cpp \
     exif.cpp \
     preferencedialog.cpp \
-    usageinfo.cpp \
     networkoperations.cpp \
     qdroptreewidget.cpp \
     cphlist.cpp
@@ -54,7 +53,6 @@ HEADERS  += caesiumph.h \
     utils.h \
     exif.h \
     preferencedialog.h \
-    usageinfo.h \
     networkoperations.h \
     qdroptreewidget.h \
     ctreewidgetitem.h \

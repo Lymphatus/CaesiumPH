@@ -29,7 +29,6 @@
 #include "cimageinfo.h"
 #include "exif.h"
 #include "preferencedialog.h"
-#include "usageinfo.h"
 #include "networkoperations.h"
 #include "qdroptreewidget.h"
 #include "ctreewidgetitem.h"
@@ -64,7 +63,6 @@ CaesiumPH::CaesiumPH(QWidget *parent) :
     ui(new Ui::CaesiumPH)
 {
     ui->setupUi(this);
-    initializeSettings();
     initializeConnections();
     initializeUI();
     readPreferences();
@@ -168,10 +166,6 @@ void CaesiumPH::initializeConnections() {
 
     //List changed signal
     connect(ui->listTreeWidget, SIGNAL(itemsChanged()), this, SLOT(listChanged()));
-}
-
-void CaesiumPH::initializeSettings() {
-    uinfo->initialize();
 }
 
 void CaesiumPH::readPreferences() {
@@ -468,16 +462,6 @@ extern void compressRoutine(CTreeWidgetItem* item) {
     originalsSize += originalSize;
     compressedSize += outputSize;
     compressedFiles++;
-
-    //Usage reports
-    if (originalInfo->size() > uinfo->max_bytes) {
-        uinfo->setMax_bytes(originalInfo->size());
-    }
-
-    if ((originalInfo->size() - fileInfo->size()) * 100 / (double) originalInfo->size() > uinfo->best_ratio
-            && fileInfo->size() != 0) {
-        uinfo->setBest_ratio((originalInfo->size() - fileInfo->size()) * 100 / (double) originalInfo->size());
-    }
 }
 
 QString CaesiumPH::getOutputPath(QFileInfo* originalInfo) {
@@ -585,11 +569,6 @@ void CaesiumPH::compressionFinished() {
                                " (" + getRatio(originalsSize, compressedSize) + ")"
                                );
     timer.invalidate();
-    //Set parameters for usage info
-    uinfo->setCompressed_bytes(uinfo->compressed_bytes + originalsSize);
-    uinfo->setCompressed_pictures(uinfo->compressed_pictures + ui->listTreeWidget->topLevelItemCount());
-
-    uinfo->writeJSON();
 }
 
 void CaesiumPH::on_sidePanelDockWidget_topLevelChanged(bool topLevel) {
@@ -660,8 +639,6 @@ void CaesiumPH::finishPreviewLoading(int i) {
 }
 
 void CaesiumPH::on_settingsButton_clicked() {
-    NetworkOperations* no = new NetworkOperations(this);
-    no->uploadUsageStatistics();
     PreferenceDialog* pd = new PreferenceDialog(this);
     pd->show();
 }

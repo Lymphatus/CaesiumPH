@@ -40,8 +40,6 @@ public:
 
 
 public slots:
-    void uploadUsageStatistics();
-    void uploadFinished(QNetworkReply*);
     void getCurrentBuild();
     void flushUpdate(); 
     int compareUpdateChecksums(QString checksum, QByteArray *file);

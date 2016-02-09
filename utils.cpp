@@ -42,7 +42,6 @@ long originalsSize = 0;
 long compressedSize = 0;
 int compressedFiles = 0;
 cparams params;
-UsageInfo* uinfo = new UsageInfo();
 QStringList osAndExtension = QStringList() <<
         #ifdef _WIN32
             "win" << ".exe";

@@ -22,14 +22,13 @@
  */
 
 #include "networkoperations.h"
-#include "usageinfo.h"
 #include "utils.h"
 
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QProgressDialog>
-#include <QJsonDocument>
+#include <QStandardPaths>
 
 NetworkOperations::NetworkOperations(QObject *parent) : QObject(parent) {
     releaseURL = "https://github.com/Lymphatus/CaesiumPH/releases/download/v" +
@@ -40,24 +39,6 @@ NetworkOperations::NetworkOperations(QObject *parent) : QObject(parent) {
             "/" +
             "cph_u" +
             osAndExtension.at(1);
-}
-
-void NetworkOperations::uploadUsageStatistics() {
-    qInfo() << "Upload stats called";
-    QString path = UsageInfo().jsonPath;
-    QFile jsonFile(path);
-    if (jsonFile.open(QFile::ReadOnly)) {
-        QNetworkRequest request;
-        request.setUrl("http://saerasoft.com/caesium/ph/" + uinfo->UUID);
-
-        //TODO Not allowed, of course
-        //networkManager->put(request, jsonFile.readAll());
-        connect(networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(uploadFinished(QNetworkReply*)));
-    }
-}
-
-void NetworkOperations::uploadFinished(QNetworkReply * reply) {
-    qInfo() << "Upload stats finished with " << reply->errorString();
 }
 
 void NetworkOperations::checkForUpdates() {

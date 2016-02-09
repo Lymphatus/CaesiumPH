@@ -49,9 +49,6 @@
 #define KEY_PREF_COMPRESSION_EXIF_COMMENT QString("exifComment")
 #define KEY_PREF_COMPRESSION_PROGRESSIVE QString("progressive")
 
-//Privacy group keys
-#define KEY_PREF_PRIVACY_USAGE QString("sendInfo")
-
 //Geometry group keys
 #define KEY_PREF_GEOMETRY_SIZE QString("size")
 #define KEY_PREF_GEOMETRY_POS QString("pos")

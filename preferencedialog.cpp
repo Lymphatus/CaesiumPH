@@ -23,7 +23,6 @@
 
 #include "preferencedialog.h"
 #include "ui_preferencedialog.h"
-#include "usageinfo.h"
 #include "caesiumph.h"
 #include "utils.h"
 
@@ -35,6 +34,7 @@
 #include <QDirIterator>
 #include <QStyledItemDelegate>
 #include <QTranslator>
+#include <QStandardPaths>
 
 PreferenceDialog::PreferenceDialog(QWidget *parent) :
     QMainWindow(parent),
@@ -56,9 +56,6 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) :
 
     //Initial list state
     ui->menuListWidget->setCurrentRow(ui->stackedWidget->currentIndex());
-
-    //UInfo
-    ui->usageReportTextEdit->setPlainText(uinfo->printJSON());
 }
 
 PreferenceDialog::~PreferenceDialog() {
@@ -89,11 +86,6 @@ void PreferenceDialog::writePreferences() {
     settings.setValue(KEY_PREF_COMPRESSION_EXIF_COMMENT, ui->keepCommentsCheckBox->isChecked());
     settings.setValue(KEY_PREF_COMPRESSION_PROGRESSIVE, ui->progressiveCheckBox->isChecked());
     settings.endGroup();
-
-    //Privacy
-    settings.beginGroup(KEY_PREF_GROUP_PRIVACY);
-    settings.setValue(KEY_PREF_PRIVACY_USAGE, ui->sendInfoCheckBox->isChecked());
-    settings.endGroup();
 }
 
 void PreferenceDialog::readPreferences() {
@@ -114,11 +106,6 @@ void PreferenceDialog::readPreferences() {
     ui->keepDateCheckBox->setChecked(settings.value(KEY_PREF_COMPRESSION_EXIF_DATE).value<bool>());
     ui->keepCommentsCheckBox->setChecked(settings.value(KEY_PREF_COMPRESSION_EXIF_COMMENT).value<bool>());
     ui->progressiveCheckBox->setChecked(settings.value(KEY_PREF_COMPRESSION_PROGRESSIVE).value<bool>());
-    settings.endGroup();
-
-    //Privacy
-    settings.beginGroup(KEY_PREF_GROUP_PRIVACY);
-    ui->sendInfoCheckBox->setChecked(settings.value(KEY_PREF_PRIVACY_USAGE).value<bool>());
     settings.endGroup();
 }
 

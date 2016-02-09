@@ -30,6 +30,7 @@
 #include <QLibraryInfo>
 #include <QTranslator>
 #include <QSettings>
+#include <QStandardPaths>
 
 void logHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     //TODO Close the file?

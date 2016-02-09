@@ -24,7 +24,6 @@
 #ifndef CAESIUMPH_H
 #define CAESIUMPH_H
 
-#include "usageinfo.h"
 #include "cimageinfo.h"
 #include "cphlist.h"
 
@@ -34,6 +33,7 @@
 #include <QTime>
 #include <QToolButton>
 #include <QLabel>
+#include <QFileInfo>
 
 namespace Ui {
 class CaesiumPH;
@@ -115,7 +115,6 @@ private:
 
     void initializeConnections();
     void initializeUI();
-    void initializeSettings();
     void readPreferences();
 
     //Update

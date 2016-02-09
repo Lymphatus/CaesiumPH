@@ -24,8 +24,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "usageinfo.h"
-
 #include <QList>
 #include <QStringList>
 #include <QSize>
@@ -67,7 +65,6 @@ extern int buildNumber;
 extern long originalsSize, compressedSize; //Before and after bytes count
 extern int compressedFiles; //Compressed files count
 extern cparams params; //Important parameters
-extern UsageInfo* uinfo;
 extern QStringList osAndExtension;
 extern QTemporaryDir tempDir;
 extern QElapsedTimer timer;
