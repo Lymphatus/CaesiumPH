@@ -50,6 +50,8 @@
 #include <QMessageBox>
 #include <QDesktopServices>
 #include <QDirIterator>
+#include <QSizeGrip>
+#include <QMovie>
 
 #include <exiv2/exiv2.hpp>
 
@@ -109,8 +111,10 @@ void CaesiumPH::initializeUI() {
                                      settings.value(KEY_PREF_GEOMETRY_SORT_ORDER).value<Qt::SortOrder>());
     settings.endGroup();
 
-    //Default EXIF value
-    ui->exifTextEdit->setText(tr("No EXIF info available"));
+    //Placeholder text for EXIF textbox
+    ui->exifTextEdit->setHtml("<p align=center><span style=\" font-size:24pt; color:#f1f1f1;\">"
+                              + tr("metadata")
+                              + "</span></p>");
 
     //No blue border on focus for Mac
     ui->listTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
@@ -248,7 +252,8 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
         } else {
             return false;
         }
-    } else if (obj == (QObject*) ui->showSidePanelButton) {
+    }
+    else if (obj == (QObject*) ui->showSidePanelButton) {
         if (!ui->sidePanelDockWidget->isVisible()) {
             if (event->type() == QEvent::Enter  && ui->showSidePanelButton->isEnabled()) {
                 ui->showSidePanelButton->setIcon(QIcon(":/icons/ui/side_panel_active.png"));
@@ -282,7 +287,7 @@ bool CaesiumPH::eventFilter(QObject *obj, QEvent *event) {
 void CaesiumPH::on_actionAbout_CaesiumPH_triggered() {
     //Start the about dialog
     AboutDialog* ad = new AboutDialog(this);
-    ad->setWindowFlags(Qt::Tool | Qt::WindowTitleHint | Qt::WindowCloseButtonHint | Qt::CustomizeWindowHint);
+    ad->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     ad->show();
 }
 
@@ -590,6 +595,7 @@ void CaesiumPH::compressionFinished() {
 void CaesiumPH::on_sidePanelDockWidget_topLevelChanged(bool topLevel) {
     //Check if it's floating and hide/show the line
     ui->sidePanelLine->setVisible(!topLevel);
+    ui->sidePanelLine2->setVisible(!topLevel);
 }
 
 void CaesiumPH::on_sidePanelDockWidget_visibilityChanged(bool visible) {
@@ -603,6 +609,7 @@ void CaesiumPH::on_showSidePanelButton_clicked(bool checked) {
     //If it's not floating, we have a dedicated handler for that
     if (!ui->sidePanelDockWidget->isFloating()) {
         ui->sidePanelLine->setVisible(checked);
+        ui->sidePanelLine2->setVisible(checked);
     }
     //Set icons
     if (checked) {
@@ -621,6 +628,7 @@ void CaesiumPH::on_listTreeWidget_itemSelectionChanged() {
         CTreeWidgetItem* currentItem = (CTreeWidgetItem*) ui->listTreeWidget->selectedItems().at(0);
 
         //Connect the global watcher to the slot
+        connect(&imageWatcher, SIGNAL(started()), this, SLOT(startPreviewLoading()));
         connect(&imageWatcher, SIGNAL(resultReadyAt(int)), this, SLOT(finishPreviewLoading(int)));
         //Run the image loader function
         imageWatcher.setFuture(QtConcurrent::run<QImage>(this, &CaesiumPH::loadImagePreview, currentItem->text(COLUMN_PATH)));
@@ -743,7 +751,7 @@ void CaesiumPH::updateDownloadFinished(QString path) {
 
 void CaesiumPH::clearUI() {
     ui->exifTextEdit->clear();
-    ui->imagePreviewLabel->clear();
+    ui->imagePreviewLabel->setText(tr("preview"));
 }
 
 void CaesiumPH::updateStatusBarCount() {
@@ -896,8 +904,29 @@ void CaesiumPH::listChanged() {
     //If the list is empty, we don't need the clear button
     ui->actionClear_list->setDisabled(ui->listTreeWidget->topLevelItemCount() == 0);
     ui->clearButton->setDisabled(ui->listTreeWidget->topLevelItemCount() == 0);
+
+    //Background image for the list
+    if (ui->listTreeWidget->topLevelItemCount() != 0) {
+        ui->listTreeWidget->setStyleSheet("QTreeWidget#listTreeWidget {background: #ffffff;}");
+    } else {
+        ui->listTreeWidget->setStyleSheet("QTreeWidget#listTreeWidget {background: url(:/icons/main/logo_alpha.png) no-repeat center;}");
+    }
 }
 
 void CaesiumPH::testSignal() {
     qDebug() << "TEST SLOT TRIGGERED";
+}
+
+void CaesiumPH::on_exifTextEdit_textChanged() {
+    if (ui->exifTextEdit->toPlainText().isEmpty() || ui->exifTextEdit->toPlainText().isNull()) {
+        ui->exifTextEdit->setHtml("<p align=center><span style=\" font-size:24pt; color:#f1f1f1;\">"
+                                  + tr("metadata")
+                                  + "</span></p>");
+    }
+}
+
+void CaesiumPH::startPreviewLoading() {
+    QMovie* loader = new QMovie(":/icons/ui/loader.gif");
+    ui->imagePreviewLabel->setMovie(loader);
+    loader->start();
 }

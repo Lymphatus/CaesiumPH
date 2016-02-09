@@ -39,6 +39,8 @@
 PreferenceDialog::PreferenceDialog(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::PreferenceDialog) {
+
+    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     ui->setupUi(this);
     QSettings settings;
     loadTranslations();
@@ -51,22 +53,16 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) :
     QStyledItemDelegate* itemDelegate = new QStyledItemDelegate();
     ui->languageComboBox->setItemDelegate(itemDelegate);
     ui->outputFileMethodComboBox->setItemDelegate(itemDelegate);
+
+    //Initial list state
+    ui->menuListWidget->setCurrentRow(ui->stackedWidget->currentIndex());
+
+    //UInfo
+    ui->usageReportTextEdit->setPlainText(uinfo->printJSON());
 }
 
 PreferenceDialog::~PreferenceDialog() {
     delete ui;
-}
-
-void PreferenceDialog::on_actionCompression_triggered() {
-    ui->stackedWidget->setCurrentIndex(1);
-}
-
-void PreferenceDialog::on_actionGeneral_triggered() {
-    ui->stackedWidget->setCurrentIndex(0);
-}
-
-void PreferenceDialog::on_actionPrivacy_triggered() {
-    ui->stackedWidget->setCurrentIndex(2);
 }
 
 void PreferenceDialog::closeEvent(QCloseEvent *event) {
@@ -122,21 +118,8 @@ void PreferenceDialog::readPreferences() {
 
     //Privacy
     settings.beginGroup(KEY_PREF_GROUP_PRIVACY);
-    ui->seeInfoButton->setChecked(settings.value(KEY_PREF_PRIVACY_USAGE).value<bool>());
+    ui->sendInfoCheckBox->setChecked(settings.value(KEY_PREF_PRIVACY_USAGE).value<bool>());
     settings.endGroup();
-}
-
-void PreferenceDialog::on_seeInfoButton_clicked() {
-    QMessageBox msgBox;
-    msgBox.setText(tr("This data will help improve this application and won't be shared with anyone."));
-    msgBox.setDetailedText(uinfo->printJSON());
-    msgBox.setStandardButtons(QMessageBox::Ok);
-    msgBox.setDefaultButton(QMessageBox::Ok);
-    //Fixed size hack
-    QSpacerItem* horizontalSpacer = new QSpacerItem(400, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    QGridLayout* layout = (QGridLayout*)msgBox.layout();
-    layout->addItem(horizontalSpacer, layout->rowCount(), 0, 1, layout->columnCount());
-    msgBox.exec();
 }
 
 void PreferenceDialog::on_outputFileMethodComboBox_currentIndexChanged(int index) {
@@ -204,4 +187,9 @@ void PreferenceDialog::loadTranslations() {
 void PreferenceDialog::on_languageComboBox_currentIndexChanged(int index) {
     qDebug() << "Writing to settings language" << locales.at(index).name();
     settings.setValue(KEY_PREF_GENERAL_LOCALE_STRING, locales.at(index).name());
+}
+
+
+void PreferenceDialog::on_menuListWidget_currentRowChanged(int currentRow) {
+    ui->stackedWidget->setCurrentIndex(currentRow);
 }
