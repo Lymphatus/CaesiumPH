@@ -26,5 +26,6 @@
         <file>icons/ui/update.png</file>
         <file>icons/ui/dropdown_arrow.png</file>
         <file>icons/main/logo_alpha.png</file>
+        <file>icons/ui/loader.gif</file>
     </qresource>
 </RCC>

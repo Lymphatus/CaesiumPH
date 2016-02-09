@@ -56,6 +56,9 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) :
 
     //Initial list state
     ui->menuListWidget->setCurrentRow(ui->stackedWidget->currentIndex());
+
+    //UInfo
+    ui->usageReportTextEdit->setPlainText(uinfo->printJSON());
 }
 
 PreferenceDialog::~PreferenceDialog() {
@@ -115,21 +118,8 @@ void PreferenceDialog::readPreferences() {
 
     //Privacy
     settings.beginGroup(KEY_PREF_GROUP_PRIVACY);
-    ui->seeInfoButton->setChecked(settings.value(KEY_PREF_PRIVACY_USAGE).value<bool>());
+    ui->sendInfoCheckBox->setChecked(settings.value(KEY_PREF_PRIVACY_USAGE).value<bool>());
     settings.endGroup();
-}
-
-void PreferenceDialog::on_seeInfoButton_clicked() {
-    QMessageBox msgBox;
-    msgBox.setText(tr("This data will help improve this application and won't be shared with anyone."));
-    msgBox.setDetailedText(uinfo->printJSON());
-    msgBox.setStandardButtons(QMessageBox::Ok);
-    msgBox.setDefaultButton(QMessageBox::Ok);
-    //Fixed size hack
-    QSpacerItem* horizontalSpacer = new QSpacerItem(400, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    QGridLayout* layout = (QGridLayout*)msgBox.layout();
-    layout->addItem(horizontalSpacer, layout->rowCount(), 0, 1, layout->columnCount());
-    msgBox.exec();
 }
 
 void PreferenceDialog::on_outputFileMethodComboBox_currentIndexChanged(int index) {

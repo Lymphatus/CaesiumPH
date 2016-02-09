@@ -51,6 +51,7 @@
 #include <QDesktopServices>
 #include <QDirIterator>
 #include <QSizeGrip>
+#include <QMovie>
 
 #include <exiv2/exiv2.hpp>
 
@@ -625,6 +626,7 @@ void CaesiumPH::on_listTreeWidget_itemSelectionChanged() {
         CTreeWidgetItem* currentItem = (CTreeWidgetItem*) ui->listTreeWidget->selectedItems().at(0);
 
         //Connect the global watcher to the slot
+        connect(&imageWatcher, SIGNAL(started()), this, SLOT(startPreviewLoading()));
         connect(&imageWatcher, SIGNAL(resultReadyAt(int)), this, SLOT(finishPreviewLoading(int)));
         //Run the image loader function
         imageWatcher.setFuture(QtConcurrent::run<QImage>(this, &CaesiumPH::loadImagePreview, currentItem->text(COLUMN_PATH)));
@@ -919,4 +921,10 @@ void CaesiumPH::on_exifTextEdit_textChanged() {
                                   + tr("metadata")
                                   + "</span></p>");
     }
+}
+
+void CaesiumPH::startPreviewLoading() {
+    QMovie* loader = new QMovie(":/icons/ui/loader.gif");
+    ui->imagePreviewLabel->setMovie(loader);
+    loader->start();
 }

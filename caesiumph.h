@@ -89,8 +89,8 @@ private slots:
     void listChanged();
     //TODO Remove, just test slot
     void testSignal();
-
     void on_exifTextEdit_textChanged();
+    void startPreviewLoading();
 
 
 private:

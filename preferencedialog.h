@@ -78,7 +78,6 @@ private slots:
     void readPreferences();
     void loadTranslations();
 
-    void on_seeInfoButton_clicked();
     void on_outputFileMethodComboBox_currentIndexChanged(int index);
     void on_browseButton_clicked();
     void on_keepCopyrightCheckBox_toggled(bool checked);
