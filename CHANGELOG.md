@@ -1,5 +1,15 @@
 ### CHANGELOG
 
+###### 0.9.5-beta
+* FIXED
+    * UI Restyle
+* ADDED
+    * Preview loader animation
+* REMOVED
+    * Usage reports
+
+----------
+
 ###### 0.9.4-beta (01/02/2016)
 * FIXED
     * Remove/Clear button behaviour with empty lists
