@@ -28,11 +28,13 @@ QTreeWidget {
     background-color: #FFFFFF;
     color: #757575;
 	alternate-background-color: #f1f1f1;
+	outline: 0;
 }
 
 QTreeWidget::item {
 	padding-top: 5px;
 	padding-bottom: 5px;
+	outline: 0;
 }
 
 QTreeWidget::item:hover {
@@ -96,6 +98,7 @@ QStatusBar {
 QStatusBar QLabel, QToolButton {
 	color: #757575;
 	border: none;
+	padding-right: 4px;
 }
 
 QScrollBar:vertical {
@@ -109,7 +112,23 @@ QScrollBar:vertical {
      background: #1cb495;
      min-height: 20px;
 	border-radius: 3px;
- }</string>
+ }
+
+QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+     border: none;
+      background: none;
+      color: none;
+ }
+
+QScrollBar::add-line:vertical {
+      border: none;
+      background: none;
+}
+
+QScrollBar::sub-line:vertical {
+      border: none;
+      background: none;
+}</string>
   </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
@@ -138,14 +157,14 @@ QScrollBar:vertical {
      <number>3</number>
     </property>
     <item row="0" column="2">
-     <widget class="Line" name="line">
+     <widget class="Line" name="sidePanelLine">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
      </widget>
     </item>
     <item row="2" column="2" rowspan="2">
-     <widget class="Line" name="line_3">
+     <widget class="Line" name="sidePanelLine2">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -544,6 +563,14 @@ border: none;</string>
       <property name="styleSheet">
        <string notr="true">QTreeWidget#listTreeWidget {
 	background: url(:/icons/main/logo_alpha.png) no-repeat center;
+}
+
+QTreeWidget:focus {
+	outline: 0;
+}
+
+QTreeWidget::item:selected {
+    outline: 0;
 }</string>
       </property>
       <property name="frameShape">
@@ -572,6 +599,9 @@ border: none;</string>
       </property>
       <property name="indentation">
        <number>0</number>
+      </property>
+      <property name="itemsExpandable">
+       <bool>false</bool>
       </property>
       <property name="sortingEnabled">
        <bool>true</bool>
@@ -629,7 +659,7 @@ border: none;</string>
      <x>0</x>
      <y>0</y>
      <width>880</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -823,7 +853,7 @@ font-size: 24pt;</string>
     <string notr="true"/>
    </property>
    <property name="sizeGripEnabled">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </widget>
   <action name="actionAdd_pictures">

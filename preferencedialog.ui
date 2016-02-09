@@ -33,6 +33,10 @@ QListWidget {
 QListWidget::item:selected {
 	background: #ffffff;
 	color: #757575;
+}
+
+QMainWindow {
+	border: 1px solid #1cb495;
 }</string>
   </property>
   <property name="locale">
@@ -70,7 +74,8 @@ QListWidget::item:selected {
        <enum>Qt::NoFocus</enum>
       </property>
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">border: 1px solid #1cb495;
+border-right: none;</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
@@ -193,7 +198,7 @@ QPushButton:hover {
          <number>0</number>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="generalPage">
          <layout class="QVBoxLayout" name="verticalLayout_4">

@@ -594,20 +594,22 @@ void CaesiumPH::compressionFinished() {
 
 void CaesiumPH::on_sidePanelDockWidget_topLevelChanged(bool topLevel) {
     //Check if it's floating and hide/show the line
-    //ui->sidePanelLine->setVisible(!topLevel);
+    ui->sidePanelLine->setVisible(!topLevel);
+    ui->sidePanelLine2->setVisible(!topLevel);
 }
 
 void CaesiumPH::on_sidePanelDockWidget_visibilityChanged(bool visible) {
     //Handle the close event
     on_showSidePanelButton_clicked(visible);
-    //ui->showSidePanelButton->setChecked(visible);
+    ui->showSidePanelButton->setChecked(visible);
 }
 
 void CaesiumPH::on_showSidePanelButton_clicked(bool checked) {
     ui->sidePanelDockWidget->setVisible(checked);
     //If it's not floating, we have a dedicated handler for that
     if (!ui->sidePanelDockWidget->isFloating()) {
-        //ui->sidePanelLine->setVisible(checked);
+        ui->sidePanelLine->setVisible(checked);
+        ui->sidePanelLine2->setVisible(checked);
     }
     //Set icons
     if (checked) {

@@ -63,7 +63,6 @@ HEADERS  += caesiumph.h \
 FORMS    += \
     aboutdialog.ui \
     preferencedialog.ui \
-    caesiumph_n.ui \
     caesiumph.ui
 
 RESOURCES += \

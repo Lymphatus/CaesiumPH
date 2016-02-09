@@ -51,6 +51,10 @@ QPushButton {
 QPushButton:hover {
 	background-color: #1ba68a;
 	color: #FFFFFF;
+}
+
+QDialog {
+	border: 1px solid #1cb495;
 }</string>
   </property>
   <property name="locale">
