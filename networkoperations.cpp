@@ -80,7 +80,7 @@ void NetworkOperations::getCurrentBuild() {
                 QByteArray data = updateFile.readAll();
                 qInfo() << "Checking integrity";
                 if (compareUpdateChecksums(updateChecksum, &data) != 0) {
-                    qInfo() << "Different checksums, download again";
+                    qInfo() << "Different checksums";
                     emit checkForUpdatesFinished(v_number,
                                                  v_string,
                                                  updateChecksum);

@@ -35,6 +35,7 @@
 
 
 Exiv2::ExifData getExifFromPath(char* filename) {
+    qDebug() << "Trying to read EXIF for" << filename;
     try {
         Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(filename);
         assert(image.get() != 0);
@@ -51,7 +52,7 @@ Exiv2::ExifData getExifFromPath(char* filename) {
         return exifData;
     } catch (Exiv2::Error& e) {
         Exiv2::ExifData exifData;
-        std::cout << "Caught Exiv2 exception '" << e.what() << "'\n";
+        qCritical() << "Caught Exiv2 exception '" << e.what();
         //TODO Translate
         return exifData;
     }

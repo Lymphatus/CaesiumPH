@@ -397,14 +397,23 @@ extern void compressRoutine(CTreeWidgetItem* item) {
     qint64 originalSize = originalInfo->size();
     QString outputPath = CaesiumPH::getOutputPath(originalInfo);
 
+    qDebug() << item->text(COLUMN_PATH) << "into" << outputPath << " -- START";
+
     //Not really necessary if we copy the whole EXIF data
     Exiv2::ExifData exifData = getExifFromPath(QStringToChar(inputPath));
+
     //BUG Sometimes files are empty. Check it out.
-    cclt_optimize(QStringToChar(inputPath),
+    int result = cclt_optimize(QStringToChar(inputPath),
                   QStringToChar(outputPath),
                   params.exif,
                   params.progressive,
                   QStringToChar(inputPath));
+
+    if (result < 0) {
+        qCritical() << "An error as occurred while compressing" << item->text(COLUMN_PATH) << "into" << outputPath;
+    } else {
+        qInfo() << item->text(COLUMN_PATH) << "into" << outputPath << " -- OK";
+    }
 
 
     //Write important metadata as user requested
@@ -695,6 +704,8 @@ void CaesiumPH::updateAvailable(int version, QString versionTag, QString checksu
         NetworkOperations* op = new NetworkOperations();
         connect(op, SIGNAL(updateDownloadFinished(QString)), this, SLOT(updateDownloadFinished(QString)));
         op->downloadUpdateRequest(checksum);
+    } else {
+        qInfo() << "Your version is equal or higher than the remote";
     }
 }
 

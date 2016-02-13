@@ -46,7 +46,7 @@ struct jpeg_decompress_struct cclt_get_markers(char* input) {
 
     //Check for errors
     if (fp == NULL) {
-        printf("INPUT: Failed to open exif file \"%s\"\n", input);
+        qCritical() << "Failed to open exif file" << input;
     }
 
     //Create the IO istance for the input file
@@ -115,14 +115,18 @@ extern int cclt_optimize(char* input_file, char* output_file, int exif_flag, int
     //Open the input file
     fp = fopen(input_file, "rb");
 
+    qInfo() << "Compressing" << input_file;
+
     //Check for errors
     if (fp == NULL) {
-        printf("INPUT: Failed to open file \"%s\"\n", input_file);
+        qCritical() << "Failed to open file" << input_file;
         return -1;
     }
 
     //Create the IO istance for the input file
     jpeg_stdio_src(&srcinfo, fp);
+
+    qInfo() << "Save EXIF info";
 
     //Save EXIF info
     if (exif_flag == 2) {
@@ -146,12 +150,14 @@ extern int cclt_optimize(char* input_file, char* output_file, int exif_flag, int
     //We don't need the input file anymore
     fclose(fp);
 
+    qInfo() << "Input file read succesfully";
+
     //Open the output one instead
     fp = fopen(output_file, "wb");
     //Check for errors
     if (fp == NULL) {
-        printf("OUTPUT: Failed to open file \"%s\"\n", output_file);
-        return -2;
+        qCritical() << "Failed to open output file" << output_file;
+        return -1;
     }
 
     //CRITICAL - This is the optimization step
@@ -171,6 +177,8 @@ extern int cclt_optimize(char* input_file, char* output_file, int exif_flag, int
     //Actually write the coefficents
     jpeg_write_coefficients(&dstinfo, dst_coef_arrays);
 
+    qInfo() << "Output file wrote succesfully";
+
     //Write EXIF
     if (exif_flag == 2) {
         if (strcmp(input_file, exif_src) == 0) {
@@ -182,6 +190,8 @@ extern int cclt_optimize(char* input_file, char* output_file, int exif_flag, int
             jpeg_destroy_decompress(&einfo);
         }
     }
+
+    qInfo() << "EXIF copied, if any";
 
     //Finish and free
     jpeg_finish_compress(&dstinfo);
