@@ -14,7 +14,7 @@
    <string>CaesiumPH</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="icons.qrc">
+   <iconset resource="../icons.qrc">
     <normaloff>:/icons/main/logo.png</normaloff>:/icons/main/logo.png</iconset>
   </property>
   <property name="styleSheet">
@@ -195,7 +195,7 @@ border: none;</string>
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="icons.qrc">
+         <iconset resource="../icons.qrc">
           <normaloff>:/icons/ui/settings.png</normaloff>:/icons/ui/settings.png</iconset>
         </property>
         <property name="iconSize">
@@ -267,7 +267,7 @@ QToolButton:hover {
          <string>Add files</string>
         </property>
         <property name="icon">
-         <iconset resource="icons.qrc">
+         <iconset resource="../icons.qrc">
           <normaloff>:/icons/ui/add.png</normaloff>:/icons/ui/add.png</iconset>
         </property>
         <property name="iconSize">
@@ -317,7 +317,7 @@ QToolButton:hover {
          <string>Import folder</string>
         </property>
         <property name="icon">
-         <iconset resource="icons.qrc">
+         <iconset resource="../icons.qrc">
           <normaloff>:/icons/ui/folder.png</normaloff>:/icons/ui/folder.png</iconset>
         </property>
         <property name="iconSize">
@@ -372,7 +372,7 @@ QToolButton:hover {
          <string>Compress</string>
         </property>
         <property name="icon">
-         <iconset resource="icons.qrc">
+         <iconset resource="../icons.qrc">
           <normaloff>:/icons/ui/compress.png</normaloff>:/icons/ui/compress.png</iconset>
         </property>
         <property name="iconSize">
@@ -425,7 +425,7 @@ QToolButton:hover {
          <string>Remove item</string>
         </property>
         <property name="icon">
-         <iconset resource="icons.qrc">
+         <iconset resource="../icons.qrc">
           <normaloff>:/icons/ui/remove.png</normaloff>:/icons/ui/remove.png</iconset>
         </property>
         <property name="iconSize">
@@ -478,7 +478,7 @@ QToolButton:hover {
          <string>Clear list</string>
         </property>
         <property name="icon">
-         <iconset resource="icons.qrc">
+         <iconset resource="../icons.qrc">
           <normaloff>:/icons/ui/clear.png</normaloff>:/icons/ui/clear.png</iconset>
         </property>
         <property name="iconSize">
@@ -518,7 +518,7 @@ border: none;</string>
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="icons.qrc">
+         <iconset resource="../icons.qrc">
           <normaloff>:/icons/ui/side_panel_active.png</normaloff>:/icons/ui/side_panel_active.png</iconset>
         </property>
         <property name="iconSize">
@@ -659,7 +659,7 @@ QTreeWidget::item:selected {
      <x>0</x>
      <y>0</y>
      <width>880</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -830,7 +830,7 @@ font-family: monospace;
 font-size: 24pt;</string>
          </property>
          <property name="text">
-          <string>preview</string>
+          <string/>
          </property>
          <property name="pixmap">
           <pixmap>:/icons/ui/picture.png</pixmap>
@@ -942,7 +942,7 @@ font-size: 24pt;</string>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="icons.qrc"/>
+  <include location="../icons.qrc"/>
  </resources>
  <connections>
   <connection>

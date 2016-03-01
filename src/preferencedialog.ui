@@ -91,7 +91,7 @@ border-right: none;</string>
         <string>General</string>
        </property>
        <property name="icon">
-        <iconset resource="icons.qrc">
+        <iconset resource="../icons.qrc">
          <normaloff>:/icons/settings/general.png</normaloff>:/icons/settings/general.png</iconset>
        </property>
       </item>
@@ -100,7 +100,7 @@ border-right: none;</string>
         <string>Compression</string>
        </property>
        <property name="icon">
-        <iconset resource="icons.qrc">
+        <iconset resource="../icons.qrc">
          <normaloff>:/icons/settings/compression.png</normaloff>:/icons/settings/compression.png</iconset>
        </property>
       </item>
@@ -503,7 +503,7 @@ QPushButton:hover {
   </widget>
  </widget>
  <resources>
-  <include location="icons.qrc"/>
+  <include location="../icons.qrc"/>
  </resources>
  <connections>
   <connection>
