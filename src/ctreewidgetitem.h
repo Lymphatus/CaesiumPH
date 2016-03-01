@@ -27,7 +27,7 @@
 #include <QTreeWidgetItem>
 #include <QFileInfo>
 
-#include <utils.h>
+#include "src/utils.h"
 
 class CTreeWidgetItem : public QTreeWidgetItem
 {

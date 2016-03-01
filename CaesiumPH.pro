@@ -34,34 +34,34 @@ unix {
 
 CONFIG += warn_off c++11
 
-SOURCES += main.cpp\
-        caesiumph.cpp \
-    aboutdialog.cpp \
-    cimageinfo.cpp \
-    lossless.cpp \
-    utils.cpp \
-    exif.cpp \
-    preferencedialog.cpp \
-    networkoperations.cpp \
-    qdroptreewidget.cpp \
-    cphlist.cpp
+SOURCES += src/main.cpp\
+        src/caesiumph.cpp \
+    src/aboutdialog.cpp \
+    src/cimageinfo.cpp \
+    src/lossless.cpp \
+    src/utils.cpp \
+    src/exif.cpp \
+    src/preferencedialog.cpp \
+    src/networkoperations.cpp \
+    src/qdroptreewidget.cpp \
+    src/cphlist.cpp
 
-HEADERS  += caesiumph.h \
-    aboutdialog.h \
-    cimageinfo.h \
-    lossless.h \
-    utils.h \
-    exif.h \
-    preferencedialog.h \
-    networkoperations.h \
-    qdroptreewidget.h \
-    ctreewidgetitem.h \
-    cphlist.h
+HEADERS  += src/caesiumph.h \
+    src/aboutdialog.h \
+    src/cimageinfo.h \
+    src/lossless.h \
+    src/utils.h \
+    src/exif.h \
+    src/preferencedialog.h \
+    src/networkoperations.h \
+    src/qdroptreewidget.h \
+    src/ctreewidgetitem.h \
+    src/cphlist.h
 
 FORMS    += \
-    aboutdialog.ui \
-    preferencedialog.ui \
-    caesiumph.ui
+    src/aboutdialog.ui \
+    src/preferencedialog.ui \
+    src/caesiumph.ui
 
 RESOURCES += \
     icons.qrc \
