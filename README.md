@@ -1,6 +1,9 @@
 ## CaesiumPH
 ##### v0.9.5-beta (build 20160209) - Copyright &copy; Matteo Paonessa, 2016. All Rights Reserved.
 
+<img width="1112" alt="schermata 2016-03-01 alle 10 51 18" src="https://cloud.githubusercontent.com/assets/12133996/13423604/249601f4-df9c-11e5-8abb-b0fea22b62b0.png">
+
+
 ----------
 
 > A Caesium version featuring lossless JPEG optimization/compression for photographers and webmasters.
