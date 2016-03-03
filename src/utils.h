@@ -70,6 +70,7 @@ extern QTemporaryDir tempDir;
 extern QElapsedTimer timer;
 extern QString lastCPHListPath; //Path of the last list saved
 extern QList<QLocale> locales;
+extern QString logPath; //Log file path
 
 QString toHumanSize(long);
 double humanToDouble(QString);

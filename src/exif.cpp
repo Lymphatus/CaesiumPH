@@ -148,7 +148,6 @@ void writeExif(Exiv2::ExifData exifData, Exiv2::ExifData* newExifData, std::stri
         }
     }
     catch (Exiv2::AnyError& e) {
-        //TODO Error handling
         qWarning() << "Caught Exiv2 exception: " + QString(e.what()) + "\n";
     }
 }

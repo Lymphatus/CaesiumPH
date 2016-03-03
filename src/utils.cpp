@@ -30,6 +30,7 @@
 #include <QTreeWidgetItem>
 #include <QDirIterator>
 #include <QLibraryInfo>
+#include <QStandardPaths>
 #include <QDebug>
 
 QString clfFilter = "CaesiumPH List File (*.cphlf)";
@@ -54,6 +55,9 @@ QTemporaryDir tempDir;
 QElapsedTimer timer;
 QString lastCPHListPath = "";
 QList<QLocale> locales;
+QString logPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) +
+        "/" +
+        QDate::currentDate().toString("caesiumph_dd_MM_yyyy.log");
 
 QString toHumanSize(long size) {
     //Check if size is 0 to avoid crashes

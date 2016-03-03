@@ -35,9 +35,6 @@
 void logHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     //TODO Close the file?
     QByteArray localMsg = msg.toUtf8();
-    QString logPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) +
-            "/" +
-            QDate::currentDate().toString("caesiumph_dd_MM_yyyy.log");
 
     QString logMessage;
 

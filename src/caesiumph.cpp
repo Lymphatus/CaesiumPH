@@ -57,6 +57,7 @@
 #include <QDebug>
 
 //TODO GENERAL: handle plurals in counts
+//TODO GENERAL: create custom error boxes
 
 CaesiumPH::CaesiumPH(QWidget *parent) :
     QMainWindow(parent),
@@ -390,87 +391,89 @@ void CaesiumPH::on_actionRemove_items_triggered() {
     ui->statusBar->showMessage(QString::number(count) + tr(" items removed"));
 }
 
-extern void compressRoutine(CTreeWidgetItem* item) {
+void CaesiumPH::compressRoutine(CTreeWidgetItem* item) {
     //Input file path
     QString inputPath = item->text(COLUMN_PATH);
     QFileInfo* originalInfo = new QFileInfo(item->text(COLUMN_PATH));
     qint64 originalSize = originalInfo->size();
     QString outputPath = CaesiumPH::getOutputPath(originalInfo);
 
-    qDebug() << item->text(COLUMN_PATH) << "into" << outputPath << " -- START";
+    if (!outputPath.isNull()) {
+        qDebug() << item->text(COLUMN_PATH) << "into" << outputPath << " -- START";
 
-    //Not really necessary if we copy the whole EXIF data
-    Exiv2::ExifData exifData = getExifFromPath(QStringToChar(inputPath));
+        //Not really necessary if we copy the whole EXIF data
+        Exiv2::ExifData exifData = getExifFromPath(QStringToChar(inputPath));
 
-    //BUG Sometimes files are empty. Check it out.
-    int result = cclt_optimize(QStringToChar(inputPath),
-                  QStringToChar(outputPath),
-                  params.exif,
-                  params.progressive,
-                  QStringToChar(inputPath));
+        //BUG Sometimes files are empty. Check it out.
+        int result = cclt_optimize(QStringToChar(inputPath),
+                      QStringToChar(outputPath),
+                      params.exif,
+                      params.progressive,
+                      QStringToChar(inputPath));
 
-    if (result < 0) {
-        qCritical() << "An error as occurred while compressing" << item->text(COLUMN_PATH) << "into" << outputPath;
-    } else {
-        qInfo() << item->text(COLUMN_PATH) << "into" << outputPath << " -- OK";
-    }
+        if (result < 0) {
+            qCritical() << "An error as occurred while compressing" << item->text(COLUMN_PATH) << "into" << outputPath;
+        } else {
+            qInfo() << item->text(COLUMN_PATH) << "into" << outputPath << " -- OK";
+        }
 
 
-    //Write important metadata as user requested
-    if (params.exif != 2 && !params.importantExifs.isEmpty()) {
-        writeSpecificExifTags(exifData, outputPath, params.importantExifs);
-    }
+        //Write important metadata as user requested
+        if (params.exif != 2 && !params.importantExifs.isEmpty()) {
+            writeSpecificExifTags(exifData, outputPath, params.importantExifs);
+        }
 
-    //Gets new file info
-    QFileInfo* fileInfo = new QFileInfo(outputPath);
-    //Get the new size
-    qint64 outputSize = fileInfo->size();
+        //Gets new file info
+        QFileInfo* fileInfo = new QFileInfo(outputPath);
+        //Get the new size
+        qint64 outputSize = fileInfo->size();
 
-    //Check if the output file is actually bigger than the original
-    if (outputSize > originalSize) {
-        /*
-         * If we choose to overwrite the files, just leave the files in the temporary folder
-         * to be removed afterwards
-         * Instead, if we compressed in a custom folder, copy the original over the compressed one
-         * and set all the output results to point to the original file
-         */
-        qInfo() << "Output is bigger than input";
-        if (!params.overwrite) {
-            //Copy the original file over the compressed one
-            QFile* outputFile = new QFile(outputPath);
-            //Check if the file already exists (just a security check) and remove it
-            if (outputFile->exists()) {
-                //WARNING No error check
-                outputFile->remove();
+        //Check if the output file is actually bigger than the original
+        if (outputSize > originalSize) {
+            /*
+             * If we choose to overwrite the files, just leave the files in the temporary folder
+             * to be removed afterwards
+             * Instead, if we compressed in a custom folder, copy the original over the compressed one
+             * and set all the output results to point to the original file
+             */
+            qInfo() << "Output is bigger than input";
+            if (!params.overwrite) {
+                //Copy the original file over the compressed one
+                QFile* outputFile = new QFile(outputPath);
+                //Check if the file already exists (just a security check) and remove it
+                if (outputFile->exists()) {
+                    //WARNING No error check
+                    outputFile->remove();
+                }
+                //Rename the original file with the output path
+                //TODO Better error handling please
+                if (!QFile(item->text(COLUMN_PATH)).copy(outputPath)) {
+                    qCritical() << "Failed while moving " << item->text(COLUMN_PATH);
+                }
             }
-            //Rename the original file with the output path
-            //TODO Better error handling please
-            if (!QFile(item->text(COLUMN_PATH)).copy(outputPath)) {
-                qCritical() << "Failed while moving " << item->text(COLUMN_PATH);
+            //Set the importat stats to point to the original file
+            outputSize = originalSize;
+        } else {
+            //The new file is smaller
+            //If overwrite is on, move the file from the temp folder into the original
+            if (params.overwrite) {
+                //Remove the original
+                QFile(item->text(COLUMN_PATH)).remove();
+                //Move the compressed
+                //TODO Better error handling please
+                if (!QFile(outputPath).rename(item->text(COLUMN_PATH))) {
+                    qCritical() << "Failed while moving " << item->text(COLUMN_PATH);
+                }
             }
         }
-        //Set the importat stats to point to the original file
-        outputSize = originalSize;
-    } else {
-        //The new file is smaller
-        //If overwrite is on, move the file from the temp folder into the original
-        if (params.overwrite) {
-            //Remove the original
-            QFile(item->text(COLUMN_PATH)).remove();
-            //Move the compressed
-            //TODO Better error handling please
-            if (!QFile(outputPath).rename(item->text(COLUMN_PATH))) {
-                qCritical() << "Failed while moving " << item->text(COLUMN_PATH);
-            }
-        }
-    }
-    item->setText(2, toHumanSize(outputSize));
-    item->setText(3, getRatio(originalSize, outputSize));
+        item->setText(2, toHumanSize(outputSize));
+        item->setText(3, getRatio(originalSize, outputSize));
 
-    //Global compression counters for the entire compression process
-    originalsSize += originalSize;
-    compressedSize += outputSize;
-    compressedFiles++;
+        //Global compression counters for the entire compression process
+        originalsSize += originalSize;
+        compressedSize += outputSize;
+        compressedFiles++;
+    }
 }
 
 QString CaesiumPH::getOutputPath(QFileInfo* originalInfo) {
@@ -491,6 +494,7 @@ QString CaesiumPH::getOutputPath(QFileInfo* originalInfo) {
             exit(-1);
         }
     } else {
+        QDir dir(originalInfo->path() + QDir::separator() + params.outMethodString + QDir::separator());
         switch (params.outMethodIndex) {
         case 0:
             //Add a suffix
@@ -501,14 +505,21 @@ QString CaesiumPH::getOutputPath(QFileInfo* originalInfo) {
             //Compress in a subfolder
             outputPath = originalInfo->path() + QDir::separator() + params.outMethodString + QDir::separator() + originalInfo->fileName();
             //Create it
-            //WARNING This does not check for user permission
-            QDir().mkdir(originalInfo->path() + QDir::separator() + params.outMethodString + QDir::separator());
+            if (!dir.mkdir(dir.path()) && !dir.exists()) {
+                ui->statusBar->showMessage(tr("ERROR: could not create output folder. Check user permissions."));
+                qCritical() << "Cannot create output directory. Abort current operation";
+                return NULL;
+            }
             break;
         case 2:
             //Compress in a custom directory
             outputPath = params.outMethodString + QDir::separator() + originalInfo->fileName();
-            //WARNING This does not check for user permission
-            QDir().mkdir(params.outMethodString);
+            if (!QDir().mkdir(params.outMethodString) && !QDir(params.outMethodString).exists()) {
+                ui->statusBar->showMessage(tr("ERROR: could not create output folder. Check user permissions."));
+                qCritical() << "Cannot create output directory. Abort current operation";
+                return NULL;
+            }
+            break;
         default:
             break;
         }
@@ -541,7 +552,7 @@ void CaesiumPH::on_actionCompress_triggered() {
         list.append((CTreeWidgetItem*) ui->listTreeWidget->topLevelItem(i));
     }
 
-    QFuture<void> future = QtConcurrent::map(list, compressRoutine);
+    QFuture<void> future = QtConcurrent::map(list, [this] (CTreeWidgetItem*& data) {compressRoutine(data);});
 
     //Setting up connections
     //Progress dialog
@@ -670,11 +681,11 @@ void CaesiumPH::closeEvent(QCloseEvent *event) {
                                        tr("Do you really want to exit?"),
                                        QMessageBox::Ok | QMessageBox::Cancel);
         //Exit if OK, go back if Cancel
-        //TODO Translate?
         switch (res) {
             case QMessageBox::Ok:
-            qInfo() << "----------------- CaesiumPH session stopped at "
+                qInfo() << "----------------- CaesiumPH session stopped at "
                     << QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") << "-----------------";
+                QFile(logPath).close();
                 event->accept();
                 break;
             case QMessageBox::Cancel:
@@ -685,6 +696,7 @@ void CaesiumPH::closeEvent(QCloseEvent *event) {
     } else {
         qInfo() << "----------------- CaesiumPH session stopped at "
                 << QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss") << "-----------------";
+        QFile(logPath).close();
         event->accept();
     }
 }

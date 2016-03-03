@@ -26,6 +26,7 @@
 
 #include "cimageinfo.h"
 #include "cphlist.h"
+#include "ctreewidgetitem.h"
 
 #include <QMainWindow>
 #include <QTreeWidgetItem>
@@ -53,7 +54,10 @@ public:
     }
 
     //Gets the right output folder
-    static QString getOutputPath(QFileInfo *originalInfo);
+    QString getOutputPath(QFileInfo *originalInfo);
+
+    //Compress routine
+    void compressRoutine(CTreeWidgetItem* );
 
 signals:
     void dropAccepted(QStringList);
