@@ -1,6 +1,6 @@
-#### Authors of CaesiumPH
+##### Authors of CaesiumPH
+- **Matteo Paonessa** - Designed and coded CaesiumPH. <<matteo.paonessa@gmail.com>>
 
-- Matteo Paonessa - Designed and coded CaesiumPH. <<matteo.paonessa@gmail.com>>
 --------------------------
 
 ###### Translations
