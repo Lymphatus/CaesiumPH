@@ -1,8 +1,9 @@
 ### CHANGELOG
 
-###### 0.9.5-beta
+###### 0.9.5-beta (12/04/2016)
 * FIXED
     * UI Restyle
+    * Experimental fix for crash at compression start
 * ADDED
     * Preview loader animation
 * REMOVED
