@@ -32,7 +32,7 @@
     <message>
         <location filename="../src/aboutdialog.ui" line="454"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>閉じる</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;http://saerasoft.com/caesium&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;License&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
@@ -207,7 +207,7 @@ p, li { white-space: pre-wrap; }
         <location filename="../src/caesiumph.cpp" line="115"/>
         <location filename="../src/caesiumph.cpp" line="923"/>
         <source>metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>メタデータ</translation>
     </message>
     <message>
         <location filename="../src/caesiumph.cpp" line="133"/>
@@ -255,7 +255,7 @@ p, li { white-space: pre-wrap; }
         <location filename="../src/caesiumph.cpp" line="509"/>
         <location filename="../src/caesiumph.cpp" line="518"/>
         <source>ERROR: could not create output folder. Check user permissions.</source>
-        <translation type="unfinished"></translation>
+        <translation>エラー: 出力フォルダを作成できません、権限を確認してください</translation>
     </message>
     <message>
         <location filename="../src/caesiumph.cpp" line="542"/>
@@ -305,7 +305,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../src/caesiumph.cpp" line="754"/>
         <source>preview</source>
-        <translation type="unfinished"></translation>
+        <translation>プレビュー</translation>
     </message>
     <message>
         <location filename="../src/caesiumph.cpp" line="760"/>
@@ -403,7 +403,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../src/preferencedialog.ui" line="163"/>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation>完了</translation>
     </message>
     <message>
         <location filename="../src/preferencedialog.ui" line="333"/>

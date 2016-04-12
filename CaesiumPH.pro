@@ -75,7 +75,8 @@ DISTFILES += \
     CHANGELOG.md \
     LICENSE \
     TODO.md \
-    qt.conf
+    qt.conf \
+    AUTHORS.md
 
 TRANSLATIONS = translations/caesiumph_en_US.ts \
     translations/caesiumph_it_IT.ts \
